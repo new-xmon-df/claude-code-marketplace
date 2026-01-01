@@ -5,12 +5,5 @@
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"
-  },
-  "skills": [
-    {
-      "name": "xmon:ui-ux",
-      "description": "Explora soluciones UI/UX, diagnostica problemas de interfaz, compara alternativas de diseño, y resuelve issues de compatibilidad entre navegadores o tamaños de pantalla.",
-      "file": "skills/ui-ux-explorer.md"
-    }
-  ]
+  }
 }

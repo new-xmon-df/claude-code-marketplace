@@ -17,6 +17,17 @@
       },
       "source": "./plugins/ui-ux-explorer",
       "category": "development"
+    },
+    {
+      "name": "security-toolkit",
+      "description": "Plugin completo de seguridad: auditoría de código, hardening de configuraciones y guías de mejores prácticas para cualquier entorno.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/security-toolkit",
+      "category": "security"
     }
   ]
 }

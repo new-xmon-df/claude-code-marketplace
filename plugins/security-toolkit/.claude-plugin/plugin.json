@@ -1,0 +1,9 @@
+{
+  "name": "security-toolkit",
+  "version": "0.1.0",
+  "description": "Plugin completo de seguridad: auditoría de código, hardening de configuraciones y guías de mejores prácticas para cualquier entorno.",
+  "author": {
+    "name": "Juanjo García",
+    "email": "juanjogarcia@gmail.com"
+  }
+}

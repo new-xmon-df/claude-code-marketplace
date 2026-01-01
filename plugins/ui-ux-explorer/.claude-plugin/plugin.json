@@ -1,0 +1,13 @@
+{
+  "name": "ui-ux-explorer",
+  "version": "1.0.0",
+  "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
+  "author": "xmon",
+  "skills": [
+    {
+      "name": "xmon:ui-ux",
+      "description": "Explora soluciones UI/UX, diagnostica problemas de interfaz, compara alternativas de diseño, y resuelve issues de compatibilidad entre navegadores o tamaños de pantalla.",
+      "file": "skills/ui-ux-explorer.md"
+    }
+  ]
+}

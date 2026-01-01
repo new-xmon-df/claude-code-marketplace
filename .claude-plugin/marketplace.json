@@ -1,23 +1,22 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "xmon-plugins",
+  "description": "Marketplace de plugins personalizados para Claude Code",
   "owner": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"
   },
-  "metadata": {
-    "description": "Marketplace de plugins personalizados para Claude Code",
-    "version": "0.0.1"
-  },
   "plugins": [
     {
       "name": "ui-ux-explorer",
-      "source": {
-        "source": "path",
-        "path": "./plugins/ui-ux-explorer"
-      },
       "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
       "version": "0.0.1",
-      "strict": false
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/ui-ux-explorer",
+      "category": "development"
     }
   ]
 }

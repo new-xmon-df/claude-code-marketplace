@@ -2,7 +2,10 @@
   "name": "ui-ux-explorer",
   "version": "0.0.1",
   "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
-  "author": "xmon",
+  "author": {
+    "name": "Juanjo García",
+    "email": "juanjogarcia@gmail.com"
+  },
   "skills": [
     {
       "name": "xmon:ui-ux",

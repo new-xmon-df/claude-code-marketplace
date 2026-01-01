@@ -2,12 +2,12 @@
   "name": "xmon-plugins",
   "description": "Marketplace de plugins personalizados para Claude Code",
   "author": "xmon",
-  "url": "https://github.com/xmondev/xmon-plugins",
+  "url": "https://github.com/new-xmon-df/claude-code-marketplace",
   "plugins": [
     {
       "name": "ui-ux-explorer",
       "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
-      "version": "1.0.0",
+      "version": "0.0.1",
       "path": "plugins/ui-ux-explorer"
     }
   ]

@@ -47,7 +47,7 @@ Para añadir este marketplace a tu Claude Code, edita `~/.claude/settings.json`:
 {
   "plugins": {
     "marketplaces": [
-      "https://github.com/xmondev/xmon-plugins"
+      "https://github.com/new-xmon-df/claude-code-marketplace"
     ]
   }
 }

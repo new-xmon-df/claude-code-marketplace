@@ -54,13 +54,29 @@ contentlayer.config.*    # Contentlayer
    - Campos obligatorios/opcionales
    - Validación de tipos
 
-2. **Guardar contexto**:
+2. **Detectar i18n/multiidioma** (si aplica):
+   ```
+   # Archivos de i18n
+   src/i18n/              # Astro
+   locales/               # Next.js, Nuxt
+   i18n.config.*          # Configuración
+   astro.config.* (i18n)  # Astro i18n
+   ```
+
+   Si es multiidioma:
+   - Los slugs varían por idioma (`/es/articulo` vs `/en/article`)
+   - Meta descriptions deben estar traducidas
+   - Hreflang tags son obligatorios
+   - Canonical apunta a la versión principal
+
+3. **Guardar contexto**:
    ```
    Sistema de contenido detectado:
    - Formato: [MDX/Markdown/CMS]
    - Schema: [Astro Content Collections/Contentlayer/Custom]
    - Campos actuales: [title, description, date, etc.]
    - Categorías/Tags: [lista si existen]
+   - i18n: [Sí/No] - Idiomas: [es, en, etc.]
    ```
 
 ---
@@ -371,6 +387,24 @@ Para más información, [haz clic aquí](/auriculares-bluetooth-baratos).
 
 ## Paso 7: Schema Markup para Contenido
 
+### Herramientas Automáticas
+
+Muchos frameworks tienen librerías que generan Schema automáticamente:
+
+| Framework | Librería | Genera |
+|-----------|----------|--------|
+| Astro | `astro-seo`, `@astrolib/seo` | OG, Twitter, JSON-LD básico |
+| Next.js | `next-seo` | OG, Twitter, JSON-LD completo |
+| Nuxt | `@nuxtjs/seo`, `nuxt-schema-org` | SEO completo, Schema |
+| SvelteKit | `svelte-meta-tags` | Meta tags, OG |
+
+**Si usas estas herramientas**:
+- Verificar que el Schema generado es correcto
+- Pueden necesitar configuración adicional para Reviews/Products
+- El FAQ Schema suele requerir implementación manual
+
+**Si NO las usas**: Implementar manualmente (ver ejemplos abajo).
+
 ### Por Tipo de Contenido
 
 **Artículo de Blog**:
@@ -465,6 +499,100 @@ Para más información, [haz clic aquí](/auriculares-bluetooth-baratos).
 
 ---
 
+## Paso 9: Contenido Generado con AI
+
+Si generas contenido con LLMs (ChatGPT, Claude, etc.) o pipelines automatizados (n8n, Make), sigue estas pautas:
+
+### Red Flags de Contenido AI Genérico
+
+Detecta y corrige estos patrones que Google penaliza:
+
+| Red Flag | Ejemplo | Solución |
+|----------|---------|----------|
+| Frases vacías | "En el mundo actual...", "Es importante destacar que..." | Eliminar, ir al grano |
+| Listas genéricas | "Ventajas: calidad, precio, durabilidad" | Datos específicos del producto |
+| Falta de especificidad | "Excelente rendimiento" | "Batería de 40h con ANC activo" |
+| Tono robótico | Párrafos perfectamente estructurados sin personalidad | Añadir voz propia, opiniones |
+| Repetición de keywords | Keyword en cada párrafo | Usar sinónimos, variaciones |
+| Sin experiencia real | "Los usuarios reportan..." | "Después de 3 semanas usándolos..." |
+
+### Cómo Humanizar Contenido AI
+
+1. **Añadir experiencia personal**:
+   ```markdown
+   <!-- AI genérico -->
+   Los auriculares Sony WH-1000XM5 ofrecen una excelente
+   cancelación de ruido.
+
+   <!-- Humanizado -->
+   Llevo 3 semanas usando los Sony WH-1000XM5 en el metro
+   de Madrid y la cancelación de ruido es brutal - no escucho
+   ni los avisos de estación.
+   ```
+
+2. **Incluir opiniones y preferencias**:
+   ```markdown
+   <!-- AI genérico -->
+   Ambos productos son opciones válidas según tus necesidades.
+
+   <!-- Humanizado -->
+   Si me preguntas cuál compraría yo: los Sony. Sí, cuestan
+   50€ más, pero el comfort en sesiones largas no tiene precio.
+   ```
+
+3. **Datos específicos, no genéricos**:
+   ```markdown
+   <!-- AI genérico -->
+   La batería tiene buena duración.
+
+   <!-- Humanizado -->
+   40 horas con ANC activado. En mi caso, cargo una vez
+   por semana con uso de 5-6h diarias.
+   ```
+
+### Checklist para Contenido AI
+
+Antes de publicar contenido generado con AI:
+
+- [ ] **Eliminar frases de relleno** ("Es importante mencionar", "Cabe destacar")
+- [ ] **Verificar datos** - Los LLMs inventan especificaciones
+- [ ] **Añadir experiencia real** si es posible (fotos, tests propios)
+- [ ] **Incluir opinión personal** - Qué recomendarías TÚ y por qué
+- [ ] **Revisar tono** - ¿Suena a robot o a persona?
+- [ ] **Comprobar fechas** - AI puede dar info desactualizada
+- [ ] **Verificar precios** - Cambian constantemente
+- [ ] **Añadir fuentes** para claims específicos
+- [ ] **Pasar detector de AI** (opcional pero recomendado)
+
+### Herramientas de Detección
+
+Para verificar que tu contenido no es "demasiado AI":
+- Originality.ai
+- GPTZero
+- Copyleaks
+
+**Nota**: El objetivo no es "engañar" detectores, sino crear contenido genuinamente útil. Si añades experiencia real y voz propia, los detectores son irrelevantes.
+
+### Pipeline de Contenido AI Recomendado
+
+```
+1. Generar borrador con AI (estructura + research)
+        ↓
+2. Verificar TODOS los datos/specs/precios
+        ↓
+3. Añadir experiencia personal y opiniones
+        ↓
+4. Humanizar tono (eliminar frases robóticas)
+        ↓
+5. Optimizar SEO (keywords, estructura)
+        ↓
+6. Review final + checklist
+        ↓
+7. Publicar
+```
+
+---
+
 ## Checklist Antes de Publicar
 
 ### SEO Técnico
@@ -551,13 +679,14 @@ Ejemplos:
 
 ## Checklist de Ejecución
 
-- [ ] Detectar sistema de contenido y schema existente
+- [ ] Detectar sistema de contenido, schema e i18n
 - [ ] Verificar/crear front matter completo
 - [ ] Revisar estructura de headers
 - [ ] Verificar ubicación de keywords
 - [ ] Optimizar imágenes y alt text
 - [ ] Añadir internal links relevantes
 - [ ] Verificar external links y atributos
-- [ ] Añadir schema markup apropiado
+- [ ] Añadir schema markup (o verificar herramienta automática)
 - [ ] Verificar disclosure de afiliados (si aplica)
+- [ ] Si es contenido AI: humanizar y verificar datos
 - [ ] Pasar checklist antes de publicar

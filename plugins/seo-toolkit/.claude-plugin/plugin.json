@@ -1,0 +1,9 @@
+{
+  "name": "seo-toolkit",
+  "version": "0.1.0",
+  "description": "Plugin completo de SEO: auditoría técnica y de contenido, optimización para sitios de afiliados/blogs, preparación para AI/LLMs, y mejores prácticas para cualquier stack.",
+  "author": {
+    "name": "Juanjo García",
+    "email": "juanjogarcia@gmail.com"
+  }
+}

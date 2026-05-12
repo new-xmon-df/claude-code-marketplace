@@ -17,8 +17,9 @@ Dos niveles, ambos obligatorios para que un plugin sea instalable:
    - `.claude-plugin/plugin.json` con `name`, `version`, `description`, `author`. El `name` y la `version` deben coincidir con la entrada del marketplace.
    - `commands/*.md` (opcional) — slash commands, uno por archivo, con frontmatter `name` + `description`. El nombre del archivo (sin `.md`) es el comando que invoca el usuario (ej. `/seo-check`).
    - `skills/<skill-name>/SKILL.md` (opcional) — skills invocables por Claude. El nombre del directorio del skill usa la convención `xmon:<slug>` (ej. `xmon:ui-ux`, `xmon:seo-audit`). Ese mismo identificador va en el frontmatter `name:` del SKILL.md.
+   - `agents/<agent-name>.md` (opcional) — subagentes invocables vía la herramienta `Agent` o como `@<agent-name>`. Cada archivo lleva frontmatter con `name`, `description`, `model` y `tools` (lista de tools permitidas). El nombre del archivo (sin `.md`) debe coincidir con el campo `name:` del frontmatter.
 
-Un plugin puede tener solo commands, solo skills, o ambos. Ver `seo-toolkit` y `security-toolkit` como ejemplos de plugins con commands + múltiples skills; `ui-ux-explorer` como ejemplo de plugin solo-skill.
+Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit` y `security-toolkit` (commands + múltiples skills), `ui-ux-explorer` (solo-skill), `langchain-toolkit` (solo-agents).
 
 ## Convenciones
 
@@ -31,7 +32,7 @@ Un plugin puede tener solo commands, solo skills, o ambos. Ver `seo-toolkit` y `
 ## Añadir un plugin nuevo
 
 1. Crear `plugins/<nombre>/.claude-plugin/plugin.json` con los metadatos básicos.
-2. Añadir `commands/` y/o `skills/xmon:<slug>/SKILL.md` según corresponda.
+2. Añadir `commands/`, `skills/xmon:<slug>/SKILL.md` y/o `agents/<agent>.md` según corresponda.
 3. Registrar el plugin en `.claude-plugin/marketplace.json` (entrada con `name`, `description`, `version`, `author`, `source: "./plugins/<nombre>"`, `category`).
 4. Si el plugin expone slash commands, documentarlos en el `README.md` del marketplace (sección "Plugins disponibles").
 

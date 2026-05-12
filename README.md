@@ -39,6 +39,32 @@ Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y enco
 /xmon:ui-ux el hover no funciona en Safari
 ```
 
+### git-toolkit
+
+**Comando**: `/commit`
+
+Slash command para generar commits siguiendo Conventional Commits en español. Detecta automáticamente la configuración del proyecto:
+
+- Si existe `commit-prompt.txt`, lo usa tal cual como prompt principal.
+- Si existe `commitlint.config.js` / `.commitlintrc.js`, extrae `type-enum`, `scope-enum`, `scope-empty` y `header-max-length` como overrides.
+- Si no hay nada, aplica reglas embebidas: español imperativo, scope opcional, subject ≤ 72 chars, sin firma de Claude.
+
+**Casos de uso**:
+
+- Estandarizar mensajes de commit entre todos tus proyectos sin copiar archivos.
+- Respetar las convenciones específicas de cada repo (scopes cerrados, prompts custom).
+- Garantizar que ningún commit lleve firma de Claude Code.
+
+**Ejemplos**:
+
+```
+# Prepara los archivos primero
+git add src/api/users.ts
+
+# Lanza el comando
+/commit
+```
+
 ## Configuración del marketplace
 
 Para añadir este marketplace a tu Claude Code, edita `~/.claude/settings.json`:

@@ -39,6 +39,17 @@
       },
       "source": "./plugins/seo-toolkit",
       "category": "development"
+    },
+    {
+      "name": "langchain-toolkit",
+      "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: experto en chains/retrievers/tools (langchain-js-expert) y experto en grafos de agentes (langgraph-js-expert). Fuentes oficiales vía context7.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/langchain-toolkit",
+      "category": "development"
     }
   ]
 }

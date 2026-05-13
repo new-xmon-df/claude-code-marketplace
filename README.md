@@ -32,22 +32,26 @@ Otros comandos útiles:
 ### ui-ux-explorer
 
 **Skill**: `/xmon:ui-ux`
+**Agente**: `@ux-consultant`
 
-Explora soluciones UI/UX, diagnostica problemas de interfaz, compara alternativas de diseño, y resuelve issues de compatibilidad entre navegadores o tamaños de pantalla.
+Pareja diseño + implementación de UI/UX. El skill `/xmon:ui-ux` detecta tu stack frontend (React/Next/Vue/Astro + UI lib + styling) e **implementa** soluciones adaptadas. El agente `@ux-consultant` entrega **specs previas a implementación** (heurísticas Nielsen, WCAG, jerarquía, flujos) sin escribir código. Diseñados para usarse en pareja.
 
 **Casos de uso**:
-- Problemas visuales o de interacción en tu UI
-- Explorar alternativas de diseño para componentes
-- Resolver problemas de responsive design
-- Bugs específicos de navegadores
-- Mejorar la UX de funcionalidades existentes
+- Problemas visuales o de interacción concretos (`/xmon:ui-ux`)
+- Responsive, compatibilidad cross-browser, alternativas de diseño (`/xmon:ui-ux`)
+- Diseño de onboarding flows, dashboards, guided tours antes de codificar (`@ux-consultant`)
+- Auditar layouts / navegación / flujos con abandono alto (`@ux-consultant`)
+- Aplicar heurísticas Nielsen y WCAG con criterios profesionales (`@ux-consultant`)
+- Planificar features UX-first: spec → implementar (`@ux-consultant` → `/xmon:ui-ux`)
 
 **Ejemplos**:
 
 ```
 /xmon:ui-ux el dropdown se ve cortado en móvil
-/xmon:ui-ux quiero mejorar la UX del formulario de login
 /xmon:ui-ux el hover no funciona en Safari
+
+@ux-consultant diseña un sistema de notificaciones para el dashboard admin
+@ux-consultant analiza por qué nuestro formulario tiene 70% de abandono
 ```
 
 ### security-toolkit
@@ -164,7 +168,7 @@ xmon-plugins/
 ├── README.md                  # este archivo
 ├── CLAUDE.md                  # guía interna para Claude
 └── plugins/
-    ├── ui-ux-explorer/        # solo skills
+    ├── ui-ux-explorer/        # skill + agent
     ├── security-toolkit/      # commands + skills
     ├── seo-toolkit/           # commands + skills
     ├── langchain-toolkit/     # solo agents

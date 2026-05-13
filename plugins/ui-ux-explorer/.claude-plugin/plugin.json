@@ -1,9 +1,20 @@
 {
   "name": "ui-ux-explorer",
-  "version": "0.0.1",
-  "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
+  "version": "0.1.0",
+  "description": "Pareja diseño + implementación UI/UX. El skill /xmon:ui-ux detecta tu stack frontend e implementa soluciones adaptadas (responsive, browser compat, alternativas de diseño). El agente @ux-consultant entrega specs previas a implementación (heurísticas Nielsen, jerarquía, accesibilidad WCAG, flujos) sin escribir código. Diseñados para usarse en pareja.",
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"
-  }
+  },
+  "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "ui",
+    "ux",
+    "design",
+    "frontend",
+    "responsive",
+    "accessibility",
+    "nielsen"
+  ]
 }

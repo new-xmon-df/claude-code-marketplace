@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "ui-ux-explorer",
-      "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
-      "version": "0.0.1",
+      "description": "Pareja diseño + implementación UI/UX. Skill /xmon:ui-ux (detecta stack frontend e implementa) + agente @ux-consultant (entrega specs previas a implementación con heurísticas Nielsen, accesibilidad WCAG, jerarquía).",
+      "version": "0.1.0",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"

@@ -52,4 +52,4 @@ Usar el nombre del plugin como scope (`seo-toolkit`, `security-toolkit`, `ui-ux-
 
 ## Instalación (referencia)
 
-Los usuarios instalan plugins con `claude /install-plugin xmon-plugins/<plugin-name>` después de añadir el marketplace a `~/.claude/settings.json`. Detalle completo en [README.md](README.md).
+Los usuarios instalan plugins con `/plugin install <plugin-name>@xmon-plugins` (sintaxis oficial de Claude Code) después de añadir el marketplace a `~/.claude/settings.json` mediante el campo top-level `extraKnownMarketplaces`. Detalle completo en [README.md](README.md).

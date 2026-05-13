@@ -4,16 +4,27 @@ Marketplace de plugins personalizados para Claude Code.
 
 ## Instalación
 
-Para instalar plugins de este marketplace, usa el comando:
+1. **Añade el marketplace a tu Claude Code** editando `~/.claude/settings.json` (ver sección [Configuración del marketplace](#configuración-del-marketplace) más abajo).
+2. **Instala los plugins** con:
 
-```bash
-claude /install-plugin xmon-plugins/<plugin-name>
+   ```
+   /plugin install <plugin-name>@xmon-plugins
+   ```
+
+   Por ejemplo:
+
+   ```
+   /plugin install ui-ux-explorer@xmon-plugins
+   /plugin install git-toolkit@xmon-plugins
+   ```
+
+Otros comandos útiles:
+
 ```
-
-Por ejemplo:
-
-```bash
-claude /install-plugin xmon-plugins/ui-ux-explorer
+/plugin                          # listar plugins instalados
+/plugin enable <name>            # activar un plugin
+/plugin disable <name>           # desactivar un plugin
+/plugin marketplace update       # refrescar el marketplace
 ```
 
 ## Plugins disponibles
@@ -22,7 +33,7 @@ claude /install-plugin xmon-plugins/ui-ux-explorer
 
 **Skill**: `/xmon:ui-ux`
 
-Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño.
+Explora soluciones UI/UX, diagnostica problemas de interfaz, compara alternativas de diseño, y resuelve issues de compatibilidad entre navegadores o tamaños de pantalla.
 
 **Casos de uso**:
 - Problemas visuales o de interacción en tu UI
@@ -39,6 +50,68 @@ Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y enco
 /xmon:ui-ux el hover no funciona en Safari
 ```
 
+### security-toolkit
+
+**Comando**: `/security-check`
+**Skills**: `/xmon:security-audit`, `/xmon:hardening`
+
+Plugin completo de seguridad: auditoría de código, hardening de configuraciones y guías de mejores prácticas para cualquier entorno.
+
+**Casos de uso**:
+- Detectar vulnerabilidades OWASP Top 10, secrets expuestos y malas prácticas
+- Reforzar configuraciones de servidores, contenedores, bases de datos y aplicaciones
+- Auditoría rápida del proyecto antes de un deploy
+
+**Ejemplos**:
+
+```
+/security-check
+/xmon:security-audit revisa el módulo de auth
+/xmon:hardening dame el hardening base para mi docker-compose
+```
+
+### seo-toolkit
+
+**Comando**: `/seo-check`
+**Skills**: `/xmon:seo-audit`, `/xmon:seo-content`
+
+Plugin completo de SEO: auditoría técnica y de contenido, optimización para sitios de afiliados/blogs, preparación para AI/LLMs, y mejores prácticas para cualquier stack.
+
+**Casos de uso**:
+- Análisis rápido SEO del proyecto o de una URL en producción
+- Auditoría completa con puntuación sobre 100
+- Optimizar contenido antes de publicar (front matter, keywords, internal linking, E-E-A-T)
+
+**Ejemplos**:
+
+```
+/seo-check
+/seo-check https://miblog.com
+/xmon:seo-audit auditoría completa con foco en indexación
+/xmon:seo-content optimiza este artículo antes de publicarlo
+```
+
+### langchain-toolkit
+
+**Agentes**: `@langchain-js-expert`, `@langgraph-js-expert`
+
+Dos agentes especializados en LangChain JS y LangGraph TS v1. Trabajan con tono español coloquial, consultan fuentes oficiales vía context7, mantienen memoria persistente entre sesiones y se delegan trabajo entre sí para evitar solapamiento de scope.
+
+- **`langchain-js-expert`**: LCEL, chains, retrievers, embeddings, tools, structured output, memoria conversacional clásica, prompt templates, streaming, seguridad.
+- **`langgraph-js-expert`**: StateGraph, Annotation, nodos, edges condicionales, checkpointers, `interrupt()` para human-in-the-loop, subgrafos, multi-agente, `streamEvents`.
+
+**Casos de uso**:
+- Construir chatbots, RAGs y chains con LangChain TS
+- Diseñar grafos de agentes con LangGraph TS v1
+- Diagnosticar errores típicos (`INVALID_CONCURRENT_GRAPH_UPDATE`, reducers, etc.)
+
+**Ejemplos**:
+
+```
+@langchain-js-expert quiero un RAG con Pinecone y memoria conversacional
+@langgraph-js-expert diseña un grafo con interrupt() para aprobación humana
+```
+
 ### git-toolkit
 
 **Comando**: `/commit`
@@ -50,52 +123,65 @@ Slash command para generar commits siguiendo Conventional Commits en español. D
 - Si no hay nada, aplica reglas embebidas: español imperativo, scope opcional, subject ≤ 72 chars, sin firma de Claude.
 
 **Casos de uso**:
+- Estandarizar mensajes de commit entre todos tus proyectos sin copiar archivos
+- Respetar las convenciones específicas de cada repo (scopes cerrados, prompts custom)
+- Garantizar que ningún commit lleve firma de Claude Code
 
-- Estandarizar mensajes de commit entre todos tus proyectos sin copiar archivos.
-- Respetar las convenciones específicas de cada repo (scopes cerrados, prompts custom).
-- Garantizar que ningún commit lleve firma de Claude Code.
-
-**Ejemplos**:
+**Ejemplo**:
 
 ```
-# Prepara los archivos primero
 git add src/api/users.ts
-
-# Lanza el comando
 /commit
 ```
 
 ## Configuración del marketplace
 
-Para añadir este marketplace a tu Claude Code, edita `~/.claude/settings.json`:
+Para registrar este marketplace en tu Claude Code, edita `~/.claude/settings.json` y añade el campo `extraKnownMarketplaces` a nivel raíz:
 
 ```json
 {
-  "plugins": {
-    "marketplaces": [
-      "https://github.com/new-xmon-df/claude-code-marketplace"
-    ]
-  }
+  "extraKnownMarketplaces": [
+    {
+      "url": "https://github.com/new-xmon-df/claude-code-marketplace"
+    }
+  ]
 }
 ```
+
+Tras editar el archivo, ejecuta `/plugin marketplace update` para refrescar y luego `/plugin install <plugin>@xmon-plugins` para instalar el plugin que quieras.
 
 ## Estructura
 
 ```
 xmon-plugins/
-├── marketplace.json
-├── README.md
+├── .claude-plugin/
+│   └── marketplace.json       # registro central del marketplace
+├── README.md                  # este archivo
+├── CLAUDE.md                  # guía interna para Claude
 └── plugins/
-    └── ui-ux-explorer/
-        ├── .claude-plugin/
-        │   └── plugin.json
-        └── skills/
-            └── ui-ux-explorer.md
+    ├── ui-ux-explorer/        # solo skills
+    ├── security-toolkit/      # commands + skills
+    ├── seo-toolkit/           # commands + skills
+    ├── langchain-toolkit/     # solo agents
+    └── git-toolkit/           # solo commands
+```
+
+Cada plugin sigue esta estructura (cualquier subconjunto de los tres subdirectorios):
+
+```
+plugins/<nombre>/
+├── .claude-plugin/
+│   └── plugin.json
+├── commands/                  # opcional, slash commands sin prefijo
+├── skills/                    # opcional, con prefijo xmon:
+│   └── xmon:<slug>/
+│       └── SKILL.md
+└── agents/                    # opcional, subagentes
 ```
 
 ## Contribuir
 
-¿Quieres añadir tu propio plugin? Crea un PR siguiendo la estructura de los plugins existentes.
+¿Quieres añadir tu propio plugin? Crea un PR siguiendo la estructura de los plugins existentes. Lee [CLAUDE.md](CLAUDE.md) para entender las convenciones del marketplace (namespace `xmon:`, naming de commands, versionado SemVer, etc.).
 
 ## Licencia
 

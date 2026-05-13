@@ -73,13 +73,22 @@ Solo si context7 no devuelve lo necesario, los agentes recurren a `WebSearch` co
 
 ## Instalación
 
-```bash
-# Añadir el marketplace si aún no lo tienes
-claude /plugin marketplace add new-xmon-df/claude-code-marketplace
+1. Añade el marketplace a tu `~/.claude/settings.json` (campo top-level `extraKnownMarketplaces`):
 
-# Instalar el plugin
-claude /plugin install langchain-toolkit
-```
+   ```json
+   {
+     "extraKnownMarketplaces": [
+       { "url": "https://github.com/new-xmon-df/claude-code-marketplace" }
+     ]
+   }
+   ```
+
+2. Refresca el marketplace e instala el plugin:
+
+   ```
+   /plugin marketplace update
+   /plugin install langchain-toolkit@xmon-plugins
+   ```
 
 Tras instalar, los dos agentes quedan disponibles como subagentes invocables vía la herramienta `Agent` o vía `@langchain-js-expert` / `@langgraph-js-expert` en el chat.
 

@@ -116,6 +116,36 @@ Dos agentes especializados en LangChain JS y LangGraph TS v1. Trabajan con tono 
 @langgraph-js-expert diseña un grafo con interrupt() para aprobación humana
 ```
 
+### symfony-toolkit
+
+**Agentes**: `@symfony-expert`, `@api-platform-pro`
+
+Dos agentes especializados en el ecosistema PHP moderno con delegación cruzada bidireccional:
+
+- **`@symfony-expert`** — Symfony 7 + Doctrine ORM + PHP 8.3+: servicios, eventos, security, Messenger, forms, entidades rich.
+- **`@api-platform-pro`** — API Platform 3.x/4.x: ApiResource, state providers/processors, DTOs, filtros, OpenAPI customization.
+
+Regla mnemotécnica: si toca HTTP API o un `#[ApiResource]`, manda API Platform; si no, manda Symfony.
+
+**Casos de uso**:
+- Diseño de servicios con autowiring y entidades Doctrine rich (`@symfony-expert`)
+- Voters para autorización per-objeto (`@symfony-expert`)
+- Diagnosticar N+1 queries, circular references en DI, memory leaks en commands (`@symfony-expert`)
+- Migrar de DataProvider/DataPersister (2.x) a state providers/processors (3.x+) (`@api-platform-pro`)
+- Diseñar recursos con DTOs in/out, provider y processor (`@api-platform-pro`)
+- Filtros custom + OpenAPI customization (`@api-platform-pro`)
+- Pagination cursor para endpoints lentos en collections grandes (`@api-platform-pro`)
+
+**Ejemplos**:
+
+```
+@symfony-expert configura un transport async con retry strategy de 3 intentos
+@symfony-expert me sale circular reference en el container, arréglalo
+
+@api-platform-pro diseña el recurso Order con DTOs input/output, provider y processor
+@api-platform-pro filtro custom para buscar pedidos por rango de fechas
+```
+
 ### git-toolkit
 
 **Comando**: `/commit`
@@ -168,11 +198,12 @@ xmon-plugins/
 ├── README.md                  # este archivo
 ├── CLAUDE.md                  # guía interna para Claude
 └── plugins/
-    ├── ui-ux-explorer/        # skill + agent
+    ├── git-toolkit/           # commands + agent
+    ├── langchain-toolkit/     # solo agents
     ├── security-toolkit/      # commands + skills
     ├── seo-toolkit/           # commands + skills
-    ├── langchain-toolkit/     # solo agents
-    └── git-toolkit/           # commands + agent
+    ├── symfony-toolkit/       # solo agents
+    └── ui-ux-explorer/        # skill + agent 
 ```
 
 Cada plugin sigue esta estructura (cualquier subconjunto de los tres subdirectorios):

@@ -61,6 +61,17 @@
       },
       "source": "./plugins/git-toolkit",
       "category": "development"
+    },
+    {
+      "name": "symfony-toolkit",
+      "description": "Dos agentes especializados en PHP moderno: @symfony-expert (Symfony 7 + Doctrine ORM + PHP 8.3+) y @api-platform-pro (API Platform 3.x/4.x). Fuentes oficiales vía context7, delegación cruzada entre ambos.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/symfony-toolkit",
+      "category": "development"
     }
   ]
 }

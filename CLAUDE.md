@@ -53,3 +53,9 @@ Usar el nombre del plugin como scope (`seo-toolkit`, `security-toolkit`, `ui-ux-
 ## Instalación (referencia)
 
 Los usuarios instalan plugins con `/plugin install <plugin-name>@xmon-plugins` (sintaxis oficial de Claude Code) después de añadir el marketplace a `~/.claude/settings.json` mediante el campo top-level `extraKnownMarketplaces`. Detalle completo en [README.md](README.md).
+
+## Probar un plugin tras publicar
+
+- Tras `git push`, los usuarios necesitan `/plugin marketplace update` antes de `/plugin install <plugin>@xmon-plugins`, porque el marketplace está cacheado localmente y no ve cambios hasta refrescar.
+- Las instalaciones reales se trackean en `~/.claude/plugins/installed_plugins.json` con `scope: user | project | local` y `projectPath`. Si una desinstalación falla con "is enabled at project scope" pero el `settings.json` ya no contiene la entrada, ese archivo interno está desincronizado y hay que editarlo a mano (ningún comando `claude plugin` lo arregla).
+- El Plugin Manager presenta 3 opciones al instalar y cada una escribe en un sitio: **Install for you** → `~/.claude/settings.json` (user, global); **Install for this project** → `<proyecto>/.claude/settings.json` (shared con equipo); **Install locally** → `<proyecto>/.claude/settings.local.json` (gitignored personal).

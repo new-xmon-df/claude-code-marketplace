@@ -115,23 +115,28 @@ Dos agentes especializados en LangChain JS y LangGraph TS v1. Trabajan con tono 
 ### git-toolkit
 
 **Comando**: `/commit`
+**Agente**: `@git-workflow-manager`
 
-Slash command para generar commits siguiendo Conventional Commits en español. Detecta automáticamente la configuración del proyecto:
+Herramientas para flujos de Git en español. Dos piezas con scopes complementarios:
 
-- Si existe `commit-prompt.txt`, lo usa tal cual como prompt principal.
-- Si existe `commitlint.config.js` / `.commitlintrc.js`, extrae `type-enum`, `scope-enum`, `scope-empty` y `header-max-length` como overrides.
-- Si no hay nada, aplica reglas embebidas: español imperativo, scope opcional, subject ≤ 72 chars, sin firma de Claude.
+- **`/commit`** para mensajes Conventional Commits con detección automática (`commit-prompt.txt` / `commitlint.config.js` del proyecto, o fallback embebido).
+- **`@git-workflow-manager`** para diseñar y configurar el workflow del repo: branching, hooks, PRs, releases, conflictos complejos.
 
 **Casos de uso**:
-- Estandarizar mensajes de commit entre todos tus proyectos sin copiar archivos
-- Respetar las convenciones específicas de cada repo (scopes cerrados, prompts custom)
-- Garantizar que ningún commit lleve firma de Claude Code
+- Estandarizar mensajes de commit entre todos tus proyectos (`/commit`)
+- Configurar husky + commitlint + branch protection en un repo nuevo (`@git-workflow-manager`)
+- Decidir estrategia de branching para tu equipo (`@git-workflow-manager`)
+- Automatizar releases con semantic-release o release-please (`@git-workflow-manager`)
+- Resolver conflictos recurrentes al rebase (`@git-workflow-manager`)
 
-**Ejemplo**:
+**Ejemplos**:
 
 ```
 git add src/api/users.ts
 /commit
+
+@git-workflow-manager diseña el workflow git para un equipo de 4 con releases semanales
+@git-workflow-manager configura release-please para auto-publicar tags al hacer merge a main
 ```
 
 ## Configuración del marketplace
@@ -163,7 +168,7 @@ xmon-plugins/
     ├── security-toolkit/      # commands + skills
     ├── seo-toolkit/           # commands + skills
     ├── langchain-toolkit/     # solo agents
-    └── git-toolkit/           # solo commands
+    └── git-toolkit/           # commands + agent
 ```
 
 Cada plugin sigue esta estructura (cualquier subconjunto de los tres subdirectorios):

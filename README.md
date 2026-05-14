@@ -281,6 +281,23 @@ plugins/<nombre>/
 └── agents/                    # opcional, subagentes
 ```
 
+## Setup tras clonar (contribuidores)
+
+Si vas a contribuir cambios al repo, activa el pre-commit hook anti-leakage:
+
+```bash
+./scripts/install-hooks.sh
+```
+
+Esto apunta Git a `.githooks/` y crea tu archivo personal de patrones (`.githooks/leakage-patterns.txt`, gitignored) a partir del template `.example`. El hook bloquea commits con:
+
+- Rutas absolutas (`/Users/X/`, `/home/X/`)
+- Tokens conocidos (OpenAI/GitHub/AWS/Google/Slack, private keys)
+- Archivos sensibles staged (`.env*`, `*.pem`, `*.key`, `id_rsa*`, `credentials*`, `.npmrc`)
+- Patrones específicos tuyos definidos en `.githooks/leakage-patterns.txt`
+
+Edita `.githooks/leakage-patterns.txt` con los nombres de TUS proyectos privados, workspaces y rutas recurrentes. El archivo está gitignored — no se publicará.
+
 ## Contribuir
 
 ¿Quieres añadir tu propio plugin? Crea un PR siguiendo la estructura de los plugins existentes. Lee [CLAUDE.md](CLAUDE.md) para entender las convenciones del marketplace (namespace `xmon:`, naming de commands, versionado SemVer, etc.).

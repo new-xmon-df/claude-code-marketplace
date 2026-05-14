@@ -51,11 +51,26 @@ Al importar un agente desde tu `~/.claude/agents/` u otro proyecto privado al ma
 - Perfil del usuario fijado (`"el usuario es beginner"`, `"trabajas con Dawid"`) → eliminar; lo aporta el CLAUDE.md del proyecto destino si aplica
 - Referencias a archivos concretos de tu proyecto origen → reemplazar por ejemplos genéricos
 
-Comando útil de verificación antes de commitear un plugin con agentes nuevos:
+### Pre-commit hook automático
+
+El repo trae un **pre-commit hook** en `.githooks/pre-commit` que bloquea commits con leakage detectado. Cubre:
+
+- Rutas absolutas (`/Users/X/`, `/home/X/`)
+- Tokens conocidos (OpenAI `sk-`, GitHub `ghp_`, AWS `AKIA`, Google `AIzaSy`, Slack `xox*`, RSA/EC/OPENSSH private keys)
+- Archivos sensibles staged por nombre (`.env*`, `*.pem`, `*.key`, `id_rsa*`, `credentials*`, `.npmrc`)
+- Patrones específicos del autor en `.githooks/leakage-patterns.txt` (gitignored — cada quien adapta el suyo desde el template `.example`)
+
+Falsos positivos auto-excluidos: matches dentro de backticks `...` en archivos `.md` (ejemplos didácticos) y líneas de campo `"name"`/`"email"` en `.json` (author del marketplace).
+
+**Activar el hook tras clonar el repo**:
 
 ```bash
-grep -rn -E "/Users/|<nombre-proyecto-privado>|<otra-ruta-privada>" plugins/<nuevo-plugin>/
+./scripts/install-hooks.sh
 ```
+
+Idempotente; también crea tu `leakage-patterns.txt` local desde el template si aún no existe.
+
+**Skip puntual** (úsalo con criterio): `git commit --no-verify`.
 
 ## Convenciones de commits (proyecto)
 

@@ -146,6 +146,37 @@ Regla mnemotécnica: si toca HTTP API o un `#[ApiResource]`, manda API Platform;
 @api-platform-pro filtro custom para buscar pedidos por rango de fechas
 ```
 
+### code-quality-toolkit
+
+**Agente**: `@code-reviewer`
+
+Revisión de calidad de código multi-lenguaje (JS/TS, PHP, Python, Go, Rust, Java, SQL, Shell). Audita por capas con severidades claras (🚨 crítico / ⚠️ mayor / 💡 menor / 📝 sugerencia) y entrega fixes accionables con snippet de código y referencia a OWASP/CWE/docs oficiales. Por defecto NO modifica código — reporta y propone.
+
+**Capas que audita** (de más crítico a menos):
+
+1. Seguridad (OWASP Top 10, secrets, AuthN/AuthZ, inyecciones)
+2. Correctness (race conditions, null dereference, edge cases)
+3. Performance (N+1, memory leaks, async mal usado)
+4. Mantenibilidad (SOLID, acoplamiento, duplicación)
+5. Tests (coverage, mocks que ocultan bugs)
+6. Dependencias (CVEs, transitive vulnerabilities)
+7. Estilo (solo si los linters no lo cubren)
+
+**Comportamiento**:
+
+- Paso 0 detecta lenguajes, frameworks, linters configurados (eslint/phpstan/ruff/etc.) y convenciones del proyecto.
+- Ejecuta los linters del proyecto primero y complementa — no duplica lo que ya marcan.
+- Deriva a especialistas xmon cuando detecta problemas específicos (`@symfony-expert`, `@langchain-js-expert`, `@ux-consultant`, etc.).
+
+**Ejemplos**:
+
+```
+@code-reviewer revisa los cambios staged antes de commitear
+@code-reviewer review de la PR #42 con foco en seguridad
+@code-reviewer audita src/auth/ buscando OWASP Top 10
+@code-reviewer revisa src/api/users.ts:45-120, sospecho que hay N+1
+```
+
 ### git-toolkit
 
 **Comando**: `/commit`
@@ -198,12 +229,13 @@ xmon-plugins/
 ├── README.md                  # este archivo
 ├── CLAUDE.md                  # guía interna para Claude
 └── plugins/
+    ├── code-quality-toolkit/  # solo agents
     ├── git-toolkit/           # commands + agent
     ├── langchain-toolkit/     # solo agents
     ├── security-toolkit/      # commands + skills
     ├── seo-toolkit/           # commands + skills
     ├── symfony-toolkit/       # solo agents
-    └── ui-ux-explorer/        # skill + agent 
+    └── ui-ux-explorer/        # skill + agent
 ```
 
 Cada plugin sigue esta estructura (cualquier subconjunto de los tres subdirectorios):

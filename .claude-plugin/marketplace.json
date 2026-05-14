@@ -72,6 +72,17 @@
       },
       "source": "./plugins/symfony-toolkit",
       "category": "development"
+    },
+    {
+      "name": "code-quality-toolkit",
+      "description": "Agente @code-reviewer para revisión de calidad multi-lenguaje (JS/TS, PHP, Python, Go, Rust, Java, SQL). Audita seguridad (OWASP), correctness, performance, mantenibilidad, tests y deps con severidades claras y fixes accionables. Detecta el stack y deriva a especialistas xmon cuando hace falta.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/code-quality-toolkit",
+      "category": "development"
     }
   ]
 }

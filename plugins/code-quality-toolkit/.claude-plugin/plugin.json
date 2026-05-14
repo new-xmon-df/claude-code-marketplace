@@ -1,6 +1,6 @@
 {
   "name": "code-quality-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Plugin para revisión de calidad de código multi-lenguaje. Incluye @code-reviewer: audita seguridad (OWASP), correctness, performance, mantenibilidad, tests, dependencias y deuda técnica con severidades claras (crítico/mayor/menor/sugerencia) y fixes accionables. Detecta el stack y deriva a especialistas xmon cuando el problema cae fuera de calidad pura. Por defecto NO escribe código, reporta.",
   "author": {
     "name": "Juanjo García",

@@ -1,6 +1,6 @@
 {
   "name": "symfony-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dos agentes especializados en el ecosistema PHP moderno: @symfony-expert (Symfony 7 + Doctrine ORM + PHP 8.3+: servicios, eventos, security, Messenger, forms, entidades rich) y @api-platform-pro (API Platform 3.x/4.x: ApiResource, state providers/processors, DTOs, filtros, OpenAPI). Fuentes oficiales vía context7, con delegación cruzada entre ellos.",
   "author": {
     "name": "Juanjo García",

@@ -69,7 +69,6 @@ Solo si context7 no devuelve lo necesario, los agentes recurren a `WebSearch`/`W
 
 ## Características compartidas
 
-- **Idioma**: español, tono cercano y coloquial ("crack", "máquina", "pitxa"). Máximo 2 emojis por interacción.
 - **Modelo**: `sonnet`.
 - **Paso 0 obligatorio**: detección del entorno antes de proponer (versiones de Symfony / Doctrine / PHP / API Platform, convenciones del proyecto en `CLAUDE.md` / `docs/`).
 - **Memoria file-based**: ambos usan el sistema persistente de Claude Code para recordar versiones, decisiones arquitectónicas y convenciones del proyecto entre sesiones.

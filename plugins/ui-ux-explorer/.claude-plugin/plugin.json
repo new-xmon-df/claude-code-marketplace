@@ -1,6 +1,6 @@
 {
   "name": "ui-ux-explorer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pareja diseño + implementación UI/UX. El skill /xmon:ui-ux detecta tu stack frontend e implementa soluciones adaptadas (responsive, browser compat, alternativas de diseño). El agente @ux-consultant entrega specs previas a implementación (heurísticas Nielsen, jerarquía, accesibilidad WCAG, flujos) sin escribir código. Diseñados para usarse en pareja.",
   "author": {
     "name": "Juanjo García",

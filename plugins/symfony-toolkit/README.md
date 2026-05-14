@@ -118,6 +118,19 @@ Tras instalar, los dos agentes quedan disponibles como subagentes invocables ví
 @api-platform-pro añade pagination cursor a este endpoint que está lento con 50k registros
 ```
 
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `context7`
+- `sequential-thinking`
+
+**Opcionales**:
+_(ninguno)_
+
+Ambos agentes consultan `context7` apuntando a `symfony/symfony`, `doctrine/orm` y `api-platform/core` como fuente de verdad obligatoria.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
+
 ## Licencia
 
 MIT — ver el repositorio del marketplace.

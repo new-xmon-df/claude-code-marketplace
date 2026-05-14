@@ -220,6 +220,36 @@ Para registrar este marketplace en tu Claude Code, edita `~/.claude/settings.jso
 
 Tras editar el archivo, ejecuta `/plugin marketplace update` para refrescar y luego `/plugin install <plugin>@xmon-plugins` para instalar el plugin que quieras.
 
+## Requisitos / MCPs
+
+La mayoría de los agentes del marketplace consultan documentación oficial vía MCPs en lugar de confiar en el conocimiento previo del modelo. Si no los tienes instalados, los agentes funcionan pero pierden la garantía de "fuente de verdad actualizada".
+
+### Requeridos por los agentes
+
+| MCP | Para qué | Cómo instalarlo |
+|---|---|---|
+| **context7** | Documentación oficial actualizada de librerías (Symfony, Doctrine, API Platform, LangChain, LangGraph, React, etc.) | Plugin del marketplace oficial: `/plugin install context7@claude-plugins-official` |
+| **sequential-thinking** | Razonamiento paso a paso antes de tocar código en producción o decisiones complejas | `claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking` |
+
+Sin estos dos, los agentes seguirán respondiendo pero verás en su instrucción "no pude consultar context7" y caerán a `WebSearch` como fallback (más lento, menos preciso).
+
+### Opcionales (solo skill `xmon:ui-ux`)
+
+| MCP | Para qué | Cómo instalarlo |
+|---|---|---|
+| **playwright** | Testing visual, screenshots, debugging cross-browser | `claude mcp add playwright -- npx @anthropic-ai/mcp-playwright` |
+| **shadcn** | Añadir/modificar componentes shadcn/ui | `claude mcp add shadcn -- npx shadcn@latest mcp` |
+| **browser-tools** | DevTools remoto, consola, network | `claude mcp add browsertools -- npx @anthropic-ai/mcp-browser-tools` |
+| **figma** | Extraer diseños de Figma | `claude mcp add figma -- npx @anthropic-ai/mcp-figma` |
+
+El skill `/xmon:ui-ux` detecta cuáles tienes disponibles al arrancar y sugiere instalar los que falten si serían útiles para tu caso. Funciona sin ninguno (cae a Read/Edit puros sobre el código).
+
+### Verificar qué tienes instalado
+
+```bash
+claude mcp list
+```
+
 ## Estructura
 
 ```

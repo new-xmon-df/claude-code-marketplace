@@ -110,6 +110,19 @@ Cuando un hallazgo se beneficia de un especialista del marketplace, lo sugiere a
 
 Tras instalar, el agente queda disponible como `@code-reviewer`.
 
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `context7`
+- `sequential-thinking`
+
+**Opcionales**:
+_(ninguno)_
+
+`context7` para verificar CVEs/deprecations contra docs oficiales; `sequential-thinking` para razonar antes de marcar findings críticos.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
+
 ## Licencia
 
 MIT — ver el repositorio del marketplace.

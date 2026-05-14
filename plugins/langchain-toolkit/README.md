@@ -109,6 +109,19 @@ Tras instalar, los dos agentes quedan disponibles como subagentes invocables ví
 
 > "Quiero que el grafo se pause antes de enviar el email y espere aprobación humana con `interrupt()`."
 
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `context7`
+- `sequential-thinking`
+
+**Opcionales**:
+_(ninguno)_
+
+Ambos agentes consultan `context7` apuntando a `langchain-ai/langchainjs` y `langchain-ai/langgraphjs` como fuente de verdad obligatoria de las APIs.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
+
 ## Licencia
 
 MIT — ver el repositorio del marketplace.

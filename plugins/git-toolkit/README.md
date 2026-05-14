@@ -144,6 +144,18 @@ Subagente experto en flujos de trabajo Git. Cubre **estrategia y configuración*
 @git-workflow-manager configura release-please para auto-publicar tags en push a main
 ```
 
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `sequential-thinking`
+
+**Opcionales**:
+_(ninguno)_
+
+El agente `@git-workflow-manager` usa `sequential-thinking` para razonar antes de tocar config existente. `/commit` no requiere ningún MCP.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
+
 ## Licencia
 
 MIT — ver el repositorio del marketplace.

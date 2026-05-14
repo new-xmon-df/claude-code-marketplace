@@ -102,6 +102,22 @@ Para problemas concretos / hotfixes UI: directamente `/xmon:ui-ux`.
 
 Tras instalar, el skill queda disponible como `/xmon:ui-ux` y el agente como `@ux-consultant`.
 
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `context7`
+- `sequential-thinking`
+
+**Opcionales**:
+- `playwright`
+- `shadcn`
+- `browser-tools`
+- `figma`
+
+El skill `/xmon:ui-ux` detecta los opcionales al arrancar y sugiere instalación si faltan; funciona sin ellos.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
+
 ## Licencia
 
 MIT — ver el repositorio del marketplace.

@@ -1,0 +1,47 @@
+# Patrones específicos a buscar en cada commit, añadidos sobre los genéricos
+# hardcoded en .githooks/pre-commit (rutas /Users/X/, tokens, archivos sensibles).
+#
+# IMPORTANTE — Este archivo es un TEMPLATE versionado. El archivo real
+# `.githooks/leakage-patterns.txt` está GITIGNORED para que tus patrones
+# privados (nombres de proyectos tuyos, clientes, paths...) NO se publiquen.
+#
+# Tras clonar el repo, `./scripts/install-hooks.sh` copia automáticamente
+# este `.example` a `leakage-patterns.txt` si aún no existe.
+#
+# Formato:
+#   - Una línea por patrón.
+#   - Tratado como fixed string (no regex), case-sensitive.
+#   - Líneas que empiezan por # son comentarios. Líneas vacías ignoradas.
+#
+# Exclusiones automáticas del hook (para evitar falsos positivos):
+#   - En *.md, matches dentro de backticks `...` se ignoran (ejemplos didácticos).
+#   - En *.json, líneas con campos "name"/"email" se ignoran (author del marketplace).
+
+# ─────────────────────────────────────────────────────────────
+# 1) Nombres de proyectos privados tuyos que no deberían aparecer
+#    como referencia funcional en un plugin público.
+# ─────────────────────────────────────────────────────────────
+# my-internal-project
+# customer-X-prototype
+# repo-personal-secreto
+
+# ─────────────────────────────────────────────────────────────
+# 2) Workspaces y carpetas recurrentes en tu home
+# ─────────────────────────────────────────────────────────────
+# Trabajo/
+# CompañiaX/
+# Cursos/
+
+# ─────────────────────────────────────────────────────────────
+# 3) Comandos custom de tus proyectos (Makefile targets, scripts)
+#    que solo existen en repos privados.
+# ─────────────────────────────────────────────────────────────
+# make bc cmd
+# pnpm internal-script
+
+# ─────────────────────────────────────────────────────────────
+# 4) Nombres propios de personas que no deberían leakear
+#    (clientes, colegas de equipos privados).
+# ─────────────────────────────────────────────────────────────
+# NombrePersona1
+# NombrePersona2

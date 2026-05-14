@@ -17,3 +17,6 @@ npm-debug.log*
 
 # Claude
 .claude/
+
+# Git hooks personales (cada autor mantiene los suyos; el template `.example` sí se versiona)
+.githooks/leakage-patterns.txt

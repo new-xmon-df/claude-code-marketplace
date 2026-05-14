@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# Pre-commit hook: bloquea commits que filtren contexto personal del autor
+# o secretos en cualquier archivo staged.
+#
+# Detecta:
+#   - Rutas absolutas con usuario (/Users/X/, /home/X/)
+#   - Tokens conocidos (OpenAI, GitHub, AWS, Google, Slack, RSA/EC private keys)
+#   - Archivos sensibles staged por nombre (.env, *.pem, *.key, id_rsa*, ...)
+#   - Patrones específicos del autor definidos en .githooks/leakage-patterns.txt
+#
+# Excluye falsos positivos:
+#   - En *.md, los matches dentro de backticks `...` (son ejemplos didácticos)
+#   - En *.json, las líneas con campos "name"/"email" (author del marketplace)
+#
+# Instalación: ./scripts/install-hooks.sh
+# Skip puntual: git commit --no-verify
+set -euo pipefail
+
+HOOKS_DIR="$(dirname "$0")"
+PATTERNS_FILE="$HOOKS_DIR/leakage-patterns.txt"
+
+RED=$'\033[0;31m'
+YELLOW=$'\033[0;33m'
+GREEN=$'\033[0;32m'
+NC=$'\033[0m'
+
+# Patrones genéricos (siempre activos)
+GENERIC_REGEX='(/Users/[^/[:space:]]+/|/home/[^/[:space:]]+/|sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{20,}|AKIA[A-Z0-9]{16}|AIzaSy[A-Za-z0-9_-]{33}|xox[baprs]-[a-zA-Z0-9-]+|BEGIN (RSA|EC|OPENSSH) PRIVATE KEY)'
+
+# Archivos sensibles por nombre
+SENSITIVE_FILES_REGEX='(^|/)(\.env(\..+)?|.+\.pem|.+\.key|id_rsa.*|.+\.secret|credentials.*|\.npmrc)$'
+
+# Archivos staged (Added, Copied, Modified, Renamed)
+# Excluye los propios archivos del hook (que contienen los patrones como texto)
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -vE '^\.githooks/(pre-commit|leakage-patterns\.txt(\.example)?)$' || true)
+
+if [[ -z "$STAGED" ]]; then
+    exit 0
+fi
+
+# Cargar patrones específicos del autor (ignorando comentarios y líneas vacías)
+AUTHOR_PATTERNS=()
+if [[ -f "$PATTERNS_FILE" ]]; then
+    while IFS= read -r line; do
+        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+        AUTHOR_PATTERNS+=("$line")
+    done < "$PATTERNS_FILE"
+fi
+
+# ¿Es falso positivo conocido?
+is_false_positive() {
+    local file="$1"
+    local line="$2"
+
+    # En *.md, match dentro de backticks => ejemplo didáctico
+    if [[ "$file" =~ \.md$ ]]; then
+        if echo "$line" | grep -qE '`[^`]+`'; then
+            return 0
+        fi
+    fi
+
+    # En *.json, línea de campo author "name"/"email"
+    if [[ "$file" =~ \.json$ ]]; then
+        if echo "$line" | grep -qE '"(name|email)":[[:space:]]*"[^"]*"'; then
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+FINDINGS=()
+
+# Chequeo 1: archivos sensibles staged por nombre
+while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+    if [[ "$file" =~ $SENSITIVE_FILES_REGEX ]]; then
+        FINDINGS+=("$file → archivo sensible staged (no debería commitearse)")
+    fi
+done <<< "$STAGED"
+
+# Chequeo 2: contenido de archivos staged contra patrones
+while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+    [[ -f "$file" ]] || continue
+
+    # Genéricos
+    while IFS= read -r match; do
+        [[ -z "$match" ]] && continue
+        line_num="${match%%:*}"
+        line_content="${match#*:}"
+        if ! is_false_positive "$file" "$line_content"; then
+            FINDINGS+=("$file:$line_num [genérico] $(echo "$line_content" | head -c 100)")
+        fi
+    done < <(grep -InE "$GENERIC_REGEX" "$file" 2>/dev/null || true)
+
+    # Específicos del autor (fixed string para evitar problemas con caracteres especiales)
+    for pattern in "${AUTHOR_PATTERNS[@]}"; do
+        while IFS= read -r match; do
+            [[ -z "$match" ]] && continue
+            line_num="${match%%:*}"
+            line_content="${match#*:}"
+            if ! is_false_positive "$file" "$line_content"; then
+                FINDINGS+=("$file:$line_num [autor: \"$pattern\"] $(echo "$line_content" | head -c 80)")
+            fi
+        done < <(grep -InF -- "$pattern" "$file" 2>/dev/null || true)
+    done
+done <<< "$STAGED"
+
+# Reportar
+if [[ ${#FINDINGS[@]} -gt 0 ]]; then
+    {
+        echo ""
+        echo "${RED}🚨 Pre-commit blocked: posible leakage detectado${NC}"
+        echo ""
+        for f in "${FINDINGS[@]}"; do
+            echo "  $f"
+        done
+        echo ""
+        echo "${YELLOW}Qué hacer:${NC}"
+        echo "  - Si es leakage real: corrige el archivo y vuelve a 'git add'"
+        echo "  - Si es falso positivo: revisa las exclusiones en .githooks/pre-commit"
+        echo "  - Caso puntual aceptado: 'git commit --no-verify' (úsalo con criterio)"
+        echo ""
+    } >&2
+    exit 1
+fi
+
+echo "${GREEN}✅ Pre-commit OK: sin leakage detectado${NC}"
+exit 0

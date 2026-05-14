@@ -5,7 +5,9 @@ description: Explora soluciones UI/UX, diagnostica problemas de interfaz, compar
 
 # UI/UX Explorer
 
-Skill universal para resolver problemas de UI/UX en cualquier stack frontend.
+Skill universal para resolver problemas de UI/UX en cualquier stack frontend. Detecta el stack del proyecto e **implementa** la solución adaptada.
+
+> 💡 **¿Necesitas diseñar la UX antes de implementar?** Si lo que buscas es análisis y especificación previa (heurísticas Nielsen, jerarquía de información, flujos de usuario, accesibilidad) sin escribir código todavía, lanza primero el agente complementario del mismo plugin: `@ux-consultant`. Él entrega una spec implementation-ready, y este skill la implementa.
 
 ## Cuándo usar este skill
 
@@ -14,6 +16,7 @@ Skill universal para resolver problemas de UI/UX en cualquier stack frontend.
 - Necesitas resolver problemas de responsive design
 - Tienes bugs específicos de un navegador
 - Quieres mejorar la UX de una funcionalidad existente
+- Ya tienes una spec de UX (propia o de `@ux-consultant`) y quieres implementarla
 
 ---
 

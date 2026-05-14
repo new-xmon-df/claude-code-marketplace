@@ -1,7 +1,7 @@
 {
   "name": "git-toolkit",
-  "version": "0.1.0",
-  "description": "Slash commands para flujos de Git. Incluye /commit con Conventional Commits en español: lee commit-prompt.txt o commitlint.config.js del proyecto si existen, fallback embebido si no.",
+  "version": "0.2.1",
+  "description": "Herramientas para flujos de Git. Incluye /commit (Conventional Commits en español con detección de commit-prompt.txt / commitlint.config.js) y el agente @git-workflow-manager (estrategias de branching, hooks, PRs, releases).",
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"

@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "ui-ux-explorer",
-      "description": "Skill para explorar soluciones UI/UX, diagnosticar problemas de interfaz, y encontrar alternativas de diseño considerando compatibilidad entre navegadores y responsive design.",
-      "version": "0.0.1",
+      "description": "Pareja diseño + implementación UI/UX. Skill /xmon:ui-ux (detecta stack frontend e implementa) + agente @ux-consultant (entrega specs previas a implementación con heurísticas Nielsen, accesibilidad WCAG, jerarquía).",
+      "version": "0.1.1",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -43,7 +43,7 @@
     {
       "name": "langchain-toolkit",
       "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: experto en chains/retrievers/tools (langchain-js-expert) y experto en grafos de agentes (langgraph-js-expert). Fuentes oficiales vía context7.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -53,13 +53,35 @@
     },
     {
       "name": "git-toolkit",
-      "description": "Slash commands para flujos de Git. /commit genera mensajes Conventional Commits en español, respetando commit-prompt.txt / commitlint.config.js del proyecto si existen.",
-      "version": "0.1.0",
+      "description": "Herramientas para flujos de Git. /commit (mensajes Conventional Commits en español detectando commit-prompt.txt / commitlint.config.js) + agente @git-workflow-manager (branching, hooks, PRs, releases).",
+      "version": "0.2.1",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
       },
       "source": "./plugins/git-toolkit",
+      "category": "development"
+    },
+    {
+      "name": "symfony-toolkit",
+      "description": "Dos agentes especializados en PHP moderno: @symfony-expert (Symfony 7 + Doctrine ORM + PHP 8.3+) y @api-platform-pro (API Platform 3.x/4.x). Fuentes oficiales vía context7, delegación cruzada entre ambos.",
+      "version": "0.1.1",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/symfony-toolkit",
+      "category": "development"
+    },
+    {
+      "name": "code-quality-toolkit",
+      "description": "Agente @code-reviewer para revisión de calidad multi-lenguaje (JS/TS, PHP, Python, Go, Rust, Java, SQL). Audita seguridad (OWASP), correctness, performance, mantenibilidad, tests y deps con severidades claras y fixes accionables. Detecta el stack y deriva a especialistas xmon cuando hace falta.",
+      "version": "0.1.1",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarcia@gmail.com"
+      },
+      "source": "./plugins/code-quality-toolkit",
       "category": "development"
     }
   ]

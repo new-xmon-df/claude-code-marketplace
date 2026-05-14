@@ -1,6 +1,6 @@
 {
   "name": "langchain-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: langchain-js-expert (LCEL, chains, retrievers, embeddings, tools, memoria conversacional) y langgraph-js-expert (StateGraph, Annotation, nodos, edges, checkpointers, interrupts). Fuentes de verdad oficiales vía context7.",
   "author": {
     "name": "Juanjo García",

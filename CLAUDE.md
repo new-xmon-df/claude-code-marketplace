@@ -53,3 +53,40 @@ Usar el nombre del plugin como scope (`seo-toolkit`, `security-toolkit`, `ui-ux-
 ## Instalación (referencia)
 
 Los usuarios instalan plugins con `/plugin install <plugin-name>@xmon-plugins` (sintaxis oficial de Claude Code) después de añadir el marketplace a `~/.claude/settings.json` mediante el campo top-level `extraKnownMarketplaces`. Detalle completo en [README.md](README.md).
+
+## Probar un plugin tras publicar
+
+- Tras `git push`, los usuarios necesitan `/plugin marketplace update` antes de `/plugin install <plugin>@xmon-plugins`, porque el marketplace está cacheado localmente y no ve cambios hasta refrescar.
+- Las instalaciones reales se trackean en `~/.claude/plugins/installed_plugins.json` con `scope: user | project | local` y `projectPath`. Si una desinstalación falla con "is enabled at project scope" pero el `settings.json` ya no contiene la entrada, ese archivo interno está desincronizado y hay que editarlo a mano (ningún comando `claude plugin` lo arregla).
+- El Plugin Manager presenta 3 opciones al instalar y cada una escribe en un sitio: **Install for you** → `~/.claude/settings.json` (user, global); **Install for this project** → `<proyecto>/.claude/settings.json` (shared con equipo); **Install locally** → `<proyecto>/.claude/settings.local.json` (gitignored personal).
+
+## Convención de cross-refs entre plugins
+
+Los agentes del marketplace **sugieren** especialistas de otros plugins cuando un problema sale de su scope, pero **nunca invocan** otro agente directamente. La regla y el porqué:
+
+- **Patrón estándar**: cada agente lleva una sección "Cuándo delegar" (o equivalente) con una tabla `cuándo derivar → a quién → comando de instalación si falta`. Al final de la respuesta, si aplica, emite un bloque del tipo:
+  ```
+  💡 Para <tarea> te recomiendo `@<agente>` del plugin `<plugin>@xmon-plugins`.
+  Si no lo tienes instalado: /plugin install <plugin>@xmon-plugins
+  ```
+- **NO se invoca otro agente directamente** (vía la tool `Task`/`Agent`). Razones: el agente no puede saber con fiabilidad qué plugins están instalados (no hay API), el control queda en manos del usuario, evita bucles A→B→A, y mantiene predecibles los tokens.
+- **Antes de derivar**, el agente da una respuesta razonable dentro de su scope. La sugerencia es para profundizar, no para evadir trabajo.
+- **Naming de delegación**: en la prosa, los agentes se citan con `@<nombre>`, los skills con `xmon:<slug>` o `/xmon:<slug>` según contexto, los slash commands con `/<nombre>`.
+
+Cross-refs válidos hoy (mantener actualizado al añadir plugins):
+
+| Plugin | Pieza | Cómo citarlo en cross-refs |
+|---|---|---|
+| `git-toolkit` | command `/commit` | `/commit` |
+| `git-toolkit` | agent `git-workflow-manager` | `@git-workflow-manager` |
+| `ui-ux-explorer` | skill `xmon:ui-ux` | `/xmon:ui-ux` |
+| `ui-ux-explorer` | agent `ux-consultant` | `@ux-consultant` |
+| `seo-toolkit` | command `/seo-check` | `/seo-check` |
+| `seo-toolkit` | skills `xmon:seo-audit`, `xmon:seo-content` | `xmon:seo-audit`, `xmon:seo-content` |
+| `security-toolkit` | command `/security-check` | `/security-check` |
+| `security-toolkit` | skills `xmon:security-audit`, `xmon:hardening` | `xmon:security-audit`, `xmon:hardening` |
+| `langchain-toolkit` | agents `langchain-js-expert`, `langgraph-js-expert` | `@langchain-js-expert`, `@langgraph-js-expert` |
+| `symfony-toolkit` | agents `symfony-expert`, `api-platform-pro` | `@symfony-expert`, `@api-platform-pro` |
+| `code-quality-toolkit` | agent `code-reviewer` | `@code-reviewer` |
+
+Al publicar un plugin nuevo, ampliar esta tabla y revisar si los agentes existentes deberían añadirlo a sus cross-refs (sin propagación automática, decisión consciente por cada agente).

@@ -1,6 +1,20 @@
 # git-toolkit
 
-Plugin para Claude Code con slash commands para flujos de Git. La v0.1.0 expone un único comando, `/commit`, que genera commits siguiendo Conventional Commits en español. Pensado para reemplazar el típico `.claude/commands/commit.md` copiado proyecto a proyecto.
+Plugin para Claude Code con herramientas para flujos de Git en español:
+
+- **`/commit`** — slash command para generar mensajes Conventional Commits con detección automática de las convenciones del proyecto (`commit-prompt.txt` / `commitlint.config.js`).
+- **`@git-workflow-manager`** — subagente para diseñar estrategias de branching, configurar hooks, automatizar PRs, gestionar releases y resolver conflictos complejos. Va más allá del commit puntual.
+
+## Cuándo usar qué
+
+| Tu necesidad | Usa |
+|---|---|
+| "Haz un commit de lo que tengo en stage" | `/commit` |
+| "¿Qué estrategia de branching me conviene para este proyecto?" | `@git-workflow-manager` |
+| "Configura husky con pre-commit y commitlint" | `@git-workflow-manager` |
+| "Configura release-please / semantic-release" | `@git-workflow-manager` |
+| "Tengo un conflicto recurrente al rebase, ¿cómo lo gestiono?" | `@git-workflow-manager` |
+| "Diseña los workflows de GitHub Actions para releases" | `@git-workflow-manager` |
 
 ## Comandos incluidos
 
@@ -99,6 +113,48 @@ test(payments): añade tests para reintentos de cobro
 feat: añade soporte para login con magic link
 docs: documenta el flujo de onboarding
 ```
+
+## Agente incluido
+
+### `@git-workflow-manager`
+
+Subagente experto en flujos de trabajo Git. Cubre **estrategia y configuración** del workflow, no el commit puntual (eso lo hace `/commit`).
+
+**Capacidades**:
+
+- **Estrategias de branching**: GitHub Flow, Git Flow, trunk-based, GitLab Flow. Recomendación según tamaño del equipo y frecuencia de releases.
+- **Hooks y validación**: pre-commit (lint, format), commit-msg (Conventional Commits), pre-push, server-side branch protection.
+- **PRs/MRs**: templates, labels automation, review assignment, auto-merge, status checks.
+- **Releases**: SemVer, `semantic-release` / `release-please`, changelog generation (`git-cliff`, `release-drafter`), tagging.
+- **Conflictos complejos**: rebase vs merge, `git rerere`, cherry-pick strategies.
+- **Repositorios complejos**: monorepos (sparse-checkout, partial clone), submódulos, limpieza de histórico con secrets filtrados.
+
+**Comportamiento**:
+
+- Detecta el entorno en el **Paso 0**: tipo de remote (GitHub/GitLab/local), convenciones del repo (`.github/`, `.husky/`, `commitlint.config.*`, `package.json`), estado actual (ramas, último log, config local).
+- Sin contexto detectado, NO propone cambios — pueden romper setups existentes.
+- Cuando la pregunta cae fuera de su scope (ej. necesitas code review pre-merge), **sugiere** al usuario el especialista adecuado del marketplace xmon con el comando de instalación si falta.
+
+**Ejemplos**:
+
+```
+@git-workflow-manager diseña la estrategia de branching para mi equipo de 4 devs con releases semanales
+@git-workflow-manager configura husky con pre-commit y commitlint para Conventional Commits
+@git-workflow-manager me sale conflicto recurrente al rebase main en feature/X, ¿qué hago?
+@git-workflow-manager configura release-please para auto-publicar tags en push a main
+```
+
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `sequential-thinking`
+
+**Opcionales**:
+_(ninguno)_
+
+El agente `@git-workflow-manager` usa `sequential-thinking` para razonar antes de tocar config existente. `/commit` no requiere ningún MCP.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
 
 ## Licencia
 

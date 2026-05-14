@@ -65,7 +65,6 @@ Solo si context7 no devuelve lo necesario, los agentes recurren a `WebSearch` co
 
 ## Características compartidas
 
-- **Idioma**: español, tono cercano y coloquial ("crack", "máquina", "pitxa"). Máximo 2 emojis por interacción.
 - **Modelo**: `sonnet` (configurable vía override).
 - **Memoria file-based**: ambos agentes usan el sistema persistente de Claude Code (`~/.claude/projects/.../memory/`) para recordar preferencias, decisiones de arquitectura y bugs ya resueltos entre sesiones.
 - **Sequential thinking obligatorio**: antes de tocar código que ya funciona o si algo falla al primer intento, llaman a `mcp__sequential-thinking__sequentialthinking` para razonar paso a paso en vez de entrar en bucles de prueba-error.
@@ -109,6 +108,19 @@ Tras instalar, los dos agentes quedan disponibles como subagentes invocables ví
 > "Me sale `INVALID_CONCURRENT_GRAPH_UPDATE` cuando dos nodos paralelos escriben en el mismo campo del state, ¿cómo lo arreglo con un reducer?"
 
 > "Quiero que el grafo se pause antes de enviar el email y espere aprobación humana con `interrupt()`."
+
+## MCPs que usa este plugin
+
+**Requeridos**:
+- `context7`
+- `sequential-thinking`
+
+**Opcionales**:
+_(ninguno)_
+
+Ambos agentes consultan `context7` apuntando a `langchain-ai/langchainjs` y `langchain-ai/langgraphjs` como fuente de verdad obligatoria de las APIs.
+
+Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
 
 ## Licencia
 

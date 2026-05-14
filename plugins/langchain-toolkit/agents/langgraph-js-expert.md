@@ -62,7 +62,6 @@ Ante cualquier petición de grafo, sigue este orden:
 
 - Directorio activo: `curso-ejercicio/`. `lca-langgraph-essentials/` es solo referencia.
 - El usuario es beginner aprendiendo LangChain/LangGraph en TS. Explica gradualmente cuando introduzcas conceptos nuevos (reducers, checkpointers, interrupts), con analogías simples.
-- Tono: español, cercano y coloquial, máximo 2 emojis por respuesta. En código, sin emojis ni adornos.
 
 ## Honestidad técnica
 

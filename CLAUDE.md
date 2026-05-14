@@ -19,7 +19,7 @@ Dos niveles, ambos obligatorios para que un plugin sea instalable:
    - `skills/<skill-name>/SKILL.md` (opcional) — skills invocables por Claude. El nombre del directorio del skill usa la convención `xmon:<slug>` (ej. `xmon:ui-ux`, `xmon:seo-audit`). Ese mismo identificador va en el frontmatter `name:` del SKILL.md.
    - `agents/<agent-name>.md` (opcional) — subagentes invocables vía la herramienta `Agent` o como `@<agent-name>`. Cada archivo lleva frontmatter con `name`, `description`, `model` y `tools` (lista de tools permitidas). El nombre del archivo (sin `.md`) debe coincidir con el campo `name:` del frontmatter.
 
-Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit` y `security-toolkit` (commands + múltiples skills), `ui-ux-explorer` (solo-skill), `langchain-toolkit` (solo-agents).
+Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit` y `security-toolkit` (commands + skills), `ui-ux-explorer` (skill + agent), `git-toolkit` (commands + agent), `langchain-toolkit`, `symfony-toolkit` y `code-quality-toolkit` (solo-agents).
 
 ## Convenciones
 
@@ -41,6 +41,22 @@ Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agen
 - **Tocar un skill** = editar `plugins/<plugin>/skills/<xmon:slug>/SKILL.md`. No olvidar bumpear `version` en `plugin.json` y en `marketplace.json` si el cambio es publicable.
 - **Tocar la descripción que ve el usuario al instalar** = vive en TRES sitios y todos deben quedar coherentes: `marketplace.json`, `plugin.json` del plugin, y `README.md`.
 
+## Empaquetar agentes externos en el marketplace
+
+Al importar un agente desde tu `~/.claude/agents/` u otro proyecto privado al marketplace, **antes de commitear** verifica que NO leakea contexto personal:
+
+- Rutas absolutas con tu usuario (`/Users/<tu-user>/...`) → cambiar a `~/...`
+- Nombres de proyectos privados (`langGraphTS`, `estupendoPHP`, etc.) → quitar o generalizar
+- Directorios específicos del repo origen (`curso-ejercicio/`, `src/ApiResource/Concreto.php`) → generalizar o eliminar
+- Perfil del usuario fijado (`"el usuario es beginner"`, `"trabajas con Dawid"`) → eliminar; lo aporta el CLAUDE.md del proyecto destino si aplica
+- Referencias a archivos concretos de tu proyecto origen → reemplazar por ejemplos genéricos
+
+Comando útil de verificación antes de commitear un plugin con agentes nuevos:
+
+```bash
+grep -rn -E "/Users/|<nombre-proyecto-privado>|<otra-ruta-privada>" plugins/<nuevo-plugin>/
+```
+
 ## Convenciones de commits (proyecto)
 
 Este repo sigue Conventional Commits con scope por plugin. Ejemplos del historial:
@@ -59,6 +75,12 @@ Los usuarios instalan plugins con `/plugin install <plugin-name>@xmon-plugins` (
 - Tras `git push`, los usuarios necesitan `/plugin marketplace update` antes de `/plugin install <plugin>@xmon-plugins`, porque el marketplace está cacheado localmente y no ve cambios hasta refrescar.
 - Las instalaciones reales se trackean en `~/.claude/plugins/installed_plugins.json` con `scope: user | project | local` y `projectPath`. Si una desinstalación falla con "is enabled at project scope" pero el `settings.json` ya no contiene la entrada, ese archivo interno está desincronizado y hay que editarlo a mano (ningún comando `claude plugin` lo arregla).
 - El Plugin Manager presenta 3 opciones al instalar y cada una escribe en un sitio: **Install for you** → `~/.claude/settings.json` (user, global); **Install for this project** → `<proyecto>/.claude/settings.json` (shared con equipo); **Install locally** → `<proyecto>/.claude/settings.local.json` (gitignored personal).
+
+## Convención de tono e idioma
+
+Los agentes, skills y commands del marketplace **NO fijan tono ni idioma** en su prompt. El estilo del modelo lo decide el `CLAUDE.md` del proyecto destino (o `~/.claude/CLAUDE.md` global del usuario). Razón: respeta a usuarios externos con preferencias distintas (otro idioma, formal, sin emojis) sin tener que editar el plugin a mano en su caché.
+
+Si quieres que un agente nuevo herede la "identidad xmon" (coloquial español), documéntalo como **recomendación** en el README del plugin (no como hardcoded en el agente). El usuario decide si la activa añadiendo el snippet correspondiente a su CLAUDE.md.
 
 ## Convención de cross-refs entre plugins
 

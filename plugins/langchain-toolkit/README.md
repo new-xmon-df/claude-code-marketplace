@@ -56,19 +56,27 @@ Regla mnemotécnica: **si hay grafo, manda LangGraph; si no, manda LangChain.**
 
 ## Fuentes de verdad
 
-Ambos agentes consultan **OBLIGATORIAMENTE** `context7` antes de responder sobre API o patrones, porque las librerías de LangChain cambian rápido y el conocimiento entrenado en el modelo puede estar desfasado.
+Ambos agentes consultan fuentes oficiales antes de responder. Las librerías de LangChain cambian rápido y el conocimiento entrenado en el modelo puede estar desfasado, así que NUNCA se inventa API.
 
-- `langchain-js-expert` → `langchain-ai/langchainjs` vía `mcp__context7__resolve-library-id` + `mcp__context7__query-docs`
-- `langgraph-js-expert` → `langchain-ai/langgraphjs` (con fallback a `langchain-ai/langchainjs` para tipos compartidos)
+Hay dos fuentes complementarias con scope distinto:
 
-Solo si context7 no devuelve lo necesario, los agentes recurren a `WebSearch` como fallback. NUNCA inventan API basándose en conocimiento previo sin verificar.
+| Fuente | Indexa | Mejor para | Estado |
+|---|---|---|---|
+| `context7` | Código del repo GitHub (`.ts`, READMEs, ejemplos) | Firmas exactas, tipos, código real, búsqueda por símbolo | **Requerido** |
+| `docs-langchain` | Documentación curada de `docs.langchain.com` vía `llms.txt` | Conceptos, how-to guides, tutorials, migration guides, LangSmith | **Recomendado** |
+
+Reparto operativo:
+- `langchain-js-expert` → `context7` apuntando a `langchain-ai/langchainjs` para API/código; `docs-langchain` con `https://js.langchain.com/llms.txt` para conceptos.
+- `langgraph-js-expert` → `context7` apuntando a `langchain-ai/langgraphjs` (con fallback a `langchain-ai/langchainjs` para tipos compartidos) para API/código; `docs-langchain` con `https://langchain-ai.github.io/langgraphjs/llms.txt` para conceptos.
+
+Si `docs-langchain` no está instalado, los agentes caen a `context7` sin romperse y avisan una sola vez de que la respuesta sería más rica con ambas fuentes. `WebSearch` queda como fallback general solo si ninguna fuente oficial devuelve nada útil.
 
 ## Características compartidas
 
 - **Modelo**: `sonnet` (configurable vía override).
 - **Memoria file-based**: ambos agentes usan el sistema persistente de Claude Code (`~/.claude/projects/.../memory/`) para recordar preferencias, decisiones de arquitectura y bugs ya resueltos entre sesiones.
 - **Sequential thinking obligatorio**: antes de tocar código que ya funciona o si algo falla al primer intento, llaman a `mcp__sequential-thinking__sequentialthinking` para razonar paso a paso en vez de entrar en bucles de prueba-error.
-- **Tools restringidas**: `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`, `TodoWrite`, `context7`, `sequential-thinking`, `WebSearch`, `WebFetch`. Nada de tools innecesarias.
+- **Tools restringidas**: `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`, `TodoWrite`, `context7`, `docs-langchain` (opcional), `sequential-thinking`, `WebSearch`, `WebFetch`. Nada de tools innecesarias.
 
 ## Instalación
 
@@ -112,15 +120,25 @@ Tras instalar, los dos agentes quedan disponibles como subagentes invocables ví
 ## MCPs que usa este plugin
 
 **Requeridos**:
-- `context7`
-- `sequential-thinking`
+- `context7` — indexación de repos GitHub (`langchain-ai/langchainjs`, `langchain-ai/langgraphjs`) para firmas exactas, tipos y código de ejemplo.
+- `sequential-thinking` — razonamiento paso a paso antes de modificar código que funciona o al primer fallo, para evitar bucles de prueba-error.
 
-**Opcionales**:
-_(ninguno)_
+**Recomendados (no requeridos)**:
+- `docs-langchain` — MCP oficial de LangChain que sirve la documentación curada de `docs.langchain.com` vía `llms.txt`. Aporta conceptos, how-to guides, tutorials, migration guides (v0 → v1) y docs de LangSmith que `context7` no cubre con la misma calidad.
 
-Ambos agentes consultan `context7` apuntando a `langchain-ai/langchainjs` y `langchain-ai/langgraphjs` como fuente de verdad obligatoria de las APIs.
+Cómo instalar `docs-langchain` (el nombre debe ser **exactamente** ese o las tools del frontmatter no matchean):
 
-Cómo instalar cada MCP: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
+```bash
+claude mcp add --transport http docs-langchain https://docs.langchain.com/mcp
+```
+
+Tools que expone (servidor Mintlify "Docs by LangChain" v1.0):
+- `mcp__docs-langchain__search_docs_by_lang_chain` — búsqueda semántica sobre la knowledge base; devuelve hits con título y path `.mdx`.
+- `mcp__docs-langchain__query_docs_filesystem_docs_by_lang_chain` — shell read-only sobre un filesystem virtualizado con las páginas `.mdx`. Soporta `rg`, `grep`, `find`, `tree`, `ls`, `cat`, `head`, `tail`, `stat`, `wc`, `sort`, `uniq`, `cut`, `sed`, `awk`, `jq`. Stateless por call (resetea al `/`), output truncado a 30KB por llamada.
+
+Si no instalas `docs-langchain` el plugin sigue funcionando: ambos agentes detectan su ausencia y caen a `context7` informando una sola vez de que la respuesta sería más completa con el MCP instalado.
+
+Cómo instalar `context7` y `sequential-thinking`: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
 
 ## Licencia
 

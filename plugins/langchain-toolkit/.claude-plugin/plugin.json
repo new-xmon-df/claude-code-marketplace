@@ -1,7 +1,7 @@
 {
   "name": "langchain-toolkit",
-  "version": "0.3.2",
-  "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: langchain-js-expert (LCEL, chains, retrievers, embeddings, tools, memoria conversacional) y langgraph-js-expert (StateGraph, Annotation, nodos, edges, checkpointers, interrupts). Fuentes oficiales: context7 (requerido, API y código) y docs-langchain MCP (recomendado, conceptos, guides, migration y LangSmith). Los agentes muestran un banner incondicional en su primera respuesta con la guía de instalación del MCP docs-langchain (ignorable si ya lo tienes), reforzado con tags EXTREMELY-IMPORTANT y lista de rationalizations rechazadas.",
+  "version": "0.4.0",
+  "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: langchain-js-expert (LCEL, chains, retrievers, embeddings, tools, memoria conversacional) y langgraph-js-expert (StateGraph, Annotation, nodos, edges, checkpointers, interrupts). Auto-instala el MCP docs-langchain (transport HTTP a https://docs.langchain.com/mcp) al activar el plugin. Fuente complementaria: context7 (requerido, se da por instalado globalmente).",
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"
@@ -16,5 +16,11 @@
     "llm",
     "agents",
     "rag"
-  ]
+  ],
+  "mcpServers": {
+    "docs-langchain": {
+      "type": "http",
+      "url": "https://docs.langchain.com/mcp"
+    }
+  }
 }

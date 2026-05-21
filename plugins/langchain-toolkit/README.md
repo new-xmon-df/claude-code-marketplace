@@ -69,14 +69,14 @@ Reparto operativo:
 - `langchain-js-expert` → `context7` apuntando a `langchain-ai/langchainjs` para API/código; `docs-langchain` con `https://js.langchain.com/llms.txt` para conceptos.
 - `langgraph-js-expert` → `context7` apuntando a `langchain-ai/langgraphjs` (con fallback a `langchain-ai/langchainjs` para tipos compartidos) para API/código; `docs-langchain` con `https://langchain-ai.github.io/langgraphjs/llms.txt` para conceptos.
 
-Si `docs-langchain` no está instalado, los agentes caen a `context7` sin romperse y avisan una sola vez de que la respuesta sería más rica con ambas fuentes. `WebSearch` queda como fallback general solo si ninguna fuente oficial devuelve nada útil.
+`docs-langchain` se **auto-instala** al activar el plugin (lo declara `mcpServers` en `plugin.json`). No hay que añadirlo a mano. `WebSearch` queda como fallback general solo si ninguna fuente oficial devuelve nada útil.
 
 ## Características compartidas
 
 - **Modelo**: `sonnet` (configurable vía override).
 - **Memoria file-based**: ambos agentes usan el sistema persistente de Claude Code (`~/.claude/projects/.../memory/`) para recordar preferencias, decisiones de arquitectura y bugs ya resueltos entre sesiones.
 - **Sequential thinking obligatorio**: antes de tocar código que ya funciona o si algo falla al primer intento, llaman a `mcp__sequential-thinking__sequentialthinking` para razonar paso a paso en vez de entrar en bucles de prueba-error.
-- **Tools restringidas**: `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`, `TodoWrite`, `context7`, `docs-langchain` (opcional), `sequential-thinking`, `WebSearch`, `WebFetch`. Nada de tools innecesarias.
+- **Tools restringidas**: `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`, `TodoWrite`, `context7`, `docs-langchain` (auto-instalado), `sequential-thinking`, `WebSearch`, `WebFetch`. Nada de tools innecesarias.
 
 ## Instalación
 
@@ -99,9 +99,11 @@ Si `docs-langchain` no está instalado, los agentes caen a `context7` sin romper
 
 Tras instalar, los dos agentes quedan disponibles como subagentes invocables vía la herramienta `Agent` o vía `@langchain-js-expert` / `@langgraph-js-expert` en el chat.
 
-### Si ya tenías el plugin instalado antes de v0.3.x
+Al instalar, el plugin **registra automáticamente el MCP `docs-langchain`** en el mismo scope donde estés instalándolo (user / project / local). Verifica tras la instalación con `claude mcp list` que aparece como `connected`.
 
-Claude Code cachea localmente los plugins instalados, así que cambios en el repo no se aplican hasta refrescar:
+### Si ya tenías el plugin instalado antes de v0.4.0
+
+Las versiones anteriores no auto-instalaban el MCP. Para que la nueva versión se aplique completamente:
 
 ```
 /plugin marketplace update
@@ -109,9 +111,7 @@ Claude Code cachea localmente los plugins instalados, así que cambios en el rep
 /plugin install langchain-toolkit@xmon-plugins
 ```
 
-Tras esto, reinicia la sesión de Claude Code (`exit` + relanzar) para asegurar que se cargue la versión nueva. Verifica con `/plugin info langchain-toolkit@xmon-plugins` que la versión instalada coincide con la del marketplace.
-
-Si tras el reinstall sigues sin ver el banner del Paso 0 al invocar los agentes, comprueba que estás invocando el agente correcto (`@langchain-js-expert` o `@langgraph-js-expert`, no nombres antiguos sin namespace) y que el plugin aparece en `installed_plugins.json` (`~/.claude/plugins/installed_plugins.json`).
+Reinicia Claude Code (`exit` + relanzar) para que el MCP recién registrado quede `connected`. Si ya tenías `docs-langchain` configurado a mano, el plugin no duplica el registro — Claude Code reusa el existente.
 
 ## Ejemplos de invocación
 
@@ -133,24 +133,16 @@ Si tras el reinstall sigues sin ver el banner del Paso 0 al invocar los agentes,
 
 ## MCPs que usa este plugin
 
-**Requeridos**:
-- `context7` — indexación de repos GitHub (`langchain-ai/langchainjs`, `langchain-ai/langgraphjs`) para firmas exactas, tipos y código de ejemplo.
-- `sequential-thinking` — razonamiento paso a paso antes de modificar código que funciona o al primer fallo, para evitar bucles de prueba-error.
-
-**Recomendados (no requeridos)**:
-- `docs-langchain` — MCP oficial de LangChain que sirve la documentación curada de `docs.langchain.com` vía `llms.txt`. Aporta conceptos, how-to guides, tutorials, migration guides (v0 → v1) y docs de LangSmith que `context7` no cubre con la misma calidad.
-
-Cómo instalar `docs-langchain` (el nombre debe ser **exactamente** ese o las tools del frontmatter no matchean):
-
-```bash
-claude mcp add --transport http docs-langchain https://docs.langchain.com/mcp
-```
+**Auto-instalado por el plugin** (declarado en `mcpServers` de `plugin.json`):
+- `docs-langchain` — MCP oficial de LangChain que sirve la documentación curada de `docs.langchain.com` (transport HTTP a `https://docs.langchain.com/mcp`). Aporta conceptos, how-to guides, tutorials, migration guides (v0 → v1) y docs de LangSmith.
 
 Tools que expone (servidor Mintlify "Docs by LangChain" v1.0):
 - `mcp__docs-langchain__search_docs_by_lang_chain` — búsqueda semántica sobre la knowledge base; devuelve hits con título y path `.mdx`.
 - `mcp__docs-langchain__query_docs_filesystem_docs_by_lang_chain` — shell read-only sobre un filesystem virtualizado con las páginas `.mdx`. Soporta `rg`, `grep`, `find`, `tree`, `ls`, `cat`, `head`, `tail`, `stat`, `wc`, `sort`, `uniq`, `cut`, `sed`, `awk`, `jq`. Stateless por call (resetea al `/`), output truncado a 30KB por llamada.
 
-Si no instalas `docs-langchain` el plugin sigue funcionando: ambos agentes detectan su ausencia y caen a `context7` informando una sola vez de que la respuesta sería más completa con el MCP instalado.
+**Requeridos a nivel global** (no los instala este plugin; debes tenerlos ya):
+- `context7` — indexación de repos GitHub (`langchain-ai/langchainjs`, `langchain-ai/langgraphjs`) para firmas exactas, tipos y código de ejemplo.
+- `sequential-thinking` — razonamiento paso a paso antes de modificar código que funciona o al primer fallo, para evitar bucles de prueba-error.
 
 Cómo instalar `context7` y `sequential-thinking`: ver la sección [Requisitos / MCPs](../../README.md#requisitos--mcps) del README raíz.
 

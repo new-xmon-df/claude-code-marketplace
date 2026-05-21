@@ -99,6 +99,20 @@ Si `docs-langchain` no está instalado, los agentes caen a `context7` sin romper
 
 Tras instalar, los dos agentes quedan disponibles como subagentes invocables vía la herramienta `Agent` o vía `@langchain-js-expert` / `@langgraph-js-expert` en el chat.
 
+### Si ya tenías el plugin instalado antes de v0.3.x
+
+Claude Code cachea localmente los plugins instalados, así que cambios en el repo no se aplican hasta refrescar:
+
+```
+/plugin marketplace update
+/plugin uninstall langchain-toolkit@xmon-plugins
+/plugin install langchain-toolkit@xmon-plugins
+```
+
+Tras esto, reinicia la sesión de Claude Code (`exit` + relanzar) para asegurar que se cargue la versión nueva. Verifica con `/plugin info langchain-toolkit@xmon-plugins` que la versión instalada coincide con la del marketplace.
+
+Si tras el reinstall sigues sin ver el banner del Paso 0 al invocar los agentes, comprueba que estás invocando el agente correcto (`@langchain-js-expert` o `@langgraph-js-expert`, no nombres antiguos sin namespace) y que el plugin aparece en `installed_plugins.json` (`~/.claude/plugins/installed_plugins.json`).
+
 ## Ejemplos de invocación
 
 ### langchain-js-expert

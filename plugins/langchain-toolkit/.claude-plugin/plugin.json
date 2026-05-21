@@ -1,7 +1,7 @@
 {
   "name": "langchain-toolkit",
-  "version": "0.3.0",
-  "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: langchain-js-expert (LCEL, chains, retrievers, embeddings, tools, memoria conversacional) y langgraph-js-expert (StateGraph, Annotation, nodos, edges, checkpointers, interrupts). Fuentes oficiales: context7 (requerido, API y código) y docs-langchain MCP (recomendado, conceptos, guides, migration y LangSmith). Los agentes detectan en su primera respuesta si docs-langchain no está instalado y muestran el comando exacto de instalación.",
+  "version": "0.3.1",
+  "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: langchain-js-expert (LCEL, chains, retrievers, embeddings, tools, memoria conversacional) y langgraph-js-expert (StateGraph, Annotation, nodos, edges, checkpointers, interrupts). Fuentes oficiales: context7 (requerido, API y código) y docs-langchain MCP (recomendado, conceptos, guides, migration y LangSmith). Los agentes muestran un banner incondicional en su primera respuesta con la guía de instalación del MCP docs-langchain (ignorable si ya lo tienes).",
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"

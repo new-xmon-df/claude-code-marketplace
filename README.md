@@ -1,105 +1,92 @@
+<div align="center">
+
 # xmon-plugins
 
-Marketplace de plugins personalizados para Claude Code.
+**Marketplace de plugins para [Claude Code](https://claude.com/claude-code): skills, agentes y comandos para SEO, seguridad, UI/UX, marca, Symfony, LangChain y Git.**
+
+![Plugins](https://img.shields.io/badge/plugins-7-blue)
+![Claude Code](https://img.shields.io/badge/Claude%20Code-marketplace-d97757)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+[Instalación](#instalación) · [Plugins](#plugins) · [Requisitos](#requisitos) · [Estructura](#estructura) · [Desarrollo](#desarrollo)
+
+</div>
+
+Cada plugin lleva solo lo que el modelo no sabe por sí mismo: cómo detectar el stack y la versión de tu proyecto, de qué fuentes oficiales fiarse, las convenciones de trabajo y el formato de salida. Antes de actuar detectan el ecosistema del proyecto (`package.json`, `composer.json`…) y se adaptan a él.
 
 ## Instalación
 
-1. **Añade el marketplace** (una sola vez):
+1. Añade el marketplace (una sola vez):
 
    ```
    /plugin marketplace add new-xmon-df/claude-code-marketplace
    ```
 
-2. **Instala los plugins** con:
+2. Instala los plugins que quieras:
 
    ```
-   /plugin install <plugin-name>@xmon-plugins
+   /plugin install <plugin>@xmon-plugins
    ```
 
-   Por ejemplo:
+> [!NOTE]
+> El marketplace se cachea en local. Si un plugin nuevo o una versión nueva no aparece, ejecuta `/plugin marketplace update` antes de instalar.
 
-   ```
-   /plugin install ui-ux-explorer@xmon-plugins
-   /plugin install git-toolkit@xmon-plugins
-   ```
-
-Otros comandos útiles:
+Gestión habitual:
 
 ```
-/plugin                          # listar plugins instalados
-/plugin enable <name>            # activar un plugin
-/plugin disable <name>           # desactivar un plugin
-/plugin marketplace update       # refrescar el marketplace
+/plugin                       # listar plugins instalados
+/plugin enable <plugin>       # activar
+/plugin disable <plugin>      # desactivar
+/plugin marketplace update    # refrescar el marketplace
 ```
 
-## Plugins disponibles
+## Plugins
+
+| Plugin | Qué incluye | Para qué |
+|---|---|---|
+| [`ui-ux-explorer`](plugins/ui-ux-explorer) | Skill `/xmon:ui-ux` | Analizar, especificar e implementar soluciones de UI/UX en cualquier stack frontend |
+| [`security-toolkit`](plugins/security-toolkit) | Skills `/xmon:security-audit`, `/xmon:hardening` | Auditar el proyecto completo y reforzar la configuración de despliegue |
+| [`seo-toolkit`](plugins/seo-toolkit) | Skills `/xmon:seo-audit`, `/xmon:seo-content` | Auditoría SEO y optimización de artículos antes de publicar |
+| [`langchain-toolkit`](plugins/langchain-toolkit) | Agente `@langchain-expert` + MCP | LangChain JS v1 y LangGraph JS v1 |
+| [`symfony-toolkit`](plugins/symfony-toolkit) | Agentes `@symfony-expert`, `@api-platform-pro` | Symfony 7.4 LTS / 8.x, Doctrine y API Platform 4.x / 5.x |
+| [`brand-identity-toolkit`](plugins/brand-identity-toolkit) | Skill `/xmon:brand-identity-pipeline` + comando `/progreso` | Proyectos de identidad de marca de principio a fin |
+| [`git-toolkit`](plugins/git-toolkit) | Comando `/commit` | Commits Conventional Commits en español |
+
+Cada plugin tiene su propio README con el detalle.
 
 ### ui-ux-explorer
 
-**Skill**: `/xmon:ui-ux`
-
-Detecta tu stack frontend (framework, librería de componentes, styling) y resuelve problemas de UI/UX adaptados a él. Dos modos: **spec primero** (análisis y especificación implementation-ready antes de tocar código) e **implementación** con verificación visual vía Playwright si está disponible.
-
-**Casos de uso**:
-- Problemas visuales o de interacción concretos, responsive, compatibilidad cross-browser
-- Especificar un flujo o pantalla antes de implementarlo (spec → implementar)
-- Implementar una spec existente y verificarla en navegador
-
-**Ejemplos**:
+Detecta tu stack frontend (framework, librería de componentes, styling) y resuelve problemas de UI/UX adaptados a él. Tiene dos modos: **spec primero**, que analiza y especifica antes de tocar código, e **implementación**, con verificación visual vía Playwright si está disponible.
 
 ```
 /xmon:ui-ux el dropdown se ve cortado en móvil
-/xmon:ui-ux el hover no funciona en Safari
 /xmon:ui-ux especifica primero un sistema de notificaciones para el dashboard admin
 ```
 
 ### security-toolkit
 
-**Skills**: `/xmon:security-audit`, `/xmon:hardening`
-
-Auditoría de seguridad del proyecto completo (OWASP Top 10 2025, secrets, dependencias) y hardening de configuraciones (servidores web, contenedores, Kubernetes, bases de datos). Para revisar solo los cambios pendientes de una rama, usa el comando nativo `/security-review` de Claude Code.
-
-**Casos de uso**:
-- Auditar el proyecto entero antes de un deploy
-- Reforzar configuraciones de servidores, contenedores, bases de datos y aplicaciones
-
-**Ejemplos**:
+Auditoría de seguridad del proyecto completo (OWASP Top 10 2025, secrets, dependencias) y hardening de configuraciones (servidores web, contenedores, Kubernetes, bases de datos).
 
 ```
 /xmon:security-audit revisa el módulo de auth
 /xmon:hardening dame el hardening base para mi docker-compose
 ```
 
+> [!TIP]
+> Para revisar solo los cambios pendientes de una rama, usa el comando nativo `/security-review` de Claude Code.
+
 ### seo-toolkit
 
-**Skills**: `/xmon:seo-audit`, `/xmon:seo-content`
-
-Auditoría SEO técnica y de contenido (con modo rápido y puntuación sobre 100) y optimización de contenido antes de publicar, con foco en blogs y sitios de afiliados.
-
-**Casos de uso**:
-- Auditoría rápida o completa del proyecto o de una URL en producción
-- Optimizar contenido antes de publicar (front matter, estructura, internal linking, E-E-A-T)
-
-**Ejemplos**:
+Auditoría SEO técnica y de contenido, con modo rápido y puntuación sobre 100, y optimización de contenido antes de publicar, con foco en blogs y sitios de afiliados.
 
 ```
 /xmon:seo-audit modo rápido de https://miblog.com
-/xmon:seo-audit auditoría completa con foco en indexación
 /xmon:seo-content optimiza este artículo antes de publicarlo
 ```
 
 ### langchain-toolkit
 
-**Agente**: `@langchain-expert`
-
-Un agente para LangChain JS v1 y LangGraph JS v1: `createAgent` y middleware, RAG, tools, structured output, StateGraph, checkpointers, human-in-the-loop y subgrafos. Consulta la documentación oficial antes de escribir código (MCP `docs-langchain`, que el plugin instala automáticamente, más context7) y guarda memoria persistente entre sesiones.
-
-**Casos de uso**:
-- Construir agentes, RAGs y chatbots con LangChain JS v1
-- Diseñar grafos con LangGraph JS v1
-- Migrar código v0 a v1
-
-**Ejemplos**:
+Agente para LangChain JS v1 y LangGraph JS v1: `createAgent` y middleware, RAG, tools, structured output, StateGraph, checkpointers, human-in-the-loop y subgrafos. Consulta la documentación oficial antes de escribir código, a través del MCP `docs-langchain` (lo instala el plugin) y de context7.
 
 ```
 @langchain-expert quiero un RAG con Pinecone y memoria conversacional
@@ -108,41 +95,21 @@ Un agente para LangChain JS v1 y LangGraph JS v1: `createAgent` y middleware, RA
 
 ### symfony-toolkit
 
-**Agentes**: `@symfony-expert`, `@api-platform-pro`
+Dos agentes que se derivan trabajo entre sí:
 
-Dos agentes especializados en el ecosistema PHP moderno con delegación cruzada bidireccional:
+- **`@symfony-expert`**: Symfony 7.4 LTS / 8.x, Doctrine ORM y PHP 8.4 (servicios, eventos, security, Messenger, forms, entidades rich).
+- **`@api-platform-pro`**: API Platform 4.x / 5.x (ApiResource, state providers/processors, DTOs, filtros, OpenAPI).
 
-- **`@symfony-expert`** — Symfony 7.4 LTS / 8.x + Doctrine ORM + PHP 8.4: servicios, eventos, security, Messenger, forms, entidades rich.
-- **`@api-platform-pro`** — API Platform 4.x/5.x: ApiResource, state providers/processors, DTOs, filtros, OpenAPI customization.
-
-Regla mnemotécnica: si toca HTTP API o un `#[ApiResource]`, manda API Platform; si no, manda Symfony.
-
-**Casos de uso**:
-- Diseño de servicios con autowiring y entidades Doctrine rich (`@symfony-expert`)
-- Voters para autorización per-objeto (`@symfony-expert`)
-- Diagnosticar N+1 queries, circular references en DI, memory leaks en commands (`@symfony-expert`)
-- Migrar de DataProvider/DataPersister (2.x) a state providers/processors (3.x+) (`@api-platform-pro`)
-- Diseñar recursos con DTOs in/out, provider y processor (`@api-platform-pro`)
-- Filtros custom + OpenAPI customization (`@api-platform-pro`)
-- Pagination cursor para endpoints lentos en collections grandes (`@api-platform-pro`)
-
-**Ejemplos**:
+Si toca la API HTTP o un `#[ApiResource]`, manda API Platform; si no, Symfony.
 
 ```
 @symfony-expert configura un transport async con retry strategy de 3 intentos
-@symfony-expert me sale circular reference en el container, arréglalo
-
 @api-platform-pro diseña el recurso Order con DTOs input/output, provider y processor
-@api-platform-pro filtro custom para buscar pedidos por rango de fechas
 ```
 
 ### brand-identity-toolkit
 
-**Skill**: `/xmon:brand-identity-pipeline` · **Comando**: `/progreso`
-
-Lleva un proyecto de identidad de marca de principio a fin (estrategia, dirección creativa, logotipo, sistema de identidad, manual y guardián de marca) sin saltarse fases, pasos ni guardrails, en orden de dependencias. Muestra sobre el prompt el paso actual de `brand/progress.md`.
-
-**Ejemplos**:
+Lleva un proyecto de identidad de marca de principio a fin (estrategia, dirección creativa, logotipo, sistema de identidad, manual y guardián de marca) en orden de dependencias y sin saltarse fases, pasos ni guardrails. Muestra sobre el prompt el paso actual de `brand/progress.md`.
 
 ```
 /xmon:brand-identity-pipeline empezamos la identidad de marca de este producto
@@ -151,95 +118,60 @@ Lleva un proyecto de identidad de marca de principio a fin (estrategia, direcci�
 
 ### git-toolkit
 
-**Comando**: `/commit`
-
-Genera mensajes Conventional Commits en español para los cambios en stage, con detección automática de la configuración del proyecto (`commit-prompt.txt`, configuración de commitlint o fallback embebido). Nunca añade firma de IA al commit.
-
-**Ejemplos**:
+Genera mensajes Conventional Commits en español para los cambios en stage. Detecta la configuración del proyecto (`commit-prompt.txt`, commitlint) y, si no hay ninguna, usa una por defecto. Nunca añade firma de IA.
 
 ```
 git add src/api/users.ts
 /commit
 ```
 
-## Requisitos / MCPs
+## Requisitos
 
-La mayoría de los agentes del marketplace consultan documentación oficial vía MCPs en lugar de confiar en el conocimiento previo del modelo. Si no los tienes instalados, los agentes funcionan pero pierden la garantía de "fuente de verdad actualizada".
+Los agentes consultan la documentación oficial a través de MCPs en lugar de fiarse de lo que el modelo ya sabe.
 
-### Requerido por los agentes
+| MCP | Lo usan | Para qué | Instalación |
+|---|---|---|---|
+| **context7** | Agentes (requerido) | Documentación actualizada de librerías | `/plugin install context7@claude-plugins-official` |
+| **playwright** | `xmon:ui-ux`, `xmon:seo-audit` (opcional) | Verificación visual y renderizado real | `claude mcp add playwright npx @playwright/mcp@latest` |
 
-| MCP | Para qué | Cómo instalarlo |
-|---|---|---|
-| **context7** | Documentación oficial actualizada de librerías (Symfony, Doctrine, API Platform, LangChain, LangGraph, React, etc.) | Plugin del marketplace oficial: `/plugin install context7@claude-plugins-official` |
+> [!IMPORTANT]
+> Sin context7 los agentes siguen respondiendo, pero recurren a `WebSearch`, que es más lento y menos preciso. `langchain-toolkit` instala además su propio MCP `docs-langchain`.
 
-Sin context7 los agentes siguen respondiendo, pero caen a `WebSearch` como fallback (más lento, menos preciso). `langchain-toolkit` instala además su propio MCP `docs-langchain` al activarse.
-
-### Opcionales (skill `xmon:ui-ux`)
-
-| MCP | Para qué | Cómo instalarlo |
-|---|---|---|
-| **playwright** | Testing visual, screenshots, debugging cross-browser | `claude mcp add playwright npx @playwright/mcp@latest` |
-
-El skill `/xmon:ui-ux` detecta qué MCPs tienes disponibles al arrancar y sugiere instalar los que falten si serían útiles para tu caso. Funciona sin ninguno (trabaja directamente sobre el código).
-
-### Verificar qué tienes instalado
-
-```bash
-claude mcp list
-```
+Para ver qué tienes instalado: `claude mcp list`.
 
 ## Estructura
 
 ```
-xmon-plugins/
+.
 ├── .claude-plugin/
-│   └── marketplace.json       # registro central del marketplace
-├── README.md                  # este archivo
-├── CLAUDE.md                  # guía interna para Claude
+│   └── marketplace.json        # registro de todos los plugins publicados
+├── CLAUDE.md                   # convenciones del marketplace
 └── plugins/
-    ├── brand-identity-toolkit/ # skill + hooks
-    ├── git-toolkit/           # command
-    ├── langchain-toolkit/     # agent + MCP
-    ├── security-toolkit/      # skills
-    ├── seo-toolkit/           # skills
-    ├── symfony-toolkit/       # agents
-    └── ui-ux-explorer/        # skill
+    └── <plugin>/
+        ├── .claude-plugin/
+        │   └── plugin.json     # nombre, versión y descripción (coinciden con marketplace.json)
+        ├── commands/           # slash commands, sin prefijo
+        ├── skills/xmon:<slug>/ # skills, con prefijo xmon:
+        ├── agents/             # subagentes
+        └── hooks/              # mods (p. ej. la banda de brand-identity-toolkit)
 ```
 
-Cada plugin sigue esta estructura (cualquier subconjunto de los tres subdirectorios):
+Cada plugin usa solo los directorios que necesita.
 
-```
-plugins/<nombre>/
-├── .claude-plugin/
-│   └── plugin.json
-├── commands/                  # opcional, slash commands sin prefijo
-├── skills/                    # opcional, con prefijo xmon:
-│   └── xmon:<slug>/
-│       └── SKILL.md
-└── agents/                    # opcional, subagentes
-```
+## Desarrollo
 
-## Setup tras clonar (contribuidores)
-
-Si vas a contribuir cambios al repo, activa el pre-commit hook anti-leakage:
+Tras clonar, activa el pre-commit hook anti-leakage:
 
 ```bash
 ./scripts/install-hooks.sh
 ```
 
-Esto apunta Git a `.githooks/` y crea tu archivo personal de patrones (`.githooks/leakage-patterns.txt`, gitignored) a partir del template `.example`. El hook bloquea commits con:
+El hook bloquea commits con rutas absolutas de usuario, tokens conocidos (OpenAI, GitHub, AWS, Google, Slack, claves privadas), archivos sensibles (`.env*`, `*.pem`, `*.key`…) y los patrones que añadas en `.githooks/leakage-patterns.txt`. Ese archivo está en `.gitignore`: pon ahí los nombres de tus proyectos privados y tus rutas habituales.
 
-- Rutas absolutas (`/Users/X/`, `/home/X/`)
-- Tokens conocidos (OpenAI/GitHub/AWS/Google/Slack, private keys)
-- Archivos sensibles staged (`.env*`, `*.pem`, `*.key`, `id_rsa*`, `credentials*`, `.npmrc`)
-- Patrones específicos tuyos definidos en `.githooks/leakage-patterns.txt`
+Antes de publicar, valida los manifiestos:
 
-Edita `.githooks/leakage-patterns.txt` con los nombres de TUS proyectos privados, workspaces y rutas recurrentes. El archivo está gitignored — no se publicará.
+```bash
+claude plugin validate .
+```
 
-## Contribuir
-
-¿Quieres añadir tu propio plugin? Crea un PR siguiendo la estructura de los plugins existentes. Lee [CLAUDE.md](CLAUDE.md) para entender las convenciones del marketplace (namespace `xmon:`, naming de commands, versionado SemVer, etc.).
-
-## Licencia
-
-MIT
+Las convenciones para añadir o modificar plugins (namespace `xmon:`, versionado SemVer, cross-refs entre plugins) están en [CLAUDE.md](CLAUDE.md).

@@ -72,6 +72,17 @@
       },
       "source": "./plugins/symfony-toolkit",
       "category": "development"
+    },
+    {
+      "name": "brand-identity-toolkit",
+      "description": "Skill xmon:brand-identity-pipeline para llevar un proyecto de identidad de marca de principio a fin (estrategia, dirección creativa, logotipo, sistema de identidad, manual y guardián de marca) sin saltarse fases, pasos ni guardrails, con orden de trabajo por dependencias y gate de cumplimiento por fase. Incluye una banda sobre el prompt con el paso actual de brand/progress.md y el comando /progreso.",
+      "version": "0.3.0",
+      "author": {
+        "name": "Juanjo García",
+        "email": "juanjogarciae@gmail.com"
+      },
+      "source": "./plugins/brand-identity-toolkit",
+      "category": "design"
     }
   ]
 }

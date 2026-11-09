@@ -1,0 +1,19 @@
+{
+  "name": "brand-identity-toolkit",
+  "version": "0.3.0",
+  "description": "Skill xmon:brand-identity-pipeline para llevar un proyecto de identidad de marca de principio a fin (estrategia, dirección creativa, logotipo, sistema de identidad, manual y guardián de marca) sin saltarse fases, pasos ni guardrails, con orden de trabajo por dependencias y gate de cumplimiento por fase. Incluye una banda sobre el prompt con el paso actual de brand/progress.md y el comando /progreso.",
+  "author": {
+    "name": "Juanjo García",
+    "email": "juanjogarciae@gmail.com"
+  },
+  "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "branding",
+    "brand-identity",
+    "logo",
+    "brand-manual",
+    "design"
+  ],
+  "types": "./types/index.d.ts"
+}

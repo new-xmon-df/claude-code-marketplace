@@ -1,413 +1,251 @@
 ---
 name: xmon:seo-content
-description: Guía para optimizar contenido antes de publicar. Front matter, estructura, keywords, internal linking, y checklist de publicación para blogs y sitios de afiliados.
+description: Optimiza contenido antes de publicar en blogs y sitios de afiliados. Detecta el sistema de contenido, ajusta front matter, estructura, cobertura temática, enlazado, structured data y disclosure de afiliados, y aplica un checklist de publicación. Para contenido asistido por IA, exige verificar datos y nunca inventar experiencia ni reviews.
 ---
 
-# SEO Content Guide
+# SEO Content
 
-Skill para optimizar contenido antes de publicar, especialmente diseñado para blogs, sitios de afiliados y contenido generado con AI.
+Optimización de un artículo o página antes de publicar, con plantillas para blogs y sitios de afiliados.
 
 ## Cuándo usar este skill
 
-- Vas a publicar un nuevo artículo o página
-- Quieres optimizar contenido existente
-- Necesitas crear front matter SEO-friendly
-- Escribes contenido de afiliados y quieres maximizar conversión
-- Generas contenido con AI y necesitas optimizarlo
-- Quieres verificar que tu contenido cumple las mejores prácticas
+- Vas a publicar un artículo o página nueva, o a actualizar uno existente
+- Necesitas front matter coherente con el schema del proyecto
+- Escribes reviews, comparativas o guías de compra con enlaces de afiliado
+- Partes de un borrador generado con IA y necesitas dejarlo publicable
+
+Para auditar un sitio entero con puntuación, usa `xmon:seo-audit`.
 
 ---
 
-## Paso 0: Detectar Stack y Sistema de Contenido (OBLIGATORIO)
+## Paso 0: Detectar el sistema de contenido (OBLIGATORIO)
 
-**ANTES de optimizar**, detecta cómo se gestiona el contenido:
+Antes de tocar nada, identifica cómo se gestiona el contenido y qué campos admite.
 
 ### Archivos a buscar
 
 ```
-# Content collections (Astro)
-src/content/
-src/content/config.ts
+# Astro content collections
+src/content.config.ts     # Astro 5+ (glob loader)
+src/content/config.ts     # Formato legacy
 
-# CMS Headless
-.directus/
-sanity/schemas/
-strapi/api/
+# CMS headless
+.directus/  sanity/schemas/  strapi/api/
 
-# MDX/Markdown
-*.mdx
-*.md
-content/
-posts/
-articles/
-
-# Frontmatter schemas
-src/content/config.ts    # Astro
-contentlayer.config.*    # Contentlayer
+# Markdown/MDX
+content/  posts/  articles/  *.md  *.mdx
+contentlayer.config.*
 ```
 
-### Identificar el sistema
+### Qué extraer
 
-1. **Leer configuración de contenido** para determinar:
-   - Formato: MDX, Markdown, JSON, CMS
-   - Schema de frontmatter existente
-   - Campos obligatorios/opcionales
-   - Validación de tipos
+1. **Formato y schema**: MDX/Markdown/JSON/CMS, campos obligatorios y opcionales, tipos validados (p. ej. `z.date()` en Astro).
+2. **Nombres reales de campos**: `publishDate` vs `pubDate` vs `date`, `updatedDate`, `heroImage`, etc. Usa siempre los del proyecto, nunca los de las plantillas de abajo.
+3. **i18n**: `src/i18n/`, `locales/`, `i18n.config.*`, bloque `i18n` en `astro.config.*`. Si es multiidioma: slugs por idioma, metadatos traducidos, `hreflang` y `canonical` coherentes.
+4. **Taxonomías existentes**: categorías y tags ya usados, para no crear duplicados.
 
-2. **Detectar i18n/multiidioma** (si aplica):
-   ```
-   # Archivos de i18n
-   src/i18n/              # Astro
-   locales/               # Next.js, Nuxt
-   i18n.config.*          # Configuración
-   astro.config.* (i18n)  # Astro i18n
-   ```
-
-   Si es multiidioma:
-   - Los slugs varían por idioma (`/es/articulo` vs `/en/article`)
-   - Meta descriptions deben estar traducidas
-   - Hreflang tags son obligatorios
-   - Canonical apunta a la versión principal
-
-3. **Guardar contexto**:
-   ```
-   Sistema de contenido detectado:
-   - Formato: [MDX/Markdown/CMS]
-   - Schema: [Astro Content Collections/Contentlayer/Custom]
-   - Campos actuales: [title, description, date, etc.]
-   - Categorías/Tags: [lista si existen]
-   - i18n: [Sí/No] - Idiomas: [es, en, etc.]
-   ```
+```
+Sistema de contenido detectado:
+- Formato: [MDX/Markdown/CMS]
+- Schema: [Astro content collections/Contentlayer/Custom]
+- Campos: [title, description, pubDate, ...]
+- Categorías/Tags existentes: [...]
+- i18n: [Sí/No] - Idiomas: [...]
+```
 
 ---
 
-## Paso 1: Front Matter SEO-Optimizado
+## Paso 1: Front matter
 
-### Campos Obligatorios
+Adapta esta plantilla a los nombres de campo detectados en el Paso 0:
 
 ```yaml
 ---
-title: "Título optimizado (50-60 chars)"
-description: "Meta description con CTA (150-160 chars)"
-publishDate: 2024-01-15  # O date, pubDate según el schema
-updatedDate: 2024-01-20  # Importante para E-E-A-T
-author: "Nombre del Autor"
----
-```
+title: "Título descriptivo y conciso"
+description: "Resumen de la página que invite al clic"
+publishDate: AAAA-MM-DD
+updatedDate: AAAA-MM-DD    # Visible en la página: ayuda a mostrar actualidad
+author: "Nombre del autor" # Con página de autor/bio
 
-### Campos Recomendados para SEO
-
-```yaml
----
-# SEO específico
+# SEO
 seo:
-  title: "Title tag si difiere del title"
-  description: "Meta description"
-  canonical: "https://..." # Si es contenido republicado
+  canonical: "https://..." # Solo si es contenido republicado
   noindex: false
 
 # Open Graph
 image: "/images/og-image.jpg"  # 1200x630px
 imageAlt: "Descripción de la imagen"
 
-# Organización del contenido
+# Organización
 category: "Categoría principal"
-tags: ["tag1", "tag2", "tag3"]
-related: ["slug-articulo-1", "slug-articulo-2"]
+tags: ["tag1", "tag2"]
+related: ["slug-1", "slug-2"]
 
-# Para afiliados
+# Afiliados
 affiliate: true
 affiliateDisclosure: true
 products: ["producto-1", "producto-2"]
 
-# Schema hints
+# Pista de structured data
 schema:
-  type: "Article" # o "Product", "Review", "HowTo", "FAQ"
+  type: "Article"  # Article | BlogPosting | Review | Product
 ---
 ```
 
-### Ejemplo Completo para Blog de Afiliados
+**Ejemplo para afiliados**:
 
 ```yaml
 ---
-title: "Mejores Auriculares Bluetooth 2024: Guía Comparativa"
-description: "Comparamos los 10 mejores auriculares Bluetooth calidad-precio. Con análisis real de sonido, batería y comodidad tras semanas de uso."
-publishDate: 2024-01-15
-updatedDate: 2024-01-20
+title: "Mejores auriculares Bluetooth [año]: comparativa"
+description: "Comparamos sonido, batería y comodidad de los auriculares Bluetooth con mejor calidad-precio para ayudarte a elegir."
+publishDate: AAAA-MM-DD
+updatedDate: AAAA-MM-DD
 author: "Nombre Autor"
-image: "/images/auriculares-bluetooth-2024.jpg"
-imageAlt: "Comparativa de auriculares Bluetooth sobre mesa de madera"
+image: "/images/auriculares-bluetooth-comparativa.jpg"
+imageAlt: "Varios auriculares Bluetooth sobre una mesa de madera"
 category: "Audio"
-tags: ["auriculares", "bluetooth", "comparativa", "guía de compra"]
+tags: ["auriculares", "bluetooth", "comparativa"]
 affiliate: true
 affiliateDisclosure: true
-schema:
-  type: "ProductCollection"
 ---
 ```
 
+Usa `[año]` solo si el contenido se actualiza de verdad cada año; si no, omite el año en title y slug para no tener que cambiar la URL.
+
 ---
 
-## Paso 2: Estructura del Contenido
+## Paso 2: Estructura
 
-### Jerarquía de Headers
+Reglas: un H1, jerarquía sin saltos, headers que anticipen el contenido.
 
+**Guía (how-to)**:
 ```markdown
-# H1: Keyword principal + modificador + año (solo uno)
-Ejemplo: "Mejores Auriculares Bluetooth 2024: Guía Definitiva"
+# Cómo [hacer X]
 
-## H2: Secciones principales (keywords secundarias)
-Ejemplo: "Cómo elegir auriculares Bluetooth"
+Intro: qué va a conseguir el lector y en qué contexto.
 
-### H3: Subsecciones
-Ejemplo: "Tipos de driver y calidad de sonido"
-
-#### H4: Puntos específicos (usar con moderación)
-```
-
-### Reglas de Estructura
-
-- [ ] **Un solo H1** por página (el título principal)
-- [ ] **H2 cada 300-400 palabras** aproximadamente
-- [ ] **No saltar niveles** (H1 -> H3 sin H2 = mal)
-- [ ] **Keywords en headers** pero natural, no forzado
-- [ ] **Headers descriptivos** que anticipen el contenido
-
-### Plantilla de Estructura para Artículos
-
-**Artículo informativo (How-to)**:
-```markdown
-# Cómo [hacer X]: Guía Completa [año]
-
-Intro con keyword en primeros 150 caracteres.
-
-## ¿Qué es [X]? / ¿Por qué [X]?
-
+## Qué es [X] / Por qué [X]
 ## Paso 1: [Primer paso]
-### Consideraciones importantes
-
 ## Paso 2: [Segundo paso]
-
 ## Errores comunes al [hacer X]
-
-## FAQ: Preguntas frecuentes sobre [X]
-
+## Preguntas frecuentes
 ## Conclusión
 ```
 
-**Review/Comparativa (Afiliados)**:
+**Review/comparativa (afiliados)**:
 ```markdown
-# [Mejor X para Y]: Comparativa [año]
+# [Mejor X para Y]: comparativa [año]
 
-Intro con gancho + keyword.
+Intro: para quién es y cómo se ha hecho la comparativa.
 
-## Resumen rápido: Top 3 picks
+## Resumen: top 3
 [Tabla comparativa]
 
-## Cómo elegimos los mejores [X]
-### Criterios de evaluación
+## Cómo los hemos evaluado
+### Criterios y método (qué se probó, cuánto tiempo, en qué condiciones)
 
 ## Análisis detallado
-
-### 1. [Producto A] - Mejor en general
+### 1. [Producto A]: mejor en general
 #### Pros y contras
 #### Especificaciones
-#### Nuestra experiencia
+#### Experiencia de uso   <!-- solo si existe experiencia real del autor; ver Paso 8 -->
 
-### 2. [Producto B] - Mejor calidad-precio
+### 2. [Producto B]: mejor calidad-precio
 ...
 
 ## Tabla comparativa completa
-
-## Guía de compra: Qué buscar en [X]
-
-## FAQ
-
-## Conclusión: ¿Cuál comprar?
+## Guía de compra: qué mirar en [X]
+## Preguntas frecuentes
+## Conclusión: cuál elegir según tu caso
 ```
+
+La sección "Preguntas frecuentes" se mantiene por su valor para el lector, no por rich results (ver Paso 6).
 
 ---
 
-## Paso 3: Optimización de Keywords
+## Paso 3: Término principal, cobertura e intención
 
-### Ubicaciones Críticas (Keyword Principal)
+- Incluye el término principal de forma natural en title, H1, primer párrafo y meta description. Slug descriptivo y corto.
+- **No trabajes con densidad de keyword ni con "keywords LSI"**: Google no tiene una densidad óptima y la repetición excesiva es keyword stuffing.
+- Trabaja la **cobertura temática**: subtemas que el lector espera, preguntas reales (búsquedas relacionadas, Search Console, foros), variaciones naturales del término.
+- Nombra **entidades** con precisión: modelo exacto, marca, especificaciones, versiones.
+- Alinea formato e **intención**: informacional → guía; comercial → comparativa/“mejor X para Y”; transaccional → review con precio y disponibilidad.
 
-| Ubicación | Prioridad | Ejemplo |
-|-----------|-----------|---------|
-| Title tag | Alta | "Mejores Auriculares Bluetooth 2024" |
-| H1 | Alta | Mismo o variación del title |
-| URL/slug | Alta | `/mejores-auriculares-bluetooth` |
-| Meta description | Alta | Incluir natural |
-| Primeros 150 chars | Alta | Primera oración del contenido |
-| Alt de imagen principal | Media | "auriculares bluetooth comparativa" |
-| Último párrafo | Media | Refuerzo natural |
+### Patrones de título para afiliados
 
-### Densidad de Keywords
-
-- **Keyword principal**: 1-2% del contenido total
-- **Evitar keyword stuffing**: Si suena forzado, lo es
-- **Usar variaciones**: Sinónimos, long-tail, LSI
-
-### Keywords por Tipo de Contenido
-
-**Blog/Informativo**:
 ```
-- Cómo + [verbo] + [objeto]
-- Guía de/para + [tema]
-- Qué es + [concepto]
-- [X] vs [Y]: Diferencias
-- [Número] + [tips/consejos/formas] para + [objetivo]
-```
-
-**Afiliados/Comercial**:
-```
-- Mejor/es + [producto] + [año]
-- [Producto] + review/análisis/opinión
-- [Producto A] vs [Producto B]
-- Comparativa + [categoría]
-- [Producto] + ¿vale la pena? / ¿merece la pena?
-- Dónde comprar + [producto]
-- [Producto] + precio/oferta/descuento
-```
-
-**Long-tail para afiliados**:
-```
-- Mejor [producto] para [caso de uso específico]
-- [Producto] para [perfil de usuario]
-- [Producto] calidad-precio
+- Mejores [producto] para [caso de uso] [año]
+- [Producto] review: [veredicto corto]
+- [Producto A] vs [Producto B]: [criterio que decide]
 - Alternativas a [producto popular]
+- [Producto] calidad-precio
 ```
 
 ---
 
-## Paso 4: Imágenes Optimizadas
+## Paso 4: Imágenes
 
-### Checklist de Imágenes
+- [ ] `alt` que describe la imagen (no "imagen1", no relleno de keywords)
+- [ ] Nombre de archivo descriptivo (`auriculares-modelo-x-plegados.webp`)
+- [ ] WebP/AVIF, dimensiones acordes al tamaño mostrado, lazy loading salvo la imagen principal
+- [ ] Imagen OG 1200x630
+- [ ] Afiliados: fotos propias del producto cuando existan (son evidencia de experiencia). Si no las hay, usa imágenes oficiales con su atribución y no las presentes como propias
 
-- [ ] **Alt text descriptivo** (no "imagen1.jpg")
-- [ ] **Keyword en alt** cuando sea natural
-- [ ] **Nombre de archivo descriptivo** (`auriculares-sony-wh1000xm5.webp`)
-- [ ] **Formato optimizado** (WebP/AVIF con fallback)
-- [ ] **Dimensiones adecuadas** (no subir 4000px si se muestra a 800px)
-- [ ] **Lazy loading** activado
-- [ ] **Imagen OG** 1200x630px
+---
 
-### Alt Text Ejemplos
+## Paso 5: Enlazado
+
+### Interno (silos/clusters)
+
+```
+              [Pilar: Auriculares Bluetooth]
+                          |
+      ------------------------------------------
+      |                   |                    |
+[Over-ear]           [In-ear]          [True wireless]
+  - Reviews            - Reviews          - Reviews
+  - Comparativa        - Guía compra      - Guía compra
+```
+
+- [ ] Enlace al pilar desde cada artículo del cluster y entre artículos del mismo cluster
+- [ ] Anchor descriptivo (nunca "clic aquí")
+- [ ] Enlaces contextuales dentro del texto + relacionados al final
+
+### Externo y atributos
 
 ```html
-<!-- Mal -->
-<img alt="imagen" />
-<img alt="auriculares" />
-<img alt="" />
+<!-- Afiliado: Google prefiere rel="sponsored" (nofollow sigue siendo aceptable) -->
+<a href="https://tienda.example/..." rel="sponsored">Ver precio en [tienda]</a>
 
-<!-- Bien -->
-<img alt="Auriculares Sony WH-1000XM5 en color negro sobre fondo blanco" />
-<img alt="Comparativa de tamaño entre AirPods Pro y Sony WF-1000XM5" />
-<img alt="Gráfico de duración de batería de auriculares bluetooth" />
+<!-- Fuente citada -->
+<a href="https://fuente.example/..." rel="noopener" target="_blank">según este estudio</a>
 ```
 
-### Para Afiliados: Imágenes que Convierten
-
-- Fotos propias del producto (E-E-A-T)
-- Unboxing si es posible
-- Comparativas visuales
-- Tablas/infografías con especificaciones
-- Screenshots de app/software si aplica
+Cita siempre la fuente de datos, estadísticas y especificaciones (preferiblemente la página oficial del fabricante).
 
 ---
 
-## Paso 5: Internal Linking
+## Paso 6: Structured data
 
-### Estrategia de Silos/Clusters
+### Dónde generarlo según el stack
 
-```
-                    [Pilar: Auriculares Bluetooth]
-                              |
-        ------------------------------------------------
-        |                     |                        |
-[Cluster: Over-ear]   [Cluster: In-ear]   [Cluster: True Wireless]
-        |                     |                        |
-    - Review X            - Review Y              - Review Z
-    - Review A            - Review B              - Review C
-    - Comparativa         - Guía compra           - Guía compra
-```
+| Stack | Opción | Notas |
+|---|---|---|
+| Next.js App Router | Metadata API (`metadata` / `generateMetadata`) para meta tags; JSON-LD con `<script type="application/ld+json">` en `layout`/`page` | Es la recomendación de la documentación de Next.js. Escapa `<` como `<` al serializar. `schema-dts` para tipar el JSON-LD |
+| Next.js Pages Router | `next-seo` | Librería comunitaria; comprueba la compatibilidad con la versión instalada |
+| Astro | `astro-seo` para meta tags; JSON-LD manual en el layout | |
+| Nuxt | `@nuxtjs/seo` (incluye `nuxt-schema-org`), `useSeoMeta` | |
+| SvelteKit | `svelte-meta-tags` | |
 
-### Reglas de Internal Linking
+Si el proyecto ya usa una de estas herramientas, revisa lo que genera antes de añadir JSON-LD manual (evita duplicados).
 
-- [ ] **3-5 links internos** por cada 1000 palabras
-- [ ] **Anchor text descriptivo** (no "clic aquí", "este artículo")
-- [ ] **Links contextuales** dentro del contenido
-- [ ] **Links a contenido relacionado** al final
-- [ ] **Link al pilar** desde artículos del cluster
-- [ ] **Links entre artículos del mismo cluster**
+### Qué tipos usar
 
-### Formato de Links
+- **Artículo**: `BlogPosting` o `Article` con `author`, `publisher`, `datePublished`, `dateModified`.
+- **Review de producto**: `Review` con `itemReviewed` de tipo `Product` (u otro tipo válido para Google) y `reviewRating`. Solo con una review real del autor.
+- **Navegación**: `BreadcrumbList`.
+- **`FAQPage` / `HowTo`**: Google ya no muestra estos rich results (HowTo desde 2023, FAQ desde 2026). No los añadas esperando visibilidad en Google; si ya existen, no hace falta quitarlos.
 
-```markdown
-<!-- Bien: Anchor descriptivo -->
-Si buscas algo más económico, revisa nuestra
-[guía de auriculares bluetooth baratos](/auriculares-bluetooth-baratos).
-
-<!-- Mal: Anchor genérico -->
-Para más información, [haz clic aquí](/auriculares-bluetooth-baratos).
-```
-
----
-
-## Paso 6: External Linking
-
-### Cuándo Enlazar Externamente
-
-- [ ] **Fuentes de datos/estadísticas** (siempre citar)
-- [ ] **Páginas oficiales de productos** (para especificaciones)
-- [ ] **Herramientas mencionadas**
-- [ ] **Estudios o investigaciones citadas**
-- [ ] **Wikipedia para conceptos técnicos** (con moderación)
-
-### Atributos de Links
-
-```html
-<!-- Links de afiliado -->
-<a href="https://amazon.es/..." rel="sponsored nofollow" target="_blank">
-  Ver en Amazon
-</a>
-
-<!-- Links a fuentes -->
-<a href="https://estudio.com/..." rel="noopener" target="_blank">
-  según este estudio
-</a>
-
-<!-- Links de confianza (no nofollow) -->
-<a href="https://sitio-autoridad.com/...">
-  documentación oficial
-</a>
-```
-
----
-
-## Paso 7: Schema Markup para Contenido
-
-### Herramientas Automáticas
-
-Muchos frameworks tienen librerías que generan Schema automáticamente:
-
-| Framework | Librería | Genera |
-|-----------|----------|--------|
-| Astro | `astro-seo`, `@astrolib/seo` | OG, Twitter, JSON-LD básico |
-| Next.js | `next-seo` | OG, Twitter, JSON-LD completo |
-| Nuxt | `@nuxtjs/seo`, `nuxt-schema-org` | SEO completo, Schema |
-| SvelteKit | `svelte-meta-tags` | Meta tags, OG |
-
-**Si usas estas herramientas**:
-- Verificar que el Schema generado es correcto
-- Pueden necesitar configuración adicional para Reviews/Products
-- El FAQ Schema suele requerir implementación manual
-
-**Si NO las usas**: Implementar manualmente (ver ejemplos abajo).
-
-### Por Tipo de Contenido
-
-**Artículo de Blog**:
 ```json
 {
   "@context": "https://schema.org",
@@ -415,278 +253,180 @@ Muchos frameworks tienen librerías que generan Schema automáticamente:
   "headline": "Título del artículo",
   "description": "Meta description",
   "image": "URL de imagen",
-  "author": {
-    "@type": "Person",
-    "name": "Autor"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Nombre del sitio"
-  },
-  "datePublished": "2024-01-15",
-  "dateModified": "2024-01-20"
+  "author": { "@type": "Person", "name": "Autor", "url": "URL de la página de autor" },
+  "publisher": { "@type": "Organization", "name": "Nombre del sitio" },
+  "datePublished": "AAAA-MM-DD",
+  "dateModified": "AAAA-MM-DD"
 }
 ```
 
-**Review de Producto (Afiliados)**:
 ```json
 {
   "@context": "https://schema.org",
   "@type": "Review",
-  "itemReviewed": {
-    "@type": "Product",
-    "name": "Nombre del producto",
-    "image": "URL imagen producto"
-  },
-  "reviewRating": {
-    "@type": "Rating",
-    "ratingValue": "4.5",
-    "bestRating": "5"
-  },
-  "author": {
-    "@type": "Person",
-    "name": "Autor"
-  }
+  "itemReviewed": { "@type": "Product", "name": "Nombre del producto", "image": "URL" },
+  "reviewRating": { "@type": "Rating", "ratingValue": "4.5", "bestRating": "5" },
+  "author": { "@type": "Person", "name": "Autor" }
 }
 ```
 
-**FAQ (muy útil para featured snippets)**:
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "¿Pregunta 1?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Respuesta 1"
-      }
-    }
-  ]
-}
-```
+Reglas de Google para reviews: nada de reviews falsas o incentivadas sin declarar, no agregar ratings de otros sitios. Valida con el Rich Results Test.
 
 ---
 
-## Paso 8: Disclosure de Afiliados (FTC Compliance)
+## Paso 7: Disclosure de afiliados
 
-### Requisitos Legales
-
-**Obligatorio si hay links de afiliado**:
+Plantilla (cerca del inicio y antes del primer enlace de afiliado):
 
 ```markdown
-<!-- Al inicio del artículo -->
-> **Disclosure**: Este artículo contiene enlaces de afiliado.
-> Si compras a través de ellos, ganamos una pequeña comisión
-> sin coste adicional para ti. Esto nos ayuda a mantener el sitio.
-> [Más info](/politica-afiliados)
+> **Aviso**: este artículo contiene enlaces de afiliado. Si compras a través
+> de ellos, recibimos una comisión sin coste adicional para ti.
+> [Más información](/politica-afiliados)
 ```
 
-### Ubicaciones del Disclosure
+- [ ] Visible antes del primer enlace y cerca de las recomendaciones; un aviso solo en el footer o en una página aparte no basta
+- [ ] Redactado en lenguaje claro: según la FTC, "enlace de afiliado" por sí solo puede no entenderse como "me pagan"; "enlace patrocinado/pagado" junto al enlace sí es adecuado
+- [ ] Página de política de afiliados enlazada desde el footer
+- [ ] Recomendaciones honestas, incluidos los contras y los productos que no recomiendas
 
-- [ ] **Inicio del artículo** (visible antes de primer link)
-- [ ] **Footer del sitio** (link a política completa)
-- [ ] **Página de política de afiliados** dedicada
-
-### Buenas Prácticas
-
-- Ser transparente sobre la relación comercial
-- No ocultar que es contenido de afiliados
-- Mantener recomendaciones honestas
-- Indicar cuando NO recomiendas un producto
+Fuente: guía de la FTC sobre endorsements (EE. UU.). Si el sitio se dirige a otros mercados, revisa también la normativa local.
 
 ---
 
-## Paso 9: Contenido Generado con AI
+## Paso 8: Contenido asistido por IA
 
-Si generas contenido con LLMs (ChatGPT, Claude, etc.) o pipelines automatizados (n8n, Make), sigue estas pautas:
+Google permite usar IA generativa siempre que el resultado sea útil, preciso y cumpla sus políticas; generar páginas en masa sin aportar valor es "scaled content abuse". Este paso deja publicable un borrador generado con IA **sin inventar nada**.
 
-### Red Flags de Contenido AI Genérico
+### Regla innegociable: la experiencia no se fabrica
 
-Detecta y corrige estos patrones que Google penaliza:
+- **Nunca** escribas ni sugieras experiencia, pruebas, mediciones, opiniones personales, anécdotas o reviews que el autor no haya vivido. Esto incluye frases como "lo he probado durante X semanas" o "en mi caso...", y fotos de producto presentadas como propias si no lo son.
+- La experiencia de primera mano **la aporta el autor**: pídesela (qué probó, cuánto tiempo, en qué condiciones, qué midió, fotos propias) y redáctala a partir de sus datos.
+- Si el autor **no tiene experiencia real** con el producto: escribe sin afirmarla. Usa un enfoque de investigación ("según las especificaciones del fabricante", "según el análisis de [fuente]") y cita las fuentes. Puede presentarse como guía o recopilación, no como review con prueba propia.
+- Motivos:
+  - Google pide que las reviews aporten evidencia de la experiencia propia (fotos, audio, enlaces) y prohíbe en su structured data las reviews que no se basan en una experiencia genuina.
+  - La regla de la FTC sobre reviews y testimonios (16 CFR Part 465, en vigor desde el 21 de octubre de 2024) prohíbe las reviews falsas, incluidas las generadas con IA, y las que tergiversan la experiencia del autor con el producto.
 
-| Red Flag | Ejemplo | Solución |
-|----------|---------|----------|
-| Frases vacías | "En el mundo actual...", "Es importante destacar que..." | Eliminar, ir al grano |
-| Listas genéricas | "Ventajas: calidad, precio, durabilidad" | Datos específicos del producto |
-| Falta de especificidad | "Excelente rendimiento" | "Batería de 40h con ANC activo" |
-| Tono robótico | Párrafos perfectamente estructurados sin personalidad | Añadir voz propia, opiniones |
-| Repetición de keywords | Keyword en cada párrafo | Usar sinónimos, variaciones |
-| Sin experiencia real | "Los usuarios reportan..." | "Después de 3 semanas usándolos..." |
+### Ejemplos
 
-### Cómo Humanizar Contenido AI
+```markdown
+<!-- Genérico (borrador IA) -->
+Los auriculares Modelo X ofrecen una excelente cancelación de ruido.
 
-1. **Añadir experiencia personal**:
-   ```markdown
-   <!-- AI genérico -->
-   Los auriculares Sony WH-1000XM5 ofrecen una excelente
-   cancelación de ruido.
+<!-- Con datos verificables, sin experiencia propia -->
+El fabricante anuncia hasta [N] horas de batería con cancelación de ruido
+activada ([enlace a la ficha oficial]). En las mediciones de [medio],
+[resultado concreto] ([enlace]).
 
-   <!-- Humanizado -->
-   Llevo 3 semanas usando los Sony WH-1000XM5 en el metro
-   de Madrid y la cancelación de ruido es brutal - no escucho
-   ni los avisos de estación.
-   ```
+<!-- Con experiencia real, aportada por el autor -->
+[Texto redactado a partir de las notas del autor: qué probó, durante cuánto
+tiempo, en qué condiciones y qué resultado obtuvo, con sus fotos.]
+```
 
-2. **Incluir opiniones y preferencias**:
-   ```markdown
-   <!-- AI genérico -->
-   Ambos productos son opciones válidas según tus necesidades.
+### Checklist del borrador IA
 
-   <!-- Humanizado -->
-   Si me preguntas cuál compraría yo: los Sony. Sí, cuestan
-   50€ más, pero el comfort en sesiones largas no tiene precio.
-   ```
+- [ ] Eliminar relleno ("En el mundo actual...", "Cabe destacar que...")
+- [ ] Verificar cada dato, especificación, precio y fecha contra la fuente oficial; los modelos inventan especificaciones
+- [ ] Revisar también title, meta description, `alt` y structured data generados (Google pide la misma revisión)
+- [ ] Sustituir generalidades por datos concretos con fuente
+- [ ] Experiencia y opinión: solo las que aporte el autor; si no hay, redactar sin afirmarlas
+- [ ] Valorar indicar cómo se ha creado el contenido cuando tenga sentido para el lector (sugerencia de Google)
 
-3. **Datos específicos, no genéricos**:
-   ```markdown
-   <!-- AI genérico -->
-   La batería tiene buena duración.
+No se recomiendan detectores de IA: Google evalúa la utilidad y precisión del contenido, no su origen.
 
-   <!-- Humanizado -->
-   40 horas con ANC activado. En mi caso, cargo una vez
-   por semana con uso de 5-6h diarias.
-   ```
-
-### Checklist para Contenido AI
-
-Antes de publicar contenido generado con AI:
-
-- [ ] **Eliminar frases de relleno** ("Es importante mencionar", "Cabe destacar")
-- [ ] **Verificar datos** - Los LLMs inventan especificaciones
-- [ ] **Añadir experiencia real** si es posible (fotos, tests propios)
-- [ ] **Incluir opinión personal** - Qué recomendarías TÚ y por qué
-- [ ] **Revisar tono** - ¿Suena a robot o a persona?
-- [ ] **Comprobar fechas** - AI puede dar info desactualizada
-- [ ] **Verificar precios** - Cambian constantemente
-- [ ] **Añadir fuentes** para claims específicos
-- [ ] **Pasar detector de AI** (opcional pero recomendado)
-
-### Herramientas de Detección
-
-Para verificar que tu contenido no es "demasiado AI":
-- Originality.ai
-- GPTZero
-- Copyleaks
-
-**Nota**: El objetivo no es "engañar" detectores, sino crear contenido genuinamente útil. Si añades experiencia real y voz propia, los detectores son irrelevantes.
-
-### Pipeline de Contenido AI Recomendado
+### Pipeline
 
 ```
-1. Generar borrador con AI (estructura + research)
-        ↓
-2. Verificar TODOS los datos/specs/precios
-        ↓
-3. Añadir experiencia personal y opiniones
-        ↓
-4. Humanizar tono (eliminar frases robóticas)
-        ↓
-5. Optimizar SEO (keywords, estructura)
-        ↓
-6. Review final + checklist
-        ↓
-7. Publicar
+1. Borrador con IA (estructura + research con fuentes)
+2. Verificar todos los datos, specs y precios
+3. Incorporar la experiencia real del autor (o redactar sin afirmarla)
+4. Editar tono y eliminar relleno
+5. SEO: término principal, cobertura, enlazado, structured data
+6. Checklist de publicación
 ```
 
 ---
 
-## Checklist Antes de Publicar
+## Checklist de publicación
 
-### SEO Técnico
-- [ ] Title tag: 50-60 caracteres, keyword incluida
-- [ ] Meta description: 150-160 caracteres, con CTA
-- [ ] URL/slug: corta, descriptiva, con keyword
-- [ ] H1 único con keyword
-- [ ] Headers en jerarquía correcta (H2, H3, H4)
-- [ ] Imágenes con alt text descriptivo
-- [ ] Imagen OG configurada (1200x630)
+### SEO técnico
+- [ ] Title descriptivo y conciso, con el término principal
+- [ ] Meta description que resuma la página
+- [ ] Slug corto y descriptivo
+- [ ] Un H1 y jerarquía correcta
+- [ ] Imágenes con `alt`; imagen OG 1200x630
+- [ ] `canonical` y `hreflang` correctos si aplica
 
 ### Contenido
-- [ ] Keyword en primeros 150 caracteres
-- [ ] Contenido de mínimo 1500 palabras (para competir)
-- [ ] Párrafos cortos (3-4 líneas)
-- [ ] Listas/bullet points donde corresponda
-- [ ] Sin errores ortográficos/gramaticales
+- [ ] Término principal en el primer párrafo, de forma natural
+- [ ] Cubre la intención y los subtemas esperados (sin objetivo de número de palabras)
+- [ ] Datos con fuente, fecha de actualización visible
+- [ ] Sin errores ortográficos
 
-### Links
-- [ ] 3-5 links internos relevantes
-- [ ] Links externos a fuentes (si citas datos)
-- [ ] Anchor text descriptivo
-- [ ] Links de afiliado con `rel="sponsored nofollow"`
+### Enlaces
+- [ ] Enlaces internos al pilar y al cluster con anchor descriptivo
+- [ ] Fuentes externas citadas
+- [ ] Enlaces de afiliado con `rel="sponsored"`
 
-### Para Afiliados
-- [ ] Disclosure visible al inicio
-- [ ] Experiencia personal mencionada (E-E-A-T)
-- [ ] Pros Y contras honestos
-- [ ] Precio/disponibilidad actualizada
-- [ ] CTA claro pero no agresivo
+### Afiliados
+- [ ] Disclosure visible antes del primer enlace
+- [ ] Experiencia de uso solo si es real y aportada por el autor, con evidencia
+- [ ] Pros y contras honestos
+- [ ] Precio y disponibilidad actualizados
 
-### Schema
-- [ ] JSON-LD apropiado para el tipo de contenido
-- [ ] FAQ Schema si hay sección de preguntas
-- [ ] Product/Review Schema si es review
+### Structured data
+- [ ] JSON-LD acorde al tipo de contenido y al contenido visible
+- [ ] `Review` solo si hay review real del autor
+- [ ] Validado en el Rich Results Test
 
 ### Final
-- [ ] Fecha de publicación configurada
-- [ ] Categoría y tags asignados
+- [ ] Fechas de publicación/actualización configuradas
+- [ ] Categoría y tags existentes asignados
 - [ ] Preview en móvil revisado
-- [ ] Links funcionando correctamente
+- [ ] Enlaces funcionando
 
 ---
 
-## Plantillas Rápidas
+## Plantillas rápidas
 
-### Meta Description para Afiliados
-
-```
-[Verbo] los [número] mejores [producto] de [año].
-Comparamos [criterio 1], [criterio 2] y [criterio 3]
-para ayudarte a elegir. [CTA].
-
-Ejemplo:
-"Descubre los 10 mejores auriculares Bluetooth de 2024.
-Comparamos sonido, batería y comodidad tras semanas de uso.
-Encuentra tu par ideal."
-```
-
-### Title Tags Efectivos
+### Meta description para afiliados
 
 ```
-[Mejor/es] [Producto] [Año]: [Beneficio/Modificador]
+[Verbo] los mejores [producto] de [año]. Comparamos [criterio 1],
+[criterio 2] y [criterio 3] para ayudarte a elegir. [CTA].
+```
 
-Ejemplos:
-- "Mejores Auriculares Bluetooth 2024: Guía Comparativa"
-- "Mejores Portátiles para Programar 2024 (Probados)"
-- "10 Mejores Sillas Gaming Calidad-Precio [Actualizado]"
+No afirmes "tras semanas de uso" ni "probados" salvo que sea cierto y esté documentado en el artículo.
+
+### Title
+
+```
+[Mejor/es] [producto] [año]: [beneficio o criterio]
+[Producto] review: [veredicto corto]
 ```
 
 ---
 
-## Ejemplos de Uso
+## Ejemplos de uso
 
 ```
 /xmon:seo-content revisar el artículo antes de publicar
-/xmon:seo-content optimizar el front matter de este post
-/xmon:seo-content generar schema para esta review de producto
-/xmon:seo-content crear estructura para artículo de [tema]
-/xmon:seo-content verificar internal linking
+/xmon:seo-content ajustar el front matter de este post al schema del proyecto
+/xmon:seo-content generar el JSON-LD para esta review
+/xmon:seo-content crear la estructura de una comparativa de [tema]
+/xmon:seo-content revisar este borrador generado con IA
 ```
 
 ---
 
-## Checklist de Ejecución
+## Checklist de ejecución
 
-- [ ] Detectar sistema de contenido, schema e i18n
-- [ ] Verificar/crear front matter completo
+- [ ] Detectar sistema de contenido, schema, campos e i18n
+- [ ] Ajustar front matter a los campos reales
 - [ ] Revisar estructura de headers
-- [ ] Verificar ubicación de keywords
-- [ ] Optimizar imágenes y alt text
-- [ ] Añadir internal links relevantes
-- [ ] Verificar external links y atributos
-- [ ] Añadir schema markup (o verificar herramienta automática)
-- [ ] Verificar disclosure de afiliados (si aplica)
-- [ ] Si es contenido AI: humanizar y verificar datos
-- [ ] Pasar checklist antes de publicar
+- [ ] Revisar término principal, cobertura temática e intención
+- [ ] Revisar imágenes y `alt`
+- [ ] Revisar enlazado interno y externo
+- [ ] Añadir o verificar structured data
+- [ ] Verificar disclosure de afiliados
+- [ ] Si hay borrador IA: verificar datos y no inventar experiencia
+- [ ] Pasar el checklist de publicación

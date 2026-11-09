@@ -1,9 +1,21 @@
 {
   "name": "seo-toolkit",
-  "version": "0.1.0",
-  "description": "Plugin completo de SEO: auditoría técnica y de contenido, optimización para sitios de afiliados/blogs, preparación para AI/LLMs, y mejores prácticas para cualquier stack.",
+  "version": "0.2.0",
+  "description": "Dos skills de SEO para blogs y sitios de afiliados: xmon:seo-audit (auditoría técnica y de contenido con puntuación sobre 100, modo rápido, structured data y visibilidad en buscadores con IA) y xmon:seo-content (optimización de artículos antes de publicar, disclosure de afiliados y revisión de borradores IA sin inventar experiencia). Detectan el stack antes de actuar.",
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"
-  }
+  },
+  "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "seo",
+    "structured-data",
+    "json-ld",
+    "affiliate",
+    "content",
+    "astro",
+    "nextjs",
+    "nuxt"
+  ]
 }

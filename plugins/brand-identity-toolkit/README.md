@@ -57,4 +57,4 @@ claude plugin test plugins/brand-identity-toolkit
 
 ## Licencia
 
-MIT — ver el repositorio del marketplace.
+MIT — ver [LICENSE](../../LICENSE).

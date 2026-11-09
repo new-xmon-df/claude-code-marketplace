@@ -57,4 +57,4 @@ Ninguno. Las herramientas de auditoría (`gitleaks`, `npm audit`, etc.) se usan 
 
 ## Licencia
 
-MIT — ver el repositorio del marketplace.
+MIT — ver [LICENSE](../../LICENSE).

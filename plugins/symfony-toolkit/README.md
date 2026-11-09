@@ -68,4 +68,4 @@ Cómo instalarlo: ver la sección [Requisitos / MCPs](../../README.md#requisitos
 
 ## Licencia
 
-MIT — ver el repositorio del marketplace.
+MIT — ver [LICENSE](../../LICENSE).

@@ -78,4 +78,4 @@ El agente queda disponible vía la herramienta `Agent` o como `@langchain-expert
 
 ## Licencia
 
-MIT — ver el repositorio del marketplace.
+MIT — ver [LICENSE](../../LICENSE).

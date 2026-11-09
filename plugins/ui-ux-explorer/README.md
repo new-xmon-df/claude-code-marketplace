@@ -56,4 +56,4 @@ El skill funciona sin ninguno, pero detecta estos al arrancar y sugiere instalar
 
 ## Licencia
 
-MIT — ver el repositorio del marketplace.
+MIT — ver [LICENSE](../../LICENSE).

@@ -4,7 +4,7 @@
   "description": "Skill /xmon:ui-ux para analizar y resolver problemas de UI/UX en cualquier stack frontend: detecta el stack, entrega specs implementation-ready (Problem Analysis / Recommended Solution / Implementation Notes / Rationale), implementa la solución y la verifica con Playwright (WCAG 2.2 AA).",
   "author": {
     "name": "Juanjo García",
-    "email": "juanjogarcia@gmail.com"
+    "email": "juanjogarciae@gmail.com"
   },
   "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
   "license": "MIT",

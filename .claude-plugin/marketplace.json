@@ -4,7 +4,7 @@
   "description": "Marketplace de plugins personalizados para Claude Code",
   "owner": {
     "name": "Juanjo García",
-    "email": "juanjogarcia@gmail.com"
+    "email": "juanjogarciae@gmail.com"
   },
   "plugins": [
     {
@@ -13,7 +13,7 @@
       "version": "0.2.0",
       "author": {
         "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
+        "email": "juanjogarciae@gmail.com"
       },
       "source": "./plugins/ui-ux-explorer",
       "category": "development"
@@ -24,7 +24,7 @@
       "version": "0.2.0",
       "author": {
         "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
+        "email": "juanjogarciae@gmail.com"
       },
       "source": "./plugins/security-toolkit",
       "category": "security"
@@ -35,7 +35,7 @@
       "version": "0.2.1",
       "author": {
         "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
+        "email": "juanjogarciae@gmail.com"
       },
       "source": "./plugins/seo-toolkit",
       "category": "development"
@@ -46,7 +46,7 @@
       "version": "0.5.0",
       "author": {
         "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
+        "email": "juanjogarciae@gmail.com"
       },
       "source": "./plugins/langchain-toolkit",
       "category": "development"
@@ -57,7 +57,7 @@
       "version": "0.3.0",
       "author": {
         "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
+        "email": "juanjogarciae@gmail.com"
       },
       "source": "./plugins/git-toolkit",
       "category": "development"
@@ -68,7 +68,7 @@
       "version": "0.2.0",
       "author": {
         "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
+        "email": "juanjogarciae@gmail.com"
       },
       "source": "./plugins/symfony-toolkit",
       "category": "development"

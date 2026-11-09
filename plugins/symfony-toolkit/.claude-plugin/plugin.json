@@ -4,7 +4,7 @@
   "description": "Dos agentes especializados en el ecosistema PHP moderno: @symfony-expert (Symfony 7.4 LTS / 8.x + Doctrine ORM 3.x + PHP 8.4: servicios, eventos, security, Messenger, forms, entidades rich) y @api-platform-pro (API Platform 4.x/5.x: ApiResource, state providers/processors, DTOs, filtros con QueryParameter, OpenAPI). Detectan la versión instalada, consultan fuentes oficiales vía context7 y se delegan trabajo entre sí.",
   "author": {
     "name": "Juanjo García",
-    "email": "juanjogarcia@gmail.com"
+    "email": "juanjogarciae@gmail.com"
   },
   "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
   "license": "MIT",

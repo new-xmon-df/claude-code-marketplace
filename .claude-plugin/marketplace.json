@@ -32,7 +32,7 @@
     {
       "name": "seo-toolkit",
       "description": "Dos skills de SEO para blogs y sitios de afiliados: xmon:seo-audit (auditoría técnica y de contenido con puntuación sobre 100, modo rápido, structured data y visibilidad en buscadores con IA) y xmon:seo-content (optimización de artículos antes de publicar, disclosure de afiliados y revisión de borradores IA sin inventar experiencia). Detectan el stack antes de actuar.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"

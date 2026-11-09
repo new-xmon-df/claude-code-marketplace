@@ -20,7 +20,7 @@ Para optimizar un artículo concreto antes de publicarlo, usa `xmon:seo-content`
 
 ## Modos
 
-- **Auditoría completa** (por defecto): las 5 categorías del Paso 2-6, 100 puntos.
+- **Auditoría completa** (por defecto): las 5 categorías de los Pasos 1-5, 100 puntos.
 - **Quick audit**: se activa si el usuario pide "quick audit", "análisis rápido" o similar. Revisa solo:
   1. Title y meta description (existen, únicos, descriptivos)
   2. URLs/slugs legibles

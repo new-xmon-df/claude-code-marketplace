@@ -231,7 +231,7 @@ Cita siempre la fuente de datos, estadísticas y especificaciones (preferiblemen
 
 | Stack | Opción | Notas |
 |---|---|---|
-| Next.js App Router | Metadata API (`metadata` / `generateMetadata`) para meta tags; JSON-LD con `<script type="application/ld+json">` en `layout`/`page` | Es la recomendación de la documentación de Next.js. Escapa `<` como `<` al serializar. `schema-dts` para tipar el JSON-LD |
+| Next.js App Router | Metadata API (`metadata` / `generateMetadata`) para meta tags; JSON-LD con `<script type="application/ld+json">` en `layout`/`page` | Es la recomendación de la documentación de Next.js. Al serializar, sustituye `<` por `<`. `schema-dts` para tipar el JSON-LD |
 | Next.js Pages Router | `next-seo` | Librería comunitaria; comprueba la compatibilidad con la versión instalada |
 | Astro | `astro-seo` para meta tags; JSON-LD manual en el layout | |
 | Nuxt | `@nuxtjs/seo` (incluye `nuxt-schema-org`), `useSeoMeta` | |

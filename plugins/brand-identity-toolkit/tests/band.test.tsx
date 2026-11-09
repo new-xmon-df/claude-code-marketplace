@@ -53,3 +53,18 @@ test('draws nothing when the project has no progress file', async ($, on) => {
   expect((await ui.find({ type: 'Text' }))?.text).toBe('engine')
   await ui.unmount()
 })
+
+test('strips control characters from step titles', async ($, on) => {
+  on('fs.exists', () => ({ value: true }))
+  on('fs.read', () => ({ value: 'Paso actual: 1.1\n- ⬜ 1.1 Discovery\u001b]8;;https://evil.test\u0007 link\u001b[2J' }))
+  on('session.cwd', () => ({ value: '/project' }))
+  on('command.register', () => ({ value: { command: 'progreso' } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+
+  const ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  const text = (await ui.find({ type: 'Text', text: /1\.1 Discovery/ }))?.text ?? ''
+  expect(text).toContain('1.1 Discovery')
+  expect(/[\u0000-\u001f\u007f-\u009f]/.test(text)).toBe(false)
+  await ui.unmount()
+})

@@ -4,7 +4,7 @@
   "description": "Agente langchain-expert para LangChain JS v1 y LangGraph JS v1 (TypeScript): createAgent y middleware, tools, RAG, StateGraph, checkpointers, interrupts y migración v0 -> v1. Auto-instala el MCP docs-langchain (HTTP a https://docs.langchain.com/mcp). Fuente complementaria: context7 (requerido, instalado globalmente).",
   "author": {
     "name": "Juanjo García",
-    "email": "juanjogarcia@gmail.com"
+    "email": "juanjogarciae@gmail.com"
   },
   "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
   "license": "MIT",

@@ -4,7 +4,7 @@
   "description": "Comando /commit: genera commits Conventional Commits en español respetando commit-prompt.txt o la configuración de commitlint del proyecto.",
   "author": {
     "name": "Juanjo García",
-    "email": "juanjogarcia@gmail.com"
+    "email": "juanjogarciae@gmail.com"
   },
   "repository": "https://github.com/new-xmon-df/claude-code-marketplace",
   "license": "MIT",

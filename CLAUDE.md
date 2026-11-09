@@ -19,7 +19,7 @@ Dos niveles, ambos obligatorios para que un plugin sea instalable:
    - `skills/<skill-name>/SKILL.md` (opcional) — skills invocables por Claude. El nombre del directorio del skill usa la convención `xmon:<slug>` (ej. `xmon:ui-ux`, `xmon:seo-audit`). Ese mismo identificador va en el frontmatter `name:` del SKILL.md.
    - `agents/<agent-name>.md` (opcional) — subagentes invocables vía la herramienta `Agent` o como `@<agent-name>`. Cada archivo lleva frontmatter con `name`, `description`, `model` y `tools` (lista de tools permitidas). El nombre del archivo (sin `.md`) debe coincidir con el campo `name:` del frontmatter.
 
-Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit`, `security-toolkit` y `ui-ux-explorer` (solo skills), `git-toolkit` (solo command), `langchain-toolkit` (agent + `mcpServers` en `plugin.json`) y `symfony-toolkit` (solo agents).
+Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit`, `security-toolkit` y `ui-ux-explorer` (solo skills), `git-toolkit` (solo command), `langchain-toolkit` (agent + `mcpServers` en `plugin.json`) `symfony-toolkit` (solo agents) y `brand-identity-toolkit` (skill + `hooks/` con una banda sobre el prompt y `types` en `plugin.json`).
 
 ### Criterio de contenido (Opus 5.5+)
 
@@ -129,5 +129,6 @@ Cross-refs válidos hoy (mantener actualizado al añadir plugins):
 | `security-toolkit` | skills `xmon:security-audit`, `xmon:hardening` | `xmon:security-audit`, `xmon:hardening` |
 | `langchain-toolkit` | agent `langchain-expert` | `@langchain-expert` |
 | `symfony-toolkit` | agents `symfony-expert`, `api-platform-pro` | `@symfony-expert`, `@api-platform-pro` |
+| `brand-identity-toolkit` | skill `xmon:brand-identity-pipeline` | `/xmon:brand-identity-pipeline` |
 
 Al publicar un plugin nuevo, ampliar esta tabla y revisar si los agentes existentes deberían añadirlo a sus cross-refs (sin propagación automática, decisión consciente por cada agente).

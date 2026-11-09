@@ -136,6 +136,19 @@ Regla mnemotécnica: si toca HTTP API o un `#[ApiResource]`, manda API Platform;
 @api-platform-pro filtro custom para buscar pedidos por rango de fechas
 ```
 
+### brand-identity-toolkit
+
+**Skill**: `/xmon:brand-identity-pipeline` · **Comando**: `/progreso`
+
+Lleva un proyecto de identidad de marca de principio a fin (estrategia, dirección creativa, logotipo, sistema de identidad, manual y guardián de marca) sin saltarse fases, pasos ni guardrails, en orden de dependencias. Muestra sobre el prompt el paso actual de `brand/progress.md`.
+
+**Ejemplos**:
+
+```
+/xmon:brand-identity-pipeline empezamos la identidad de marca de este producto
+/progreso
+```
+
 ### git-toolkit
 
 **Comando**: `/commit`
@@ -184,6 +197,7 @@ xmon-plugins/
 ├── README.md                  # este archivo
 ├── CLAUDE.md                  # guía interna para Claude
 └── plugins/
+    ├── brand-identity-toolkit/ # skill + hooks
     ├── git-toolkit/           # command
     ├── langchain-toolkit/     # agent + MCP
     ├── security-toolkit/      # skills

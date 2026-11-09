@@ -1,7 +1,7 @@
 {
   "name": "ui-ux-explorer",
-  "version": "0.1.1",
-  "description": "Pareja diseño + implementación UI/UX. El skill /xmon:ui-ux detecta tu stack frontend e implementa soluciones adaptadas (responsive, browser compat, alternativas de diseño). El agente @ux-consultant entrega specs previas a implementación (heurísticas Nielsen, jerarquía, accesibilidad WCAG, flujos) sin escribir código. Diseñados para usarse en pareja.",
+  "version": "0.2.0",
+  "description": "Skill /xmon:ui-ux para analizar y resolver problemas de UI/UX en cualquier stack frontend: detecta el stack, entrega specs implementation-ready (Problem Analysis / Recommended Solution / Implementation Notes / Rationale), implementa la solución y la verifica con Playwright (WCAG 2.2 AA).",
   "author": {
     "name": "Juanjo García",
     "email": "juanjogarcia@gmail.com"
@@ -15,6 +15,6 @@
     "frontend",
     "responsive",
     "accessibility",
-    "nielsen"
+    "wcag"
   ]
 }

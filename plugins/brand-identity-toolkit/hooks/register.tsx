@@ -17,7 +17,10 @@ function statusOf(mark: string): Step['status'] {
 }
 
 function shorten(text: string, max = 70): string {
-  const plain = text.replace(/\*\*/g, '').replace(/`/g, '')
+  const plain = text
+    .replace(/\*\*/g, '')
+    .replace(/`/g, '')
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, '')
   return plain.length > max ? `${plain.slice(0, max - 1)}…` : plain
 }
 

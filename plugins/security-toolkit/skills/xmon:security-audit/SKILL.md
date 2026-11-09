@@ -1,270 +1,121 @@
 ---
 name: xmon:security-audit
-description: Auditoría de seguridad de código y configuraciones. Detecta vulnerabilidades OWASP Top 10, malas prácticas, secrets expuestos, y problemas de seguridad en cualquier stack.
+description: Auditoría de seguridad de un proyecto completo (no solo del diff) - secrets expuestos, dependencias vulnerables, configuración insegura y checklist OWASP Top 10 2025, con reporte por severidades. Stack-agnóstica.
 ---
 
 # Security Audit
 
-Skill para realizar auditorías de seguridad en código y configuraciones de cualquier proyecto.
+Audita el **proyecto entero**: código, dependencias, configuración e infraestructura versionada. Para revisar solo los cambios pendientes de la rama actual, Claude Code ya trae el comando nativo `/security-review`; esta skill es su complemento para el estado global del repo.
 
-## Cuándo usar este skill
-
-- Quieres revisar el código en busca de vulnerabilidades
-- Necesitas detectar secrets o credenciales expuestas
-- Quieres verificar que tu código cumple con OWASP Top 10
-- Vas a hacer code review con foco en seguridad
-- Preparas una aplicación para producción
+Para reforzar configuraciones de servidores, contenedores o bases de datos, usa `xmon:hardening`.
 
 ---
 
-## Paso 0: Detectar Stack y Entorno (OBLIGATORIO)
+## Paso 0: Detectar stack (OBLIGATORIO)
 
-**ANTES de auditar**, detecta el stack del proyecto:
+Antes de auditar, localiza los manifiestos y anota el stack detectado (lenguaje, framework, gestor de paquetes, BD, infra):
 
-### Archivos a buscar
+| Ecosistema | Manifiestos / lockfiles |
+|---|---|
+| Node.js | `package.json`, `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock` |
+| PHP | `composer.json`, `composer.lock` |
+| Python | `requirements*.txt`, `pyproject.toml`, `poetry.lock`, `uv.lock` |
+| Ruby | `Gemfile`, `Gemfile.lock` |
+| Go | `go.mod`, `go.sum` |
+| Rust | `Cargo.toml`, `Cargo.lock` |
+| Java | `pom.xml`, `build.gradle*` |
+| .NET | `*.csproj`, `packages.lock.json` |
+| Infra | `Dockerfile`, `compose*.yml`, `*.tf`, manifiestos K8s, `.github/workflows/*` |
 
-```
-# Backend
-package.json          # Node.js
-composer.json         # PHP
-requirements.txt      # Python
-Gemfile              # Ruby
-go.mod               # Go
-pom.xml / build.gradle # Java
-*.csproj             # .NET
-
-# Frontend
-package.json         # Dependencias JS
-angular.json         # Angular
-next.config.*        # Next.js
-nuxt.config.*        # Nuxt
-
-# Infraestructura
-Dockerfile           # Contenedores
-docker-compose.yml   # Orquestación
-*.tf                 # Terraform
-*.yaml / *.yml       # K8s, Ansible
-```
-
-### Identificar el entorno
-
-1. **Leer archivos de configuración** para determinar:
-   - Lenguaje principal
-   - Framework usado
-   - Base de datos
-   - Servicios externos
-
-2. **Guardar contexto detectado**:
-   ```
-   Stack detectado:
-   - Backend: [Node.js/PHP/Python/Go/Java/etc.]
-   - Framework: [Express/Laravel/Django/Spring/etc.]
-   - Frontend: [React/Vue/Angular/etc.]
-   - DB: [PostgreSQL/MySQL/MongoDB/etc.]
-   - Infra: [Docker/K8s/AWS/etc.]
-   ```
+Lee también `CLAUDE.md` / `docs/` del proyecto por si hay convenciones de seguridad propias.
 
 ---
 
-## Paso 1: Verificar herramientas disponibles
+## Paso 1: Secrets y credenciales
 
-### Herramientas siempre disponibles
-- **Grep**: Buscar patrones en código
-- **Glob**: Encontrar archivos por extensión
-- **Read**: Leer código y configuraciones
-- **WebSearch**: Buscar CVEs y vulnerabilidades conocidas
-
-### MCPs opcionales útiles
-| MCP | Para qué sirve |
-|-----|----------------|
-| **Sequential Thinking** | Análisis metódico de vulnerabilidades complejas |
-| **Context7** | Documentación de seguridad de frameworks |
+1. Si está instalado `gitleaks`, ejecútalo (cubre también el historial):
+   - `gitleaks git` → historial del repositorio
+   - `gitleaks dir` → árbol de trabajo actual
+2. Si no está disponible, búscalos con Grep (claves, tokens, `BEGIN .* PRIVATE KEY`, cadenas de conexión con password) y revisa archivos sensibles: `.env*`, `*.pem`, `*.key`, `credentials*`, `secrets*`, configs con valores reales.
+3. Comprueba que `.gitignore` excluye esos archivos y que ninguno está trackeado (`git ls-files`).
+4. Si un secret estuvo en algún commit, la remediación es **rotarlo**: borrarlo del árbol actual no basta.
 
 ---
 
-## Paso 2: Análisis de Secrets y Credenciales
+## Paso 2: Dependencias vulnerables
 
-### Patrones a buscar (CRÍTICO)
+Ejecuta la herramienta del ecosistema detectado (solo las que apliquen):
 
-Usar la herramienta Grep para buscar estos patrones:
+| Ecosistema | Comando |
+|---|---|
+| Node.js | `npm audit --audit-level=high` (o el `audit` del gestor detectado) |
+| PHP | `composer audit` |
+| Python | `pip-audit` (o `pip-audit -r requirements.txt`) |
+| Ruby | `bundle-audit check --update` |
+| Go | `govulncheck ./...` |
+| Rust | `cargo audit` |
+| .NET | `dotnet package list --vulnerable --include-transitive` |
 
-**API Keys y Tokens:**
-- `api[_-]?key`
-- `secret[_-]?key`
-- `access[_-]?token`
-- `auth[_-]?token`
-- `bearer`
-
-**Credenciales de base de datos:**
-- `password\s*=`
-- `passwd\s*=`
-- `DATABASE_URL`
-- `MONGO.*URI`
-
-**Cloud credentials:**
-- `AWS_ACCESS_KEY`
-- `AWS_SECRET`
-- `GOOGLE_.*KEY`
-- `AZURE_.*KEY`
-
-**Private keys:**
-- `BEGIN.*PRIVATE KEY`
-- `BEGIN RSA`
-
-### Archivos a revisar especialmente
-
-```
-.env                  # Variables de entorno
-.env.*               # Variantes
-config/*.json        # Configuraciones
-**/secrets.*         # Archivos de secrets
-**/credentials.*     # Credenciales
-**/*.pem             # Certificados
-**/*.key             # Claves privadas
-```
-
-### Si encuentras secrets expuestos
-
-**Acciones recomendadas**:
-1. Rotar inmediatamente las credenciales expuestas
-2. Mover secrets a variables de entorno o secret manager
-3. Añadir archivos sensibles a .gitignore
-4. Revisar historial de git por si están en commits anteriores
+Si la herramienta no está instalada, indícalo en el reporte y no inventes resultados. Revisa también si los lockfiles están versionados (supply chain, A03).
 
 ---
 
-## Paso 3: OWASP Top 10 Checklist
+## Paso 3: Checklist OWASP Top 10 2025
 
-Consultar la guía oficial de OWASP para patrones específicos de cada categoría:
+Fuente: https://owasp.org/Top10/2025/. Revisa cada categoría con foco en el stack detectado; cita la categoría en cada hallazgo.
 
-### A01: Broken Access Control
-- Verificar validación de permisos en endpoints
-- Buscar posibles IDOR (Insecure Direct Object Reference)
-- Revisar escalación de privilegios
-
-### A02: Cryptographic Failures
-- Buscar algoritmos de hash débiles (MD5, SHA1)
-- Verificar uso de HTTPS
-- Revisar almacenamiento de passwords
-
-### A03: Injection
-- **SQL**: Buscar concatenación de queries sin prepared statements
-- **Command**: Buscar ejecución de comandos del sistema con input de usuario
-- **XSS**: Buscar renderizado de HTML sin sanitizar
-
-Para patrones específicos de búsqueda, consultar:
-- OWASP Cheat Sheet Series
-- Semgrep rules para el lenguaje del proyecto
-
-### A04: Insecure Design
-- [ ] ¿Hay rate limiting?
-- [ ] ¿Hay validación de inputs?
-- [ ] ¿Se usa CAPTCHA donde corresponde?
-
-### A05: Security Misconfiguration
-- Buscar debug habilitado en producción
-- Verificar CORS no sea demasiado permisivo
-- Revisar headers de seguridad (CSP, HSTS, X-Frame-Options)
-
-### A06: Vulnerable Components
-- **Node.js**: Ejecutar `npm audit`
-- **Python**: Usar `pip-audit` o `safety`
-- **PHP**: Ejecutar `composer audit`
-
-### A07: Authentication Failures
-- Verificar configuración segura de sesiones
-- Revisar políticas de passwords
-- Comprobar cookies con flags secure y httpOnly
-
-### A08: Software and Data Integrity
-- Verificar integridad de dependencias
-- Revisar pipeline de CI/CD
-- Comprobar Content Security Policy
-
-### A09: Logging Failures
-- Buscar datos sensibles en logs (passwords, tokens)
-- Verificar que errores no expongan información interna
-
-### A10: SSRF
-- Buscar fetch/requests con URLs provenientes de input de usuario
-- Verificar validación de URLs externas
+| ID | Categoría | Qué revisar en el proyecto |
+|---|---|---|
+| A01:2025 | Broken Access Control | Autorización en cada endpoint, IDOR, deny-by-default, CORS, escalada de privilegios. Incluye **SSRF** (fetch/requests con URLs controladas por el usuario). |
+| A02:2025 | Security Misconfiguration | Debug activo en prod, cabeceras de seguridad, defaults inseguros, servicios expuestos, permisos de cloud. |
+| A03:2025 | Software Supply Chain Failures | Resultado del Paso 2, lockfiles versionados, dependencias sin mantener, acciones de CI sin fijar, origen de imágenes base. |
+| A04:2025 | Cryptographic Failures | Hash de passwords (no MD5/SHA1 sin sal), TLS, cifrado en reposo, claves en código. |
+| A05:2025 | Injection | SQL sin parámetros, ejecución de comandos con input, XSS, plantillas sin escape, NoSQL/LDAP. |
+| A06:2025 | Insecure Design | Rate limiting, validación de flujos de negocio, límites y cuotas. |
+| A07:2025 | Authentication Failures | Sesiones, cookies (`Secure`, `HttpOnly`, `SameSite`), MFA, protección contra fuerza bruta, gestión de tokens. |
+| A08:2025 | Software or Data Integrity Failures | Deserialización insegura, actualizaciones sin firma, integridad de artefactos del pipeline. |
+| A09:2025 | Security Logging and Alerting Failures | Eventos de seguridad registrados y alertados, sin datos sensibles en logs. |
+| A10:2025 | Mishandling of Exceptional Conditions | Fail-open ante errores, excepciones sin capturar, errores verbosos al usuario, transacciones sin rollback. |
 
 ---
 
-## Paso 4: Reporte de Auditoría
-
-### Formato del reporte
+## Paso 4: Reporte
 
 ```markdown
 # Reporte de Auditoría de Seguridad
 
-**Proyecto**: [Nombre]
-**Fecha**: [Fecha]
-**Stack**: [Stack detectado]
+**Proyecto**: [nombre] · **Fecha**: [fecha] · **Stack**: [detectado]
+**Herramientas ejecutadas**: [gitleaks, npm audit, ...] · **No disponibles**: [...]
 
-## Resumen Ejecutivo
+## Resumen
 
 | Severidad | Cantidad |
 |-----------|----------|
-| Crítica   | X        |
-| Alta      | X        |
-| Media     | X        |
-| Baja      | X        |
+| Crítica   | X |
+| Alta      | X |
+| Media     | X |
+| Baja      | X |
 
 ## Hallazgos
 
-### [SEV-001] [Título del hallazgo]
+### [SEV-001] [Título]
 
-**Severidad**: Crítica/Alta/Media/Baja
-**Categoría**: OWASP A0X
-**Ubicación**: `archivo:línea`
+- **Severidad**: Crítica/Alta/Media/Baja
+- **Categoría**: A0X:2025 [nombre]
+- **Ubicación**: `archivo:línea`
+- **Descripción**: qué se encontró y por qué es un problema
+- **Impacto**: qué permitiría a un atacante
+- **Remediación**: cambio concreto
 
-**Descripción**:
-[Qué se encontró y por qué es un problema]
+## Recomendaciones generales
 
-**Impacto**:
-[Qué podría pasar si se explota]
-
-**Remediación**:
-[Cómo solucionarlo]
-
----
-
-## Recomendaciones Generales
-
-1. [Recomendación 1]
-2. [Recomendación 2]
-...
+1. ...
 ```
 
----
-
-## Paso 5: Verificación de Remediaciones
-
-Una vez aplicados los fixes:
-
-1. **Re-ejecutar búsquedas** de patrones vulnerables
-2. **Verificar** que los fixes no introducen nuevos problemas
-3. **Documentar** los cambios realizados
+Ordena los hallazgos por severidad. Separa lo verificado (con evidencia `archivo:línea` o salida de herramienta) de lo sospechoso pendiente de confirmar.
 
 ---
 
-## Recursos externos
+## Paso 5: Verificación
 
-Para patrones de búsqueda específicos por lenguaje:
-- **Semgrep Registry**: Reglas predefinidas por lenguaje y framework
-- **OWASP Cheat Sheets**: Guías de prevención por tipo de vulnerabilidad
-- **CWE Database**: Catálogo de debilidades de software
-
----
-
-## Checklist de Ejecución
-
-- [ ] Detectar stack y entorno
-- [ ] Buscar secrets y credenciales expuestas
-- [ ] Revisar OWASP Top 10
-- [ ] Analizar dependencias vulnerables
-- [ ] Verificar configuración de seguridad
-- [ ] Generar reporte con hallazgos
-- [ ] Proponer remediaciones
-- [ ] Verificar fixes aplicados
+Tras aplicar fixes: vuelve a ejecutar las herramientas y búsquedas que detectaron cada hallazgo, confirma que desaparece y que el fix no rompe tests ni introduce otro problema. Marca cada `SEV-xxx` como resuelto, pendiente o aceptado.

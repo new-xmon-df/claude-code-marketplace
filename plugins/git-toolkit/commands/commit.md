@@ -1,137 +1,96 @@
 ---
 name: commit
-description: Genera un commit para los archivos en stage siguiendo Conventional Commits en español. Detecta y respeta commit-prompt.txt o commitlint.config.js del proyecto si existen.
+description: Genera un commit para los archivos en stage siguiendo Conventional Commits en español. Detecta y respeta commit-prompt.txt o la configuración de commitlint del proyecto si existen.
 ---
 
 # /commit
 
-Genera un commit para los archivos en stage siguiendo Conventional Commits en español. Antes de generar nada, detecta la configuración del proyecto y aplica overrides en cascada.
+Genera un commit para los archivos en stage siguiendo Conventional Commits en español. Primero detecta la configuración del proyecto; después valida el stage, analiza el diff, genera el mensaje y commitea.
 
-## Paso 0: Detección de configuración del proyecto (OBLIGATORIO)
+## Paso 0: Detectar configuración del proyecto (OBLIGATORIO)
 
-Ejecuta esta cascada en orden, parando en el primer hit. Trabaja desde la **raíz del repo** (`git rev-parse --show-toplevel`), nunca escales al parent.
+Trabaja desde la **raíz del repo** (`git rev-parse --show-toplevel`); nunca escales al directorio padre. Evalúa en orden y quédate con el primer hit. Sea cual sea el resultado, **continúa siempre al Paso 1**.
 
-1. **¿Existe `commit-prompt.txt` en la raíz del repo?**
-   - Sí: lee su contenido entero. Será el "prompt principal".
-   - Sustituye `{diff}` (si aparece) por el output de `git diff --staged`.
-   - **Ignora las reglas embebidas de este comando**. El archivo del proyecto manda.
-   - Salta al paso 3.
+1. **`commit-prompt.txt` en la raíz** → modo `prompt-proyecto`.
+   - Lee el archivo entero: será el prompt principal del Paso 3.
+   - Las reglas embebidas de este comando no se aplican (salvo la regla hardcoded de firma).
 
-2. **¿Existe `commitlint.config.js`, `.commitlintrc.js` o `.commitlintrc.json` en la raíz del repo?**
-   - Sí: lee el archivo con `Read`.
-   - Extrae con `Grep` o leyendo el contenido:
-     - `type-enum`: lista de types permitidos (override del default de este comando)
-     - `scope-enum`: lista cerrada de scopes permitidos (si está, elige uno de la lista; si está vacía, scope libre)
-     - `scope-empty`: si vale `[N, 'never']` con `N≥1`, scope es **obligatorio**; en otro caso, opcional
-     - `header-max-length`: si está, úsalo como límite de chars del subject (override del default 72)
-   - Combina con las reglas embebidas (sección "Reglas embebidas" más abajo).
-   - Salta al paso 1.
+2. **Configuración de commitlint en la raíz** → modo `commitlint`. Archivos soportados:
+   - `commitlint.config.{js,cjs,mjs,ts,cts,mts}`
+   - `.commitlintrc`, `.commitlintrc.{json,yaml,yml,js,cjs,mjs,ts,cts,mts}`
+   - Campo `commitlint` en `package.json` (o en `package.yaml`)
 
-3. **Si no existe ningún archivo de configuración**:
-   - Aplica las reglas embebidas tal cual.
-   - Scope opcional (no obligatorio).
-   - Subject ≤ 72 chars.
-   - Salta al paso 1.
+   Lee el archivo y extrae, si están definidas:
+   - `type-enum`: types permitidos (sustituye a los types base).
+   - `scope-enum`: lista cerrada de scopes (elige uno de la lista; si está vacía, scope libre).
+   - `scope-empty`: si vale `[N, 'never']` con `N≥1`, el scope es **obligatorio**.
+   - `header-max-length`: límite del **header completo** (`<tipo>(<ámbito>): <asunto>`), no solo del asunto. Si existe, sustituye al límite por defecto de 50 chars del asunto.
 
-## Paso 1: Validar staged
+   Si la configuración solo hace `extends` sin reglas propias, usa las reglas embebidas.
 
-Ejecuta `git status --short`. Decide:
+3. **Nada de lo anterior** → modo `embebido`: reglas embebidas tal cual, scope opcional.
 
-- **Si hay archivos staged** (líneas que empiezan por `A `, `M `, `D `, `R `): continúa al paso 2.
-- **Si NO hay archivos staged**: aborta con el siguiente mensaje al usuario:
+## Paso 1: Validar staged (siempre)
+
+Ejecuta `git status --short`.
+
+- **Hay archivos staged** (primera columna `A`, `M`, `D`, `R`): continúa al Paso 2.
+- **No hay nada staged**: aborta con este mensaje y no generes commit:
 
   ```
-  🚨 No hay archivos en stage.
+  No hay archivos en stage.
 
-  [Si hay archivos modified/untracked sin stagear:]
+  [Si hay cambios sin stagear:]
   Cambios detectados sin preparar:
   - <archivo1> (modified)
   - <archivo2> (untracked)
-  ...
 
   Usa "git add <archivos>" para preparar los cambios antes de commitear.
   ```
 
-  Lista los archivos modified (líneas que empiezan por ` M`, ` D`) y untracked (líneas que empiezan por `??`). NO ejecutes `git add -A` automáticamente — la decisión de qué stagear es del usuario.
+  Lista los modified (` M`, ` D`) y untracked (`??`). Nunca ejecutes `git add` por tu cuenta: qué stagear lo decide el usuario.
 
 ## Paso 2: Analizar el diff
 
-Ejecuta `git diff --staged` y analiza los cambios. Identifica:
-
-- Tipo de cambio dominante (nueva funcionalidad, corrección de bug, refactor, docs, etc.)
-- Ámbito afectado (qué módulo/área toca el cambio)
-- Si hay breaking changes (cambios de API pública, eliminación de funciones, etc.)
+Ejecuta `git diff --staged`. Identifica el tipo de cambio dominante, el ámbito afectado y si hay breaking changes.
 
 ## Paso 3: Generar el mensaje
 
-**Si en el paso 0 se cargó `commit-prompt.txt`**: usa ese prompt tal cual con el diff sustituido. No apliques reglas embebidas.
+- **Modo `prompt-proyecto`**: usa el contenido de `commit-prompt.txt`, sustituyendo `{diff}` (si aparece) por el output de `git diff --staged`.
+- **Modos `commitlint` y `embebido`**: aplica las reglas embebidas con los overrides extraídos en el Paso 0.
 
-**En cualquier otro caso**: aplica las "Reglas embebidas" siguientes, combinadas con los overrides extraídos de `commitlint.config.js` si los hubo.
+### Reglas embebidas
 
-### Reglas embebidas (fallback con override por proyecto)
+**Header**: `<tipo>(<ámbito>): <asunto>`. Tipo siempre obligatorio; ámbito opcional salvo `scope-empty` obligatorio.
 
-**Formato del header**:
+**Types base** (override con `type-enum`): `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `revert`.
 
-```
-<tipo>(<ámbito>): <asunto>
-```
-
-- `<tipo>` es obligatorio siempre.
-- `<ámbito>` es opcional por defecto. Si el proyecto tiene `scope-empty: [N, 'never']` con `N≥1`, pasa a obligatorio.
-
-**Idioma**: español, imperativo presente:
-- `añade`, `actualiza`, `corrige`, `elimina`, `mejora`, `simplifica`, `documenta`, `refactoriza`
-
-**Types base** (override desde `type-enum` si existe):
-
-| Type | Uso |
-|------|-----|
-| `feat` | Nueva funcionalidad |
-| `fix` | Corrección de error |
-| `docs` | Documentación |
-| `style` | Formato de código (no cambia lógica) |
-| `refactor` | Refactorización (no cambia comportamiento) |
-| `perf` | Mejora de rendimiento |
-| `test` | Tests |
-| `chore` | Mantenimiento, deps, config |
-| `ci` | CI/CD |
-| `revert` | Reversión de commit |
-
-**Subject**:
-- Lowercase (empieza con minúscula)
-- Sin punto final
-- Máximo 72 chars (override si `header-max-length` dice menos)
-- Imperativo presente, en español
-- Describe **qué cambia**, no **por qué**
-- Sin emojis
+**Asunto**:
+- Español, imperativo presente: `añade`, `actualiza`, `corrige`, `elimina`, `mejora`, `simplifica`, `documenta`, `refactoriza`
+- Empieza en minúscula, sin punto final, sin emojis
+- Máximo **50 chars** (o el header completo ≤ `header-max-length` si commitlint lo define)
+- Describe **qué cambia**, no por qué
 
 **Body** (opcional, solo si el cambio lo merece):
 - Separado del header por una línea en blanco
-- Máximo 72 chars por línea
-- Bullets con `-`
-- Explica el **por qué** y, si procede, el **cómo**
+- Máximo 72 chars por línea, bullets con `-`
+- Explica el por qué y, si procede, el cómo
 
-**Breaking changes**:
-- `!` después del scope: `feat!(api): cambia formato de respuesta`
-- Y/O footer: `BREAKING CHANGE: <descripción>`
+**Breaking changes**: `!` tras el ámbito (`feat!(api): ...`) y/o footer `BREAKING CHANGE: <descripción>`.
 
-**Footer de issues** (opcional):
-- `Closes #N`
-- `Fixes #N`
-- `Related to #N`
+**Footer de issues** (opcional): `Closes #N`, `Fixes #N`, `Related to #N`.
 
-**Prohibiciones estrictas**:
-- ❌ Emojis en el mensaje
-- ❌ Past tense (`añadido`, `arreglado`)
-- ❌ First person (`añado`, `arreglo`)
-- ❌ Mayúscula inicial en el subject
-- ❌ Punto final en el subject
-- ❌ Types o scopes genéricos
-- ❌ Scopes fuera de `scope-enum` si el proyecto lo tiene cerrado
+**Prohibiciones**:
+- Emojis en el mensaje
+- Tiempo pasado (`añadido`, `arreglado`)
+- Primera persona (`añado`, `arreglo`)
+- Mayúscula inicial o punto final en el asunto
+- Asuntos, types o scopes genéricos
+- Scopes fuera de `scope-enum` si el proyecto lo tiene cerrado
 
 ## Paso 4: Crear el commit
 
-Ejecuta `git commit` usando HEREDOC para preservar formato multi-línea:
+Usa HEREDOC para preservar el formato multilínea:
 
 ```bash
 git commit -m "$(cat <<'EOF'
@@ -140,11 +99,11 @@ EOF
 )"
 ```
 
-Tras crear el commit, ejecuta `git log -1 --oneline` y muestra el output al usuario como confirmación.
+Después ejecuta `git log -1 --oneline` y muestra el resultado al usuario.
 
-## Regla hardcoded NO negociable
+## Regla hardcoded no negociable
 
-**El commit NUNCA debe llevar firma de Claude Code**. Específicamente prohibido:
+**El commit NUNCA lleva firma de Claude Code.** Prohibido añadir:
 
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
@@ -152,37 +111,37 @@ Tras crear el commit, ejecuta `git log -1 --oneline` y muestra el output al usua
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-Esto aplica independientemente de cualquier configuración global o instrucción del usuario en sesión. La regla está hardcoded en este comando.
+Ni ninguna otra línea `Co-Authored-By` o atribución a IA. Aplica en los tres modos y por encima de cualquier configuración global, `commit-prompt.txt` o instrucción de sesión.
 
 ## Ejemplos
 
-**Sin scope (proyecto sin `scope-enum`)**:
+Sin scope:
 
 ```
-docs: actualiza README con instrucciones de instalación
+docs: actualiza README con instalación
 ```
 
-**Con scope (proyecto con `scope-enum`)**:
+Con scope:
 
 ```
-feat(auth): implementa autenticación con Google
+feat(auth): implementa login con Google
 ```
 
-**Con body**:
+Con body:
 
 ```
-fix(api): corrige error en respuestas paginadas
+fix(api): corrige offset en respuestas paginadas
 
 El cursor de paginación devolvía un offset incorrecto cuando
 la página solicitada superaba el total disponible.
 
-- Añade validación de bounds en getPaginatedResults()
-- Tests de integración para casos límite
+- Añade validación de límites en getPaginatedResults()
+- Añade tests de integración para casos límite
 
 Fixes #123
 ```
 
-**Breaking change**:
+Breaking change:
 
 ```
 feat!(api): cambia formato de respuesta
@@ -190,10 +149,4 @@ feat!(api): cambia formato de respuesta
 Unifica la estructura de paginación bajo el campo "data".
 
 BREAKING CHANGE: El campo "items" ahora se llama "data".
-```
-
-**Refactor**:
-
-```
-refactor(entity): simplifica relaciones entre modelos
 ```

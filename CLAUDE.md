@@ -15,16 +15,25 @@ Dos niveles, ambos obligatorios para que un plugin sea instalable:
 1. **Registro a nivel marketplace** — [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json) lista todos los plugins publicados (`name`, `description`, `version`, `author`, `source`, `category`). El campo `source` es una ruta relativa al directorio del plugin dentro de `plugins/`. Si un plugin existe en `plugins/` pero no está aquí, no se publica.
 2. **Definición del plugin** — cada plugin vive en [plugins/<nombre>/](plugins/) y debe tener:
    - `.claude-plugin/plugin.json` con `name`, `version`, `description`, `author`. El `name` y la `version` deben coincidir con la entrada del marketplace.
-   - `commands/*.md` (opcional) — slash commands, uno por archivo, con frontmatter `name` + `description`. El nombre del archivo (sin `.md`) es el comando que invoca el usuario (ej. `/seo-check`).
+   - `commands/*.md` (opcional) — slash commands, uno por archivo, con frontmatter `name` + `description`. El nombre del archivo (sin `.md`) es el comando que invoca el usuario (ej. `/commit`).
    - `skills/<skill-name>/SKILL.md` (opcional) — skills invocables por Claude. El nombre del directorio del skill usa la convención `xmon:<slug>` (ej. `xmon:ui-ux`, `xmon:seo-audit`). Ese mismo identificador va en el frontmatter `name:` del SKILL.md.
    - `agents/<agent-name>.md` (opcional) — subagentes invocables vía la herramienta `Agent` o como `@<agent-name>`. Cada archivo lleva frontmatter con `name`, `description`, `model` y `tools` (lista de tools permitidas). El nombre del archivo (sin `.md`) debe coincidir con el campo `name:` del frontmatter.
 
-Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit` y `security-toolkit` (commands + skills), `ui-ux-explorer` (skill + agent), `git-toolkit` (commands + agent), `langchain-toolkit`, `symfony-toolkit` y `code-quality-toolkit` (solo-agents).
+Un plugin puede combinar cualquier subconjunto de `commands/`, `skills/` y `agents/`. Ejemplos vivos: `seo-toolkit`, `security-toolkit` y `ui-ux-explorer` (solo skills), `git-toolkit` (solo command), `langchain-toolkit` (agent + `mcpServers` en `plugin.json`) y `symfony-toolkit` (solo agents).
+
+### Criterio de contenido (Opus 5.5+)
+
+Los componentes solo llevan lo que el modelo **no** sabe por sí mismo: detección de stack/versión, fuentes de verdad y cómo consultarlas, convenciones del autor, formatos de salida, gotchas específicos de versión y delegación entre plugins. Nada de teoría genérica ni chuletas de manual.
+
+- Agentes **sin `model:`** en el frontmatter: heredan el modelo de la sesión.
+- **No** usar el MCP `sequential-thinking`: el razonamiento nativo del modelo lo cubre.
+- Memoria persistente de un agente: campo `memory: user|project|local` del frontmatter, nunca un bloque de instrucciones copiado a mano.
+- Antes de añadir un componente, comprobar que no duplica algo nativo de Claude Code (`/code-review`, `/security-review`, etc.).
 
 ## Convenciones
 
 - **Namespace `xmon:`** — todos los skills de este marketplace se prefijan con `xmon:` para evitar colisiones con skills de otros marketplaces. Respetar el prefijo al crear skills nuevos.
-- **Commands sin prefijo** — los slash commands NO llevan namespace; se invocan tal cual (`/seo-check`, `/security-check`). Asegúrate de que el nombre no choque con commands del core de Claude Code.
+- **Commands sin prefijo** — los slash commands NO llevan namespace; se invocan tal cual (`/commit`). Asegúrate de que el nombre no choque con commands del core de Claude Code.
 - **Idioma del contenido**: español. Todo el material de plugins (descripciones, skills, commands) está en español. Mantener consistencia.
 - **Estructura típica de un SKILL.md**: frontmatter (`name`, `description`) → "Cuándo usar este skill" → "Paso 0: Detectar stack/entorno (OBLIGATORIO)" → pasos numerados → checklist final. Los skills están diseñados para ser stack-agnósticos: el primer paso siempre detecta el ecosistema (package.json, composer.json, etc.) antes de decidir qué herramientas usar.
 - **Versionado**: SemVer en `marketplace.json` y `plugin.json` deben coincidir. Bumpea ambos en la misma operación al publicar cambios.
@@ -83,7 +92,7 @@ Usar el nombre del plugin como scope (`seo-toolkit`, `security-toolkit`, `ui-ux-
 
 ## Instalación (referencia)
 
-Los usuarios instalan plugins con `/plugin install <plugin-name>@xmon-plugins` (sintaxis oficial de Claude Code) después de añadir el marketplace a `~/.claude/settings.json` mediante el campo top-level `extraKnownMarketplaces`. Detalle completo en [README.md](README.md).
+Los usuarios instalan plugins con `/plugin install <plugin-name>@xmon-plugins` (sintaxis oficial de Claude Code) después de añadir el marketplace con `/plugin marketplace add new-xmon-df/claude-code-marketplace`. Valida los manifiestos antes de publicar con `claude plugin validate .`. Detalle completo en [README.md](README.md).
 
 ## Probar un plugin tras publicar
 
@@ -115,15 +124,10 @@ Cross-refs válidos hoy (mantener actualizado al añadir plugins):
 | Plugin | Pieza | Cómo citarlo en cross-refs |
 |---|---|---|
 | `git-toolkit` | command `/commit` | `/commit` |
-| `git-toolkit` | agent `git-workflow-manager` | `@git-workflow-manager` |
 | `ui-ux-explorer` | skill `xmon:ui-ux` | `/xmon:ui-ux` |
-| `ui-ux-explorer` | agent `ux-consultant` | `@ux-consultant` |
-| `seo-toolkit` | command `/seo-check` | `/seo-check` |
 | `seo-toolkit` | skills `xmon:seo-audit`, `xmon:seo-content` | `xmon:seo-audit`, `xmon:seo-content` |
-| `security-toolkit` | command `/security-check` | `/security-check` |
 | `security-toolkit` | skills `xmon:security-audit`, `xmon:hardening` | `xmon:security-audit`, `xmon:hardening` |
-| `langchain-toolkit` | agents `langchain-js-expert`, `langgraph-js-expert` | `@langchain-js-expert`, `@langgraph-js-expert` |
+| `langchain-toolkit` | agent `langchain-expert` | `@langchain-expert` |
 | `symfony-toolkit` | agents `symfony-expert`, `api-platform-pro` | `@symfony-expert`, `@api-platform-pro` |
-| `code-quality-toolkit` | agent `code-reviewer` | `@code-reviewer` |
 
 Al publicar un plugin nuevo, ampliar esta tabla y revisar si los agentes existentes deberían añadirlo a sus cross-refs (sin propagación automática, decisión consciente por cada agente).

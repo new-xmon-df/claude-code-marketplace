@@ -4,7 +4,12 @@ Marketplace de plugins personalizados para Claude Code.
 
 ## Instalación
 
-1. **Añade el marketplace a tu Claude Code** editando `~/.claude/settings.json` (ver sección [Configuración del marketplace](#configuración-del-marketplace) más abajo).
+1. **Añade el marketplace** (una sola vez):
+
+   ```
+   /plugin marketplace add new-xmon-df/claude-code-marketplace
+   ```
+
 2. **Instala los plugins** con:
 
    ```
@@ -32,88 +37,73 @@ Otros comandos útiles:
 ### ui-ux-explorer
 
 **Skill**: `/xmon:ui-ux`
-**Agente**: `@ux-consultant`
 
-Pareja diseño + implementación de UI/UX. El skill `/xmon:ui-ux` detecta tu stack frontend (React/Next/Vue/Astro + UI lib + styling) e **implementa** soluciones adaptadas. El agente `@ux-consultant` entrega **specs previas a implementación** (heurísticas Nielsen, WCAG, jerarquía, flujos) sin escribir código. Diseñados para usarse en pareja.
+Detecta tu stack frontend (framework, librería de componentes, styling) y resuelve problemas de UI/UX adaptados a él. Dos modos: **spec primero** (análisis y especificación implementation-ready antes de tocar código) e **implementación** con verificación visual vía Playwright si está disponible.
 
 **Casos de uso**:
-- Problemas visuales o de interacción concretos (`/xmon:ui-ux`)
-- Responsive, compatibilidad cross-browser, alternativas de diseño (`/xmon:ui-ux`)
-- Diseño de onboarding flows, dashboards, guided tours antes de codificar (`@ux-consultant`)
-- Auditar layouts / navegación / flujos con abandono alto (`@ux-consultant`)
-- Aplicar heurísticas Nielsen y WCAG con criterios profesionales (`@ux-consultant`)
-- Planificar features UX-first: spec → implementar (`@ux-consultant` → `/xmon:ui-ux`)
+- Problemas visuales o de interacción concretos, responsive, compatibilidad cross-browser
+- Especificar un flujo o pantalla antes de implementarlo (spec → implementar)
+- Implementar una spec existente y verificarla en navegador
 
 **Ejemplos**:
 
 ```
 /xmon:ui-ux el dropdown se ve cortado en móvil
 /xmon:ui-ux el hover no funciona en Safari
-
-@ux-consultant diseña un sistema de notificaciones para el dashboard admin
-@ux-consultant analiza por qué nuestro formulario tiene 70% de abandono
+/xmon:ui-ux especifica primero un sistema de notificaciones para el dashboard admin
 ```
 
 ### security-toolkit
 
-**Comando**: `/security-check`
 **Skills**: `/xmon:security-audit`, `/xmon:hardening`
 
-Plugin completo de seguridad: auditoría de código, hardening de configuraciones y guías de mejores prácticas para cualquier entorno.
+Auditoría de seguridad del proyecto completo (OWASP Top 10 2025, secrets, dependencias) y hardening de configuraciones (servidores web, contenedores, Kubernetes, bases de datos). Para revisar solo los cambios pendientes de una rama, usa el comando nativo `/security-review` de Claude Code.
 
 **Casos de uso**:
-- Detectar vulnerabilidades OWASP Top 10, secrets expuestos y malas prácticas
+- Auditar el proyecto entero antes de un deploy
 - Reforzar configuraciones de servidores, contenedores, bases de datos y aplicaciones
-- Auditoría rápida del proyecto antes de un deploy
 
 **Ejemplos**:
 
 ```
-/security-check
 /xmon:security-audit revisa el módulo de auth
 /xmon:hardening dame el hardening base para mi docker-compose
 ```
 
 ### seo-toolkit
 
-**Comando**: `/seo-check`
 **Skills**: `/xmon:seo-audit`, `/xmon:seo-content`
 
-Plugin completo de SEO: auditoría técnica y de contenido, optimización para sitios de afiliados/blogs, preparación para AI/LLMs, y mejores prácticas para cualquier stack.
+Auditoría SEO técnica y de contenido (con modo rápido y puntuación sobre 100) y optimización de contenido antes de publicar, con foco en blogs y sitios de afiliados.
 
 **Casos de uso**:
-- Análisis rápido SEO del proyecto o de una URL en producción
-- Auditoría completa con puntuación sobre 100
-- Optimizar contenido antes de publicar (front matter, keywords, internal linking, E-E-A-T)
+- Auditoría rápida o completa del proyecto o de una URL en producción
+- Optimizar contenido antes de publicar (front matter, estructura, internal linking, E-E-A-T)
 
 **Ejemplos**:
 
 ```
-/seo-check
-/seo-check https://miblog.com
+/xmon:seo-audit modo rápido de https://miblog.com
 /xmon:seo-audit auditoría completa con foco en indexación
 /xmon:seo-content optimiza este artículo antes de publicarlo
 ```
 
 ### langchain-toolkit
 
-**Agentes**: `@langchain-js-expert`, `@langgraph-js-expert`
+**Agente**: `@langchain-expert`
 
-Dos agentes especializados en LangChain JS y LangGraph TS v1. Trabajan con tono español coloquial, consultan fuentes oficiales vía context7, mantienen memoria persistente entre sesiones y se delegan trabajo entre sí para evitar solapamiento de scope.
-
-- **`langchain-js-expert`**: LCEL, chains, retrievers, embeddings, tools, structured output, memoria conversacional clásica, prompt templates, streaming, seguridad.
-- **`langgraph-js-expert`**: StateGraph, Annotation, nodos, edges condicionales, checkpointers, `interrupt()` para human-in-the-loop, subgrafos, multi-agente, `streamEvents`.
+Un agente para LangChain JS v1 y LangGraph JS v1: `createAgent` y middleware, RAG, tools, structured output, StateGraph, checkpointers, human-in-the-loop y subgrafos. Consulta la documentación oficial antes de escribir código (MCP `docs-langchain`, que el plugin instala automáticamente, más context7) y guarda memoria persistente entre sesiones.
 
 **Casos de uso**:
-- Construir chatbots, RAGs y chains con LangChain TS
-- Diseñar grafos de agentes con LangGraph TS v1
-- Diagnosticar errores típicos (`INVALID_CONCURRENT_GRAPH_UPDATE`, reducers, etc.)
+- Construir agentes, RAGs y chatbots con LangChain JS v1
+- Diseñar grafos con LangGraph JS v1
+- Migrar código v0 a v1
 
 **Ejemplos**:
 
 ```
-@langchain-js-expert quiero un RAG con Pinecone y memoria conversacional
-@langgraph-js-expert diseña un grafo con interrupt() para aprobación humana
+@langchain-expert quiero un RAG con Pinecone y memoria conversacional
+@langchain-expert diseña un grafo con interrupt() para aprobación humana
 ```
 
 ### symfony-toolkit
@@ -122,8 +112,8 @@ Dos agentes especializados en LangChain JS y LangGraph TS v1. Trabajan con tono 
 
 Dos agentes especializados en el ecosistema PHP moderno con delegación cruzada bidireccional:
 
-- **`@symfony-expert`** — Symfony 7 + Doctrine ORM + PHP 8.3+: servicios, eventos, security, Messenger, forms, entidades rich.
-- **`@api-platform-pro`** — API Platform 3.x/4.x: ApiResource, state providers/processors, DTOs, filtros, OpenAPI customization.
+- **`@symfony-expert`** — Symfony 7.4 LTS / 8.x + Doctrine ORM + PHP 8.4: servicios, eventos, security, Messenger, forms, entidades rich.
+- **`@api-platform-pro`** — API Platform 4.x/5.x: ApiResource, state providers/processors, DTOs, filtros, OpenAPI customization.
 
 Regla mnemotécnica: si toca HTTP API o un `#[ApiResource]`, manda API Platform; si no, manda Symfony.
 
@@ -146,103 +136,38 @@ Regla mnemotécnica: si toca HTTP API o un `#[ApiResource]`, manda API Platform;
 @api-platform-pro filtro custom para buscar pedidos por rango de fechas
 ```
 
-### code-quality-toolkit
-
-**Agente**: `@code-reviewer`
-
-Revisión de calidad de código multi-lenguaje (JS/TS, PHP, Python, Go, Rust, Java, SQL, Shell). Audita por capas con severidades claras (🚨 crítico / ⚠️ mayor / 💡 menor / 📝 sugerencia) y entrega fixes accionables con snippet de código y referencia a OWASP/CWE/docs oficiales. Por defecto NO modifica código — reporta y propone.
-
-**Capas que audita** (de más crítico a menos):
-
-1. Seguridad (OWASP Top 10, secrets, AuthN/AuthZ, inyecciones)
-2. Correctness (race conditions, null dereference, edge cases)
-3. Performance (N+1, memory leaks, async mal usado)
-4. Mantenibilidad (SOLID, acoplamiento, duplicación)
-5. Tests (coverage, mocks que ocultan bugs)
-6. Dependencias (CVEs, transitive vulnerabilities)
-7. Estilo (solo si los linters no lo cubren)
-
-**Comportamiento**:
-
-- Paso 0 detecta lenguajes, frameworks, linters configurados (eslint/phpstan/ruff/etc.) y convenciones del proyecto.
-- Ejecuta los linters del proyecto primero y complementa — no duplica lo que ya marcan.
-- Deriva a especialistas xmon cuando detecta problemas específicos (`@symfony-expert`, `@langchain-js-expert`, `@ux-consultant`, etc.).
-
-**Ejemplos**:
-
-```
-@code-reviewer revisa los cambios staged antes de commitear
-@code-reviewer review de la PR #42 con foco en seguridad
-@code-reviewer audita src/auth/ buscando OWASP Top 10
-@code-reviewer revisa src/api/users.ts:45-120, sospecho que hay N+1
-```
-
 ### git-toolkit
 
 **Comando**: `/commit`
-**Agente**: `@git-workflow-manager`
 
-Herramientas para flujos de Git en español. Dos piezas con scopes complementarios:
-
-- **`/commit`** para mensajes Conventional Commits con detección automática (`commit-prompt.txt` / `commitlint.config.js` del proyecto, o fallback embebido).
-- **`@git-workflow-manager`** para diseñar y configurar el workflow del repo: branching, hooks, PRs, releases, conflictos complejos.
-
-**Casos de uso**:
-- Estandarizar mensajes de commit entre todos tus proyectos (`/commit`)
-- Configurar husky + commitlint + branch protection en un repo nuevo (`@git-workflow-manager`)
-- Decidir estrategia de branching para tu equipo (`@git-workflow-manager`)
-- Automatizar releases con semantic-release o release-please (`@git-workflow-manager`)
-- Resolver conflictos recurrentes al rebase (`@git-workflow-manager`)
+Genera mensajes Conventional Commits en español para los cambios en stage, con detección automática de la configuración del proyecto (`commit-prompt.txt`, configuración de commitlint o fallback embebido). Nunca añade firma de IA al commit.
 
 **Ejemplos**:
 
 ```
 git add src/api/users.ts
 /commit
-
-@git-workflow-manager diseña el workflow git para un equipo de 4 con releases semanales
-@git-workflow-manager configura release-please para auto-publicar tags al hacer merge a main
 ```
-
-## Configuración del marketplace
-
-Para registrar este marketplace en tu Claude Code, edita `~/.claude/settings.json` y añade el campo `extraKnownMarketplaces` a nivel raíz:
-
-```json
-{
-  "extraKnownMarketplaces": [
-    {
-      "url": "https://github.com/new-xmon-df/claude-code-marketplace"
-    }
-  ]
-}
-```
-
-Tras editar el archivo, ejecuta `/plugin marketplace update` para refrescar y luego `/plugin install <plugin>@xmon-plugins` para instalar el plugin que quieras.
 
 ## Requisitos / MCPs
 
 La mayoría de los agentes del marketplace consultan documentación oficial vía MCPs en lugar de confiar en el conocimiento previo del modelo. Si no los tienes instalados, los agentes funcionan pero pierden la garantía de "fuente de verdad actualizada".
 
-### Requeridos por los agentes
+### Requerido por los agentes
 
 | MCP | Para qué | Cómo instalarlo |
 |---|---|---|
 | **context7** | Documentación oficial actualizada de librerías (Symfony, Doctrine, API Platform, LangChain, LangGraph, React, etc.) | Plugin del marketplace oficial: `/plugin install context7@claude-plugins-official` |
-| **sequential-thinking** | Razonamiento paso a paso antes de tocar código en producción o decisiones complejas | `claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking` |
 
-Sin estos dos, los agentes seguirán respondiendo pero verás en su instrucción "no pude consultar context7" y caerán a `WebSearch` como fallback (más lento, menos preciso).
+Sin context7 los agentes siguen respondiendo, pero caen a `WebSearch` como fallback (más lento, menos preciso). `langchain-toolkit` instala además su propio MCP `docs-langchain` al activarse.
 
-### Opcionales (solo skill `xmon:ui-ux`)
+### Opcionales (skill `xmon:ui-ux`)
 
 | MCP | Para qué | Cómo instalarlo |
 |---|---|---|
-| **playwright** | Testing visual, screenshots, debugging cross-browser | `claude mcp add playwright -- npx @anthropic-ai/mcp-playwright` |
-| **shadcn** | Añadir/modificar componentes shadcn/ui | `claude mcp add shadcn -- npx shadcn@latest mcp` |
-| **browser-tools** | DevTools remoto, consola, network | `claude mcp add browsertools -- npx @anthropic-ai/mcp-browser-tools` |
-| **figma** | Extraer diseños de Figma | `claude mcp add figma -- npx @anthropic-ai/mcp-figma` |
+| **playwright** | Testing visual, screenshots, debugging cross-browser | `claude mcp add playwright npx @playwright/mcp@latest` |
 
-El skill `/xmon:ui-ux` detecta cuáles tienes disponibles al arrancar y sugiere instalar los que falten si serían útiles para tu caso. Funciona sin ninguno (cae a Read/Edit puros sobre el código).
+El skill `/xmon:ui-ux` detecta qué MCPs tienes disponibles al arrancar y sugiere instalar los que falten si serían útiles para tu caso. Funciona sin ninguno (trabaja directamente sobre el código).
 
 ### Verificar qué tienes instalado
 
@@ -259,13 +184,12 @@ xmon-plugins/
 ├── README.md                  # este archivo
 ├── CLAUDE.md                  # guía interna para Claude
 └── plugins/
-    ├── code-quality-toolkit/  # solo agents
-    ├── git-toolkit/           # commands + agent
-    ├── langchain-toolkit/     # solo agents
-    ├── security-toolkit/      # commands + skills
-    ├── seo-toolkit/           # commands + skills
-    ├── symfony-toolkit/       # solo agents
-    └── ui-ux-explorer/        # skill + agent
+    ├── git-toolkit/           # command
+    ├── langchain-toolkit/     # agent + MCP
+    ├── security-toolkit/      # skills
+    ├── seo-toolkit/           # skills
+    ├── symfony-toolkit/       # agents
+    └── ui-ux-explorer/        # skill
 ```
 
 Cada plugin sigue esta estructura (cualquier subconjunto de los tres subdirectorios):

@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "ui-ux-explorer",
-      "description": "Pareja diseño + implementación UI/UX. Skill /xmon:ui-ux (detecta stack frontend e implementa) + agente @ux-consultant (entrega specs previas a implementación con heurísticas Nielsen, accesibilidad WCAG, jerarquía).",
-      "version": "0.1.1",
+      "description": "Skill /xmon:ui-ux para analizar y resolver problemas de UI/UX en cualquier stack frontend: detecta el stack, entrega specs implementation-ready (Problem Analysis / Recommended Solution / Implementation Notes / Rationale), implementa la solución y la verifica con Playwright (WCAG 2.2 AA).",
+      "version": "0.2.0",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -20,8 +20,8 @@
     },
     {
       "name": "security-toolkit",
-      "description": "Plugin completo de seguridad: auditoría de código, hardening de configuraciones y guías de mejores prácticas para cualquier entorno.",
-      "version": "0.1.0",
+      "description": "Dos skills de seguridad: xmon:security-audit (auditoría del proyecto completo: secrets, dependencias vulnerables, configuración y OWASP Top 10 2025, con reporte por severidades) y xmon:hardening (cabeceras HTTP, TLS, Docker, Kubernetes con Pod Security Admission, bases de datos, Redis y AWS). Complementa al /security-review nativo de Claude Code.",
+      "version": "0.2.0",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -31,8 +31,8 @@
     },
     {
       "name": "seo-toolkit",
-      "description": "Plugin completo de SEO: auditoría técnica y de contenido, optimización para sitios de afiliados/blogs, preparación para AI/LLMs, y mejores prácticas para cualquier stack.",
-      "version": "0.1.0",
+      "description": "Dos skills de SEO para blogs y sitios de afiliados: xmon:seo-audit (auditoría técnica y de contenido con puntuación sobre 100, modo rápido, structured data y visibilidad en buscadores con IA) y xmon:seo-content (optimización de artículos antes de publicar, disclosure de afiliados y revisión de borradores IA sin inventar experiencia). Detectan el stack antes de actuar.",
+      "version": "0.2.1",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -42,8 +42,8 @@
     },
     {
       "name": "langchain-toolkit",
-      "description": "Dos agentes especializados en LangChain JS y LangGraph TS v1: experto en chains/retrievers/tools (langchain-js-expert) y experto en grafos de agentes (langgraph-js-expert). Auto-instala el MCP docs-langchain (HTTP a https://docs.langchain.com/mcp) al activar el plugin. Fuente complementaria: context7 (requerido globalmente).",
-      "version": "0.4.0",
+      "description": "Agente langchain-expert para LangChain JS v1 y LangGraph JS v1 (TypeScript): createAgent y middleware, tools, RAG, StateGraph, checkpointers, interrupts y migración v0 -> v1. Auto-instala el MCP docs-langchain (HTTP a https://docs.langchain.com/mcp). Fuente complementaria: context7 (requerido, instalado globalmente).",
+      "version": "0.5.0",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -53,8 +53,8 @@
     },
     {
       "name": "git-toolkit",
-      "description": "Herramientas para flujos de Git. /commit (mensajes Conventional Commits en español detectando commit-prompt.txt / commitlint.config.js) + agente @git-workflow-manager (branching, hooks, PRs, releases).",
-      "version": "0.2.1",
+      "description": "Comando /commit: genera commits Conventional Commits en español respetando commit-prompt.txt o la configuración de commitlint del proyecto.",
+      "version": "0.3.0",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
@@ -64,24 +64,13 @@
     },
     {
       "name": "symfony-toolkit",
-      "description": "Dos agentes especializados en PHP moderno: @symfony-expert (Symfony 7 + Doctrine ORM + PHP 8.3+) y @api-platform-pro (API Platform 3.x/4.x). Fuentes oficiales vía context7, delegación cruzada entre ambos.",
-      "version": "0.1.1",
+      "description": "Dos agentes especializados en el ecosistema PHP moderno: @symfony-expert (Symfony 7.4 LTS / 8.x + Doctrine ORM 3.x + PHP 8.4: servicios, eventos, security, Messenger, forms, entidades rich) y @api-platform-pro (API Platform 4.x/5.x: ApiResource, state providers/processors, DTOs, filtros con QueryParameter, OpenAPI). Detectan la versión instalada, consultan fuentes oficiales vía context7 y se delegan trabajo entre sí.",
+      "version": "0.2.0",
       "author": {
         "name": "Juanjo García",
         "email": "juanjogarcia@gmail.com"
       },
       "source": "./plugins/symfony-toolkit",
-      "category": "development"
-    },
-    {
-      "name": "code-quality-toolkit",
-      "description": "Agente @code-reviewer para revisión de calidad multi-lenguaje (JS/TS, PHP, Python, Go, Rust, Java, SQL). Audita seguridad (OWASP), correctness, performance, mantenibilidad, tests y deps con severidades claras y fixes accionables. Detecta el stack y deriva a especialistas xmon cuando hace falta.",
-      "version": "0.1.1",
-      "author": {
-        "name": "Juanjo García",
-        "email": "juanjogarcia@gmail.com"
-      },
-      "source": "./plugins/code-quality-toolkit",
       "category": "development"
     }
   ]

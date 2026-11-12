@@ -20,7 +20,7 @@ Last updated: {YYYY-MM-DD} · last decision: D{n}
 - ⬜ 0.2 Decisions log, filled pipeline prompt and this file created
 - ⬜ 0.3 Where the brand lives (products, surfaces, print, who applies it)
 - ⬜ 0.4 Liked and disliked references (brands, logos, voices), each with what the owner likes or dislikes about it
-- ⬜ 0.5 Manual format and the owner's review width confirmed (width: {px})
+- ⬜ 0.5 Manual format, the owner's review width and the PDF's use confirmed (width: {px} · PDF: screen / print)
 - ⬜ 0.6 Sketch analysis (if there is a sketch)
 
 ## Phase 1 · Strategy

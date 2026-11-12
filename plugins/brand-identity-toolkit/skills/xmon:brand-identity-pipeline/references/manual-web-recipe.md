@@ -106,22 +106,53 @@ build to skip the cache) and, at the owner's review width and at 390 px:
 1. `python3 check_classes.py <every module>`: exit 0 (G53).
 2. `check_page.js` in Playwright's evaluate: `pass: true` (no overflow, no text below the
    minimum, no broken image, no internal reference outside the notes).
-3. Load with a deep link (`index.html?v=N#s4`), then `check_nav.js`: `pass: true`.
+3. Load with a deep link (`index.html?v=N#s4`), then `check_nav.js`: `pass: true`. It reads the
+   markup of `assets/manual-web/nav.js` by default; a different navigation sets its selectors in
+   the script's `CONFIG`.
 4. Screenshots of each section, read one by one (G13).
 
 Paste the outputs into the Phase 5 gate.
 
-## PDF (recipe not yet validated in a project)
+## PDF for screen (validated in a project)
 
-The first project that builds the PDF validates this and updates it here.
+A PDF read on screen: cover, index and one page per section, each page as tall as its content.
+Dependencies: `google-chrome` and `poppler-utils` (`pdfinfo`, `pdftoppm`).
 
-- Chromium print (Playwright `page.pdf`) with a print stylesheet: `@page` margins,
-  `break-before: page` per section, `break-inside: avoid` on figures, cards and drawings, the
-  navigation hidden, spreads laid out for the page, not the screen.
-- Footer page numbers: Playwright's `footerTemplate` with `<span class="pageNumber">`.
-- Page numbers in the index: Chromium does not support `target-counter()`, so two passes: print,
-  read the page on which each section starts (e.g. with `pypdf`, searching each section number),
-  print again with those numbers.
-- The animation as frames: freeze the SVG at 5-6 instants with a negative `animation-delay` and
-  `animation-play-state: paused`, or with the Web Animations API (`currentTime`).
-- Check the PDF page by page: no split figure, every section on a new page, index numbers match.
+1. **`print.html` from the same assembler as the web.** Each page is a `<div class="pg">` holding
+   one group: the cover, the index, and each section with its continuations (split the HTML at
+   every `<section … id="sN">`). `print.html` is intermediate: delete it when the PDF is built.
+2. **Forced desktop layout.** Rewrite the narrow-screen media queries (the 1199 and 767 px
+   breakpoints of `base.css`) to `(max-width: 0px)` in `print.html`, and render with a window as
+   wide as the page (1280 px), so what is measured is what is printed.
+3. **Nothing in `vh`.** A cover sized `min(52vh, 480px)` broke into two pages; give it a fixed
+   height in `print.html`.
+4. **One page size per page.** A script at the end of the body measures each `.pg` with
+   `getBoundingClientRect().height`, sets `style.page = 'pK'` on it and injects
+   `@page pK { size: 1280px <height + 2>px; margin: 0 }`. Chrome honours a different size for each
+   named page.
+5. **Page number on each page**: an element of its own inside each `.pg`, absolutely positioned
+   at the bottom (margin boxes do not exist with `margin: 0`).
+6. **Index numbers known before printing**: cover 1, index 2, section N on page N + 2. Write them
+   directly, then check them against the PDF: `pdfinfo -dests out.pdf` lists one named destination
+   per linked id, with its page. The build fails when the page count or a destination does not
+   match. Searching section titles with `pdftotext` does not work: the reading order mixes
+   columns, even with `-layout`.
+7. **Print**:
+   `google-chrome --headless=new --disable-gpu --hide-scrollbars --window-size=1280,900 --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf=out.pdf file://<abs>/print.html`
+8. **Animation as frames**, without touching the approved file: one screenshot at the last
+   millisecond of each step,
+   `google-chrome --headless=new --window-size=480,480 --force-device-scale-factor=2 --virtual-time-budget=<ms> --screenshot=frame-N.png file://<abs>/animation.html`.
+   The frames replace the `<iframe>` in `print.html`, and any caption that only works on screen
+   («click to replay») is rewritten for the page.
+9. **Read it back** (G13): a contact sheet of every page (`pdftoppm` at low resolution, tiled with
+   PIL) and a few pages at 40 dpi.
+
+## PDF for paper (recipe not yet validated in a project)
+
+A4 pages composed one by one, each a fixed spread; long sections are split on purpose into several
+pages. Never the web layout printed with automatic breaks: tried in landscape and portrait, it
+left lone foot notes, almost empty pages, continuations cut from their title and a cover in two,
+and Chrome applied the narrow-screen media queries at the page width (G52). Known to work in
+Chrome for this route: `@page` margin boxes for the folio (`@bottom-right { content:
+counter(page) }`). The first project that builds a printed manual validates this and updates it
+here.

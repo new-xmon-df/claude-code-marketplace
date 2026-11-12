@@ -282,7 +282,8 @@ audit is summarised in G15-G17.
 
 **G52 · A manual with no layout work**
 - Error: the first web manual put the approved documents one after another, with long tables and decision codes in the body. The owner rejected it: there was no layout work anywhere in the guide, only one thing after another.
-- Rule: follow `brand-manual-standard.md` «How it is laid out» and work-order steps 5.1-5.6: layout directions first, spreads, the brand's own system, built and checked in blocks.
+- Second case: the web manual was printed to A4 with automatic breaks (`break-before`, `break-inside: avoid`), landscape and portrait. Foot notes ended alone on a page, pages came out almost empty, continuations were split from their title and the cover broke in two; Chrome also applied the narrow-screen media queries at the page width and stacked every spread in one column.
+- Rule: follow `brand-manual-standard.md` «How it is laid out» and work-order steps 5.1-5.6: layout directions first, spreads, the brand's own system, built and checked in blocks. The PDF follows the use asked in step 0.5 (screen or paper), never the web layout cut by the printer.
 - Verify: the Phase 5 gate links the directions board with the owner's choice, and the browser checks of every block at the review width and 390 px.
 
 **G53 · CSS classes clashing between generator modules**

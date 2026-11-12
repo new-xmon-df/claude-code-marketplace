@@ -60,5 +60,6 @@ Per delivery: the deliverable files, a filled phase gate, a visual board or canv
 - `references/work-order.md`: the order of every step, what each needs and what uses it.
 - `references/skill-map.md`: phase → skill → references → hand-offs.
 - `references/guardrails.md`: errors made in earlier projects and the rules that prevent them.
-- `references/brand-manual-standard.md`: what a brand manual must be.
+- `references/brand-manual-standard.md`: what a brand manual must be and how it is laid out.
+- `references/manual-web-recipe.md`: how to generate the manual as a web page and its PDF; tested pieces in `assets/manual-web/` (grid, navigation, checks).
 - The `brand-identity-toolkit` plugin that ships this skill also shows, above the prompt, the current step of `brand/progress.md` and any earlier step still open; `/progreso` rereads the file.

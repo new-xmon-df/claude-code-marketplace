@@ -275,3 +275,8 @@ audit is summarised in G15-G17.
 **G51 · A brand element used below its own minimum size**
 - Error: the motion rules put the animated symbol inside buttons at 16 px, while the logo guidelines set the symbol's minimum at 32 px; at 16-24 px the animation read as a blur. The owner reverted to a spinner below 32 px.
 - Rule: every rule that places the logo, the symbol or an animation of them at a size (icons, loaders, buttons, emails) checks that size against the logo's minimum sizes; below the minimum, use the small-size cut or a neutral element, never the full symbol.
+
+**G52 · A manual with no layout work**
+- Error: the first web manual put the approved documents one after another, with long tables and decision codes in the body. The owner rejected it: there was no layout work anywhere in the guide, only one thing after another.
+- Rule: follow `brand-manual-standard.md` «How it is laid out» and work-order steps 5.1-5.6: layout directions first, spreads, the brand's own system, built and checked in blocks.
+- Verify: the Phase 5 gate links the directions board with the owner's choice, and the browser checks of every block at the review width and 390 px.

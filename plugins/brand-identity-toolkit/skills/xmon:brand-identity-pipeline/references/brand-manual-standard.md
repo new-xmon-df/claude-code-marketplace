@@ -16,8 +16,61 @@ here comes from a particular project.
 - **The approved files, never redrawn**; the manual is a view of the source documents, which stay
   canonical. Source: `brand-style-guide` «Output format» («The source files are canonical. The
   presentation is a view of them»).
-- **The PDF comes after approval**, with a clean design, index, cover, numbered sections and visual
-  examples. Source: `assets/pipeline-prompt.md` Phase 5 (last paragraph).
+- **Data and layout are two layers.** A data layer reads the approved documents (by heading or
+  table), fails when a heading, table or file is missing, and writes the canonical Markdown manual.
+  The layout layer imports that data layer and never reads a source on its own. Recipe:
+  `references/manual-web-recipe.md`.
+- **The PDF comes after the whole web manual is approved**, with a clean design, index, cover,
+  numbered sections and visual examples. Source: `assets/pipeline-prompt.md` Phase 5 (last
+  paragraph). It is laid out for paper, not printed from the screen layout: every section starts
+  on a new page; no figure, card or drawing is split across pages; page numbers in the index and
+  in the footer; an animation is shown as a sequence of frames.
+
+## How it is laid out
+
+Contents are not layout. A manual that stacks the approved documents one after another, with long
+tables and decision codes in the body, was rejected as having no layout work at all (G52).
+
+- **Layout direction first.** Before building, show a board with 2 or 3 truly different layout
+  directions, each with the cover, two sample sections (e.g. logo and colour) and its navigation,
+  rendered at the owner's review width and at 390 px. Recommended direction first, with its source
+  (G36). The owner picks; navigation decided later means rebuilding the bar.
+- **Each section is a spread**: number, title, standfirst and short rules in a narrow column
+  (4 of 12), the hero image large beside it (8 of 12); on tablet 3 of 8 and 5 of 8, so the spread
+  does not stack at the owner's review width (asked in work-order step 0.5).
+- **No long tables dumped from the sources**: visual lists, drawn swatches, scales at real size,
+  «do / don't» cards.
+- **Decision codes, paths and sources only in a discreet note at the foot of each spread.** The
+  generator strips internal references from the body text, and a browser check confirms none is
+  left outside the notes.
+- **The manual uses the brand's own system**: its typography and scale, spacing, grid, colour
+  proportions, icons and voice, and the minimum text size of the typography document. Token
+  values come from the approved documents, never hand copies (G35).
+- **Sample copy is quoted verbatim** from the approved voice document (headlines, buttons,
+  notices); no invented interface text.
+- **Missing photographs are hatched placeholders labelled [pending]**, never stock or AI images.
+- **Built in blocks** of 3 or 4 sections. Each block is rendered and checked at the owner's review
+  width and at 390 px before it is shown. The owner may allow building on without confirming each
+  block while the approved direction and content hold; the whole web manual is still approved
+  before the PDF.
+
+### Web format: navigation
+
+A long single-page manual needs more than an «Index» link. The approved pattern: a fixed bar with
+the current section, arrows to the previous and next section, a progress line and an index grouped
+by block (side panel on desktop, bottom sheet on mobile). Requirements (Vercel Web Interface
+Guidelines): real links; the URL hash follows the section; `scroll-padding-top` so the bar never
+covers a title; visible focus; Escape closes the index and focus returns to its button;
+`prefers-reduced-motion`. Each trap below is a Phase 5 gate row:
+
+- Updating the hash on the first pass wipes deep links (`#s9`): leave the URL alone until the user
+  scrolls or the page has loaded.
+- Locking the body scroll when the index opens removes the scrollbar and the page jumps: use
+  `overscroll-behavior: contain` on the panel and `focus({preventScroll: true})`.
+- The threshold that detects the current section is equal to or greater than
+  `scroll-padding-top`.
+
+Tested implementation: `assets/manual-web/nav.js` and `nav.css`.
 
 ## Contents: the phase contract crossed with `brand-style-guide`
 

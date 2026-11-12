@@ -29,7 +29,7 @@ Rules that apply to every step:
 | 0.2 | Create the decisions log, the project's filled pipeline prompt and `brand/progress.md` (from `assets/pipeline-prompt.md` and `assets/progress.md`) | — | all phases |
 | 0.3 | Ask where the brand really lives: products, surfaces, print or not, who applies it (G8); who owns the brand and which contact channel the manual gives for questions and change requests | — | 1.2, 3 tests, 4 package, imagery, layout, motion, applications, 5 governance and contact |
 | 0.4 | Collect, in one pass, the liked and disliked references the later skills ask for: brands, logos and voices, each with what the owner likes or dislikes about it | — | 1.2, 2.1, 3 inputs, 4.5 voice |
-| 0.5 | Confirm the manual's format (canvas, PDF, document) | — | every board is built so it can go into it |
+| 0.5 | Confirm the manual's format (canvas, web page, PDF, document) and the width at which the owner reviews pages on screen; record both in `brand/progress.md` | — | every board is built so it can go into it; 5.3-5.5 |
 | 0.6 | Analyse the sketch, if there is one | 0.3 | 2, 3 |
 
 ## Phase 1 · Strategy
@@ -78,14 +78,18 @@ Rules that apply to every step:
 
 | # | Step | Needs | Used by |
 |---|---|---|---|
-| 5.1 | Build the manual in the format chosen in 0.5, from the approved files only | 1-4 approved | 5.2 |
-| 5.2 | Before asking: no «pending» placeholder left and no contradiction between the manual and its sources (G44, G45). Approval; then the PDF | 5.1 | 6 |
+| 5.1 | Data layer: readers that fail on a missing heading, table or file; the canonical Markdown manual; CSS tokens generated from the approved documents (`brand-manual-standard.md`, `manual-web-recipe.md`) | 1-4 approved | 5.3-5.6 |
+| 5.2 | Check that `production/` and the client package work on their own (G54) before the manual links them | 4.2 | 5.4 |
+| 5.3 | Layout directions board: 2-3 directions, each with cover, two sample sections and navigation, at the owner's review width and 390 px; the owner picks | 5.1, 0.5 | 5.4 |
+| 5.4 | Core before the first section: spread helpers, prefixed CSS (G53), reference stripping, navigation and the check scripts (`assets/manual-web/`) | 5.3 | 5.5 |
+| 5.5 | Sections in blocks of 3-4; each block passes the browser checks at both widths and is committed with its log (G6) | 5.4 | 5.6 |
+| 5.6 | Before asking: phase gate with counts by command (G7), no «pending» placeholder left except hatched photo slots, no contradiction between the manual and its sources (G44, G45). Approval of the whole web manual; then the PDF | 5.5 | 6 |
 
 ## Phase 6 · Brand guard
 
 | # | Step | Needs | Used by |
 |---|---|---|---|
-| 6.1 | The brand-check skill with the real tokens, rules and checklist; the values are generated from the source documents by a script, never copied by hand, and the script fails when a copied heading is missing | 5.2 | every later delivery |
+| 6.1 | The brand-check skill with the real tokens, rules and checklist; the values are generated from the source documents by a script, never copied by hand, and the script fails when a copied heading is missing | 5.6 | every later delivery |
 
 ## Before resuming a project that did not follow this order
 

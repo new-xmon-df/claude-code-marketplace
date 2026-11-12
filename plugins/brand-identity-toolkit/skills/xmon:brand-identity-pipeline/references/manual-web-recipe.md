@@ -131,7 +131,7 @@ Dependencies: `google-chrome` and `poppler-utils` (`pdfinfo`, `pdftoppm`).
    `@page pK { size: 1280px <height + 2>px; margin: 0 }`. Chrome honours a different size for each
    named page.
 5. **Page number on each page**: an element of its own inside each `.pg`, absolutely positioned
-   at the bottom (margin boxes do not exist with `margin: 0`).
+   at the bottom, since the pages have no margins (`margin: 0`).
 6. **Index numbers known before printing**: cover 1, index 2, section N on page N + 2. Write them
    directly, then check them against the PDF: `pdfinfo -dests out.pdf` lists one named destination
    per linked id, with its page. The build fails when the page count or a destination does not

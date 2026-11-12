@@ -1,0 +1,91 @@
+<!doctype html>
+<!--
+  Brand manual web: markup contract for base.css, nav.css and nav.js.
+  The project's generator writes one index.html with this structure: CSS of every module in
+  one <style>, the bar, <main> with the cover and one section per spread, the script last.
+  Placeholder text and icons only; the real ones come from the approved documents.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand manual</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="nav.css">
+</head>
+<body>
+<a class="nav-skip" href="#main">Skip to content</a>
+<header class="nav-bar">
+  <a class="nav-prev" aria-label="Previous section"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+  <p class="nav-cur" aria-live="polite"></p>
+  <a class="nav-next" aria-label="Next section"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-panel">Index</button>
+  <div class="nav-progress" aria-hidden="true"><span></span></div>
+</header>
+<nav id="nav-panel" class="nav-panel" aria-label="Index" hidden>
+  <h2>Foundations</h2>
+  <ol>
+    <li><a href="#s1">01 Introduction</a></li>
+    <li><a href="#s2">02 Logo</a></li>
+    <li><a href="#s3">03 Colour</a></li>
+  </ol>
+  <h2>In use</h2>
+  <ol>
+    <li><a href="#s4">04 Typography</a></li>
+    <li><a href="#s5">05 Imagery</a></li>
+    <li><a href="#s6">06 Version history</a></li>
+  </ol>
+</nav>
+<main id="main">
+  <section id="s1" data-nav="01 Introduction" class="mw-spread">
+    <div class="mw-wrap mw-grid">
+      <div class="mw-side">
+        <p class="mw-num">01</p>
+        <p class="mw-kicker">Foundations</p>
+        <h2 class="mw-title">Introduction</h2>
+        <p class="mw-lead">What this manual is for and who uses it.</p>
+        <div class="mw-rule"><h3>Short rule</h3><p>One sentence that the image beside it proves.</p></div>
+      </div>
+      <div class="mw-main"><div class="mw-pending" style="min-height:520px">[pending] hero image</div></div>
+      <p class="mw-note">Source: approved document · decision codes go here only.</p>
+    </div>
+  </section>
+  <section id="s2" data-nav="02 Logo" class="mw-spread">
+    <div class="mw-wrap mw-grid">
+      <div class="mw-side"><p class="mw-num">02</p><h2 class="mw-title">Logo</h2><p class="mw-lead">Versions and files.</p></div>
+      <div class="mw-main"><div class="mw-pending" style="min-height:720px">[pending] logo versions</div></div>
+      <div class="mw-extra"><div class="mw-pending">[pending] do / don't cards</div></div>
+      <p class="mw-note">Source: logo guidelines.</p>
+    </div>
+  </section>
+  <section id="s3" data-nav="03 Colour" class="mw-spread">
+    <div class="mw-wrap mw-grid">
+      <div class="mw-side"><p class="mw-num">03</p><h2 class="mw-title">Colour</h2><p class="mw-lead">Palette and proportions.</p></div>
+      <div class="mw-main"><div class="mw-pending" style="min-height:900px">[pending] drawn swatches</div></div>
+      <p class="mw-note">Source: colour document.</p>
+    </div>
+  </section>
+  <section id="s4" data-nav="04 Typography" class="mw-spread">
+    <div class="mw-wrap mw-grid">
+      <div class="mw-side"><p class="mw-num">04</p><h2 class="mw-title">Typography</h2><p class="mw-lead">Scale at real size.</p></div>
+      <div class="mw-main"><div class="mw-pending" style="min-height:700px">[pending] specimens</div></div>
+      <p class="mw-note">Source: typography document.</p>
+    </div>
+  </section>
+  <section id="s5" data-nav="05 Imagery" class="mw-spread">
+    <div class="mw-wrap mw-grid">
+      <div class="mw-side"><p class="mw-num">05</p><h2 class="mw-title">Imagery</h2><p class="mw-lead">Direction and treatment.</p></div>
+      <div class="mw-main"><div class="mw-pending" style="min-height:600px">[pending] photograph</div></div>
+      <p class="mw-note">Source: imagery document.</p>
+    </div>
+  </section>
+  <section id="s6" data-nav="06 Version history" class="mw-spread">
+    <div class="mw-wrap mw-grid">
+      <div class="mw-side"><p class="mw-num">06</p><h2 class="mw-title">Version history</h2></div>
+      <div class="mw-main"><p>Version, date, changes.</p></div>
+    </div>
+  </section>
+</main>
+<script src="nav.js"></script>
+</body>
+</html>

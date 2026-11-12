@@ -4,7 +4,7 @@ description: "Trigger: identidad de marca, crear o rediseñar logotipo, identida
 license: MIT
 metadata:
   author: "juanjo"
-  version: "0.3"
+  version: "0.4"
 ---
 
 ## Activation Contract
@@ -34,7 +34,7 @@ Load for any logo creation or redesign, brand identity, brand manual or brand-sk
 | Work that uses the logo (favicon, icons, app files, motion, identity system) | Start only after the logo and its construction drawing are approved |
 | Optical choice (spacing, size, weight) | Show a range of options; the owner's eye decides |
 | Showing work | Show it visually and inspect the rendered board before sending |
-| Owner rejects a deliverable | Log it, redo it from the skill's workflow |
+| Owner rejects a deliverable | Log it, redo it from the skill's workflow, and retire the old generator's output in the same step (G56) |
 
 ## Execution Steps
 
@@ -60,5 +60,6 @@ Per delivery: the deliverable files, a filled phase gate, a visual board or canv
 - `references/work-order.md`: the order of every step, what each needs and what uses it.
 - `references/skill-map.md`: phase → skill → references → hand-offs.
 - `references/guardrails.md`: errors made in earlier projects and the rules that prevent them.
-- `references/brand-manual-standard.md`: what a brand manual must be.
+- `references/brand-manual-standard.md`: what a brand manual must be and how it is laid out.
+- `references/manual-web-recipe.md`: how to generate the manual as a web page and its PDF; tested pieces in `assets/manual-web/` (grid, navigation, checks).
 - The `brand-identity-toolkit` plugin that ships this skill also shows, above the prompt, the current step of `brand/progress.md` and any earlier step still open; `/progreso` rereads the file.

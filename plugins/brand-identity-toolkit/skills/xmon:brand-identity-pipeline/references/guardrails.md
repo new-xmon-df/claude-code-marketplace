@@ -40,14 +40,16 @@ audit is summarised in G15-G17.
 **G6 · Stale statuses**
 - Error: headers said «approved» while the pending list still asked to approve the document; a rejection was never recorded.
 - Rule: on every approval or rejection, update the header, the pending list and the decisions log in the same step.
-- Verify: no document says approved and pending at once.
+- Second case: a chained shell command failed half way and `brand/progress.md` was left out of the commit twice.
+- Verify: no document says approved and pending at once; `git show --stat` of each commit lists `brand/progress.md` and `brand/decisions-log.md` when the step changed them.
 
 ## Facts and claims
 
 **G7 · Numbers stated without measuring**
 - Error: a part of the symbol was claimed to be «2.5 times» thicker than the letters before measuring (real: 0.27X vs 0.21X).
 - Rule: measure first; otherwise label the figure as an unverified estimate.
-- Verify: every number in a delivery has a measurement or source.
+- Second case: the row counts of a phase gate («48 rows, 7 partly») were counted by eye and the first figure given was wrong.
+- Verify: every number in a delivery has a measurement or source; counts and totals come from a command (grep, a script), never from reading.
 
 **G8 · Invented brand surfaces**
 - Error: designed imagery for a public web, social posts and proposals that do not exist; the owner pointed out the product already had a website.
@@ -81,6 +83,7 @@ audit is summarised in G15-G17.
 **G13 · Broken boards**
 - Error: missing glyphs (✓ ✗ ō), overlapping labels, clipped descenders and captions.
 - Rule: render every board and look at it before showing it; fix glyphs, overlap and clipping.
+- How to capture with a browser (Playwright): set fixed and sticky elements (bars, sticky columns) to `position: static` before an element screenshot; add `?v=N` to the URL so a local server does not serve a cached version; wait for animations and iframes to finish; screenshots can take a moment to appear on disk, so check the file exists before reading it.
 - Verify: the board was read back after its last change.
 
 **G14 · Text instead of visuals**
@@ -193,6 +196,7 @@ audit is summarised in G15-G17.
 **G35 · A step that needs a later step**
 - Error: the work order put the client package in the logo step, before colour; the package was built with the wrong icon colour and had to be redone. A second review found more: the name search after discovery although it needs nothing from it, references asked for three times, the logo's rules written in two documents. The owner had asked several times for the task list to be reordered so that whatever a task needs comes before it.
 - Rule: before starting a step, check each thing it produces against its «Needs»: if any output carries something decided later (colour, type, voice, a surface), that output belongs to the later step. Ask the owner each input once, in the earliest step that needs it. Write each rule in one document.
+- Third case: the manual's CSS carried the brand's colour, type scale and spacing values typed by hand into a string; any later change to the source documents would leave the manual wrong. Token values in any generator are read from the approved documents, never typed.
 - Verify: for every step in `work-order.md`, every input of every output is in its «Needs» or an earlier step; no owner question appears in two steps; no rule appears in two documents.
 
 **G36 · Options without the expert's recommendation**
@@ -275,3 +279,33 @@ audit is summarised in G15-G17.
 **G51 · A brand element used below its own minimum size**
 - Error: the motion rules put the animated symbol inside buttons at 16 px, while the logo guidelines set the symbol's minimum at 32 px; at 16-24 px the animation read as a blur. The owner reverted to a spinner below 32 px.
 - Rule: every rule that places the logo, the symbol or an animation of them at a size (icons, loaders, buttons, emails) checks that size against the logo's minimum sizes; below the minimum, use the small-size cut or a neutral element, never the full symbol.
+
+**G52 · A manual with no layout work**
+- Error: the first web manual put the approved documents one after another, with long tables and decision codes in the body. The owner rejected it: there was no layout work anywhere in the guide, only one thing after another.
+- Rule: follow `brand-manual-standard.md` «How it is laid out» and work-order steps 5.1-5.6: layout directions first, spreads, the brand's own system, built and checked in blocks.
+- Verify: the Phase 5 gate links the directions board with the owner's choice, and the browser checks of every block at the review width and 390 px.
+
+**G53 · CSS classes clashing between generator modules**
+- Error: modules of the manual generator reused the same unscoped class names; texts and a title turned grey, a button came out 4 px shorter and a colour bar stayed fixed on screen.
+- Rule: one class prefix per section or component module; before delivering, run the duplicate-class check (`assets/manual-web/check_classes.py`) over every module.
+- Verify: the check exits 0, and its output is in the gate.
+
+**G54 · Production files that do not work on their own**
+- Error: the construction drawings in `production/` linked a sibling folder that does not exist next to them; the working copy and the `production/` copy were kept in sync by hand.
+- Rule: every SVG or HTML file in `production/` and in the client package is self-contained: resources embedded, or paths that exist inside the package itself. Production copies are written by the same generator run as the working files, or checked identical byte for byte.
+- Verify: every `href` and `src` of those files resolves inside the package (list them with a command), and the copies compare equal.
+
+**G55 · Test images leaking into deliverables**
+- Error: reference photographs of other organisations, used only for a test in the logo phase, ended up in an example of the manual.
+- Rule: every image brought in for a test or as a reference is stored with its provenance and marked «test only»; no deliverable uses it.
+- Verify: the licence row of the gate lists every image of the deliverable with its provenance and licence, and none is marked «test only».
+
+**G56 · A rejected generator still writing the deliverable**
+- Error: after the manual was rebuilt with a new generator, the old one still wrote the same `index.html` and could overwrite the new version.
+- Rule: when a deliverable is redone, retire the old generator's output in the same step (delete it, or point it elsewhere and log it).
+- Verify: only one generator writes each deliverable path (grep the generators for the output path).
+
+**G57 · Icons added from another source or by transforming an existing one**
+- Error risk: the manual needed an arrow pointing left that the icon set in use did not have; flipping the right arrow or fetching it elsewhere would break the set's consistency.
+- Rule: a new icon comes from the same source and version as the rest of the set (check that an icon already in use, downloaded again from there, matches byte for byte), is added to the list of icons in use and to their generator, and an existing icon is never rotated or mirrored to make it.
+- Verify: the icon list names source and version for each icon, and the byte-for-byte check is logged.

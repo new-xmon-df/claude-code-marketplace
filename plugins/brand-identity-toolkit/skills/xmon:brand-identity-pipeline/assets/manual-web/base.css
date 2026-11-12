@@ -1,0 +1,99 @@
+/*
+ * Brand manual web: base grid and spread.
+ * Copy into the project's manual generator. The --mw-* values below are placeholders:
+ * the generator replaces this :root block with values read from the approved colour,
+ * typography and layout documents (never hand copies, G35).
+ * Every class here starts with "mw-"; each section module uses its own prefix (G53).
+ */
+:root {
+  --mw-ink: #1a1a1a;
+  --mw-paper: #ffffff;
+  --mw-muted: #5c5c5c;
+  --mw-rule: #d9d9d9;
+  --mw-accent: #0055cc;
+  --mw-font-body: system-ui, sans-serif;
+  --mw-font-display: system-ui, sans-serif;
+  --mw-text-min: 16px;          /* floor from the typography document */
+  --mw-text-body: 18px;
+  --mw-text-lead: 22px;
+  --mw-text-title: 48px;
+  --mw-text-num: 96px;
+  --mw-s1: 8px; --mw-s2: 16px; --mw-s3: 24px; --mw-s4: 32px;
+  --mw-s5: 40px; --mw-s6: 48px; --mw-s7: 56px; --mw-s8: 64px;
+  --mw-gutter: 64px;
+  --mw-max: 1328px;
+  --mw-bar: 64px;               /* height of the navigation bar */
+}
+
+html {
+  scroll-behavior: smooth;
+  /* bar height + 16 px; the current-section threshold in nav.js is this + 16 */
+  scroll-padding-top: calc(var(--mw-bar) + 16px);
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+body {
+  margin: 0;
+  background: var(--mw-paper);
+  color: var(--mw-ink);
+  font: var(--mw-text-body)/1.5 var(--mw-font-body);
+}
+:focus-visible { outline: 2px solid var(--mw-accent); outline-offset: 2px; }
+
+.mw-wrap { max-width: var(--mw-max); margin: 0 auto; padding: 0 var(--mw-gutter); }
+
+/* 12 columns on desktop. Always minmax(0,1fr): a bare 1fr lets a nowrap child widen the grid. */
+.mw-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--mw-s3);
+}
+
+/* Spread: narrow text column (4 of 12), hero column (8 of 12), optional full-width extra. */
+.mw-spread { padding: var(--mw-s8) 0; border-top: 1px solid var(--mw-rule); }
+.mw-side { grid-column: 1 / 5; align-self: start; position: sticky; top: calc(var(--mw-bar) + var(--mw-s3)); }
+.mw-main { grid-column: 5 / 13; min-width: 0; }
+.mw-extra { grid-column: 1 / 13; margin-top: var(--mw-s6); min-width: 0; }
+
+.mw-num { font: 700 var(--mw-text-num)/1 var(--mw-font-display); margin: 0; }
+.mw-kicker { font-size: var(--mw-text-min); color: var(--mw-muted); text-transform: uppercase; letter-spacing: .08em; margin: var(--mw-s2) 0 0; }
+.mw-title { font: 700 var(--mw-text-title)/1.1 var(--mw-font-display); margin: var(--mw-s1) 0 var(--mw-s3); }
+.mw-lead { font-size: var(--mw-text-lead); line-height: 1.4; margin: 0 0 var(--mw-s4); }
+.mw-rule { border-top: 2px solid var(--mw-ink); padding-top: var(--mw-s2); margin: 0 0 var(--mw-s3); }
+.mw-rule h3 { font-size: var(--mw-text-body); margin: 0 0 var(--mw-s1); }
+.mw-rule p { margin: 0; }
+
+/* Source note: the only place for decision codes, paths and sources. */
+.mw-note { grid-column: 1 / 13; margin-top: var(--mw-s5); font-size: var(--mw-text-min); color: var(--mw-muted); }
+
+/* Hatched slot for a photograph that does not exist yet; never stock or AI images. */
+.mw-pending {
+  display: grid; place-items: center; min-height: 240px;
+  background: repeating-linear-gradient(45deg, var(--mw-rule) 0 2px, transparent 2px 12px);
+  color: var(--mw-muted); font-size: var(--mw-text-min);
+}
+
+.mw-main img, .mw-extra img { display: block; max-width: 100%; height: auto; }
+
+/* Tablet: 8 columns, side 3 of 8 and main 5 of 8, so the spread does not stack at the
+   owner's review width. Check that width against these breakpoints in step 0.5. */
+@media (max-width: 1199px) {
+  .mw-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .mw-side { grid-column: 1 / 4; }
+  .mw-main { grid-column: 4 / 9; }
+  .mw-extra, .mw-note { grid-column: 1 / 9; }
+  .mw-num { font-size: calc(var(--mw-text-num) * .75); }
+  .mw-title { font-size: calc(var(--mw-text-title) * .8); }
+}
+
+/* Mobile: one column, no sticky, 16 px gutters. */
+@media (max-width: 767px) {
+  :root { --mw-gutter: 16px; }
+  .mw-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mw-side, .mw-main, .mw-extra, .mw-note { grid-column: 1 / -1; }
+  .mw-side { position: static; }
+  .mw-spread { padding: var(--mw-s6) 0; }
+  .mw-num { font-size: calc(var(--mw-text-num) * .6); }
+  .mw-title { font-size: calc(var(--mw-text-title) * .66); }
+}

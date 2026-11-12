@@ -1,0 +1,65 @@
+/*
+ * Brand manual web: navigation bar and index panel. Every class starts with "nav-" (G53).
+ * Needs base.css (--mw-* variables). Markup contract: skeleton.html.
+ */
+.nav-skip { position: absolute; left: -9999px; }
+.nav-skip:focus {
+  left: var(--mw-s2); top: var(--mw-s2); z-index: 30;
+  padding: var(--mw-s1) var(--mw-s2); background: var(--mw-paper); color: var(--mw-ink);
+}
+
+.nav-bar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: var(--mw-s1);
+  height: var(--mw-bar); padding: 0 var(--mw-gutter);
+  background: var(--mw-paper); border-bottom: 1px solid var(--mw-rule);
+}
+.nav-cur {
+  flex: 1; min-width: 0; margin: 0;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font-size: var(--mw-text-min);
+}
+/* Arrows and index button share one box so they sit at the same height. */
+.nav-prev, .nav-next, .nav-toggle {
+  box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center;
+  height: 44px; min-width: 44px; padding: 0 var(--mw-s2);
+  border: 1px solid var(--mw-rule); border-radius: 4px;
+  background: var(--mw-paper); color: var(--mw-ink);
+  font: inherit; font-size: var(--mw-text-min); line-height: 1; text-decoration: none; cursor: pointer;
+}
+.nav-prev, .nav-next { padding: 0; }
+.nav-prev[aria-disabled="true"], .nav-next[aria-disabled="true"] { opacity: .35; cursor: default; }
+.nav-prev svg, .nav-next svg { width: 20px; height: 20px; }
+
+.nav-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; }
+.nav-progress span {
+  display: block; height: 100%; background: var(--mw-accent);
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform .1s linear;
+}
+
+/* Index: side panel on desktop, bottom sheet on mobile. Never lock the body scroll:
+   the scrollbar would disappear and the page would jump. */
+.nav-panel {
+  position: fixed; z-index: 25; top: var(--mw-bar); right: 0; bottom: 0;
+  width: min(360px, 100vw); box-sizing: border-box;
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: var(--mw-s3); background: var(--mw-paper); border-left: 1px solid var(--mw-rule);
+  box-shadow: -8px 0 24px rgb(0 0 0 / .08);
+}
+.nav-panel[hidden] { display: none; }
+.nav-panel h2 { font-size: var(--mw-text-min); color: var(--mw-muted); text-transform: uppercase; letter-spacing: .08em; margin: var(--mw-s3) 0 var(--mw-s1); }
+.nav-panel h2:first-child { margin-top: 0; }
+.nav-panel ol { list-style: none; margin: 0; padding: 0; }
+.nav-panel a { display: block; padding: var(--mw-s1) 0; color: var(--mw-ink); text-decoration: none; }
+.nav-panel a[aria-current="true"] { font-weight: 700; color: var(--mw-accent); }
+
+@media (max-width: 767px) {
+  .nav-panel {
+    top: auto; left: 0; width: auto; height: 80svh;
+    border-left: 0; border-top: 1px solid var(--mw-rule); border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 24px rgb(0 0 0 / .12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress span { transition: none; }
+}

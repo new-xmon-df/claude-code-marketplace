@@ -20,7 +20,7 @@ Last updated: {YYYY-MM-DD} · last decision: D{n}
 - ⬜ 0.2 Decisions log, filled pipeline prompt and this file created
 - ⬜ 0.3 Where the brand lives (products, surfaces, print, who applies it)
 - ⬜ 0.4 Liked and disliked references (brands, logos, voices), each with what the owner likes or dislikes about it
-- ⬜ 0.5 Manual format confirmed
+- ⬜ 0.5 Manual format and the owner's review width confirmed (width: {px})
 - ⬜ 0.6 Sketch analysis (if there is a sketch)
 
 ## Phase 1 · Strategy
@@ -73,8 +73,12 @@ Last updated: {YYYY-MM-DD} · last decision: D{n}
   - ⬜ Files handed to their consumers
 
 ## Phase 5 · Manual
-- ⬜ 5.1 Manual built in the chosen format from approved files
-- ⬜ 5.2 Approval, then the PDF
+- ⬜ 5.1 Data layer, canonical Markdown and generated CSS tokens
+- ⬜ 5.2 `production/` and client package work on their own (G54)
+- ⬜ 5.3 Layout directions board and the owner's choice
+- ⬜ 5.4 Core: spread helpers, prefixed CSS, reference stripping, navigation, check scripts
+- ⬜ 5.5 Sections built in blocks, each checked at both widths and committed
+- ⬜ 5.6 Gate, approval of the whole web manual, then the PDF
 
 ## Phase 6 · Brand guard
 - ⬜ 6.1 Brand-check skill with real tokens, rules and checklist

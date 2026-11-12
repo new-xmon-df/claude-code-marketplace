@@ -22,9 +22,15 @@ here comes from a particular project.
   `references/manual-web-recipe.md`.
 - **The PDF comes after the whole web manual is approved**, with a clean design, index, cover,
   numbered sections and visual examples. Source: `assets/pipeline-prompt.md` Phase 5 (last
-  paragraph). It is laid out for paper, not printed from the screen layout: every section starts
-  on a new page; no figure, card or drawing is split across pages; page numbers in the index and
-  in the footer; an animation is shown as a sequence of frames.
+  paragraph). Whether it is read on screen or printed is asked in work-order step 0.5; the two are
+  built differently (`manual-web-recipe.md`):
+  - **For screen**: cover, index and one page per section, each page as tall as its content, at
+    the desktop width of the web manual; page numbers in the index and on each page; an animation
+    shown as a sequence of frames.
+  - **For paper**: A4 pages composed one by one, each a fixed spread; long sections split on
+    purpose into several pages; no figure, card or drawing split across pages; page numbers in the
+    index and in the footer; an animation shown as frames. Never the web layout printed with
+    automatic page breaks (G52).
 
 ## How it is laid out
 
@@ -64,7 +70,8 @@ covers a title; visible focus; Escape closes the index and focus returns to its 
 `prefers-reduced-motion`. Each trap below is a Phase 5 gate row:
 
 - Updating the hash on the first pass wipes deep links (`#s9`): leave the URL alone until the user
-  scrolls or the page has loaded.
+  acts (wheel, touch, key or pointer). Not on the load event: smooth scrolling to the deep link can
+  still pass through earlier sections after it.
 - Locking the body scroll when the index opens removes the scrollbar and the page jumps: use
   `overscroll-behavior: contain` on the panel and `focus({preventScroll: true})`.
 - The threshold that detects the current section is equal to or greater than

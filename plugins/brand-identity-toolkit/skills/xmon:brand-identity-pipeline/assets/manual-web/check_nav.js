@@ -3,8 +3,18 @@
  * evaluate (MCP browser_evaluate `function`, or page.evaluate). Load the page with a deep link
  * (e.g. index.html?v=3#s4), wait for the load, then run it once at each width.
  * Every entry of `failures` names a trap from brand-manual-standard.md «Web format: navigation».
+ * The selectors default to the markup of nav.js (skeleton.html); edit CONFIG for another navigation.
  */
 async () => {
+  const CONFIG = {
+    bar: '.nav-bar',
+    current: '.nav-cur',         // element whose text names the current section
+    prev: '.nav-prev',
+    next: '.nav-next',
+    toggle: '.nav-toggle',       // index button; its aria-controls names the panel
+    sections: 'section[data-nav][id]',
+    title: s => s.dataset.nav,   // text the bar shows for a section
+  };
   const frame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
   const wait = ms => new Promise(r => setTimeout(r, ms));
   // Smooth scrolling to a deep link can still be running: wait until the page stands still.
@@ -17,20 +27,20 @@ async () => {
   };
   const failures = [];
   await still();
-  const bar = document.querySelector('.nav-bar');
-  const cur = bar.querySelector('.nav-cur');
-  const prev = bar.querySelector('.nav-prev');
-  const next = bar.querySelector('.nav-next');
-  const toggle = bar.querySelector('.nav-toggle');
+  const bar = document.querySelector(CONFIG.bar);
+  const cur = bar.querySelector(CONFIG.current);
+  const prev = bar.querySelector(CONFIG.prev);
+  const next = bar.querySelector(CONFIG.next);
+  const toggle = bar.querySelector(CONFIG.toggle);
   const panel = document.getElementById(toggle.getAttribute('aria-controls'));
-  const sections = [...document.querySelectorAll('section[data-nav][id]')];
+  const sections = [...document.querySelectorAll(CONFIG.sections)];
 
   // 1. Deep link kept on load
   const initial = location.hash;
   if (initial) {
     const target = document.querySelector(initial);
     if (!target) failures.push(`deep link ${initial}: no such section`);
-    else if (cur.textContent !== target.dataset.nav) failures.push(`deep link ${initial}: bar shows «${cur.textContent}»`);
+    else if (cur.textContent !== CONFIG.title(target)) failures.push(`deep link ${initial}: bar shows «${cur.textContent}»`);
   }
 
   // 2. Bar controls at the same height
@@ -45,7 +55,7 @@ async () => {
   window.dispatchEvent(new Event('wheel')); // the user acts: the hash may follow from now on
   s.scrollIntoView({ behavior: 'instant', block: 'start' });
   await still(); await wait(50); await frame();
-  if (cur.textContent !== s.dataset.nav) failures.push(`after jump to #${s.id}: bar shows «${cur.textContent}»`);
+  if (cur.textContent !== CONFIG.title(s)) failures.push(`after jump to #${s.id}: bar shows «${cur.textContent}»`);
   if (location.hash !== '#' + s.id) failures.push(`after jump to #${s.id}: hash is «${location.hash}»`);
   if (prev.getAttribute('href') !== '#' + sections[k - 1]?.id) failures.push(`prev arrow points to ${prev.getAttribute('href')}`);
   if (next.getAttribute('href') !== (sections[k + 1] ? '#' + sections[k + 1].id : null)) failures.push(`next arrow points to ${next.getAttribute('href')}`);

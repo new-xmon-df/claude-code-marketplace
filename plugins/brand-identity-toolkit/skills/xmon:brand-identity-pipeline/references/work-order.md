@@ -29,7 +29,7 @@ Rules that apply to every step:
 | 0.2 | Create the decisions log, the project's filled pipeline prompt and `brand/progress.md` (from `assets/pipeline-prompt.md` and `assets/progress.md`) | — | all phases |
 | 0.3 | Ask where the brand really lives: products, surfaces, print or not, who applies it (G8); who owns the brand and which contact channel the manual gives for questions and change requests | — | 1.2, 3 tests, 4 package, imagery, layout, motion, applications, 5 governance and contact |
 | 0.4 | Collect, in one pass, the liked and disliked references the later skills ask for: brands, logos and voices, each with what the owner likes or dislikes about it | — | 1.2, 2.1, 3 inputs, 4.5 voice |
-| 0.5 | Confirm the manual's format (canvas, web page, PDF, document) and the width at which the owner reviews pages on screen; record both in `brand/progress.md` | — | every board is built so it can go into it; 5.3-5.5 |
+| 0.5 | Confirm the manual's format (canvas, web page, PDF, document), the width at which the owner reviews pages on screen, and whether the PDF is to be read on screen or printed; record the three in `brand/progress.md` | — | every board is built so it can go into it; 5.3-5.5 |
 | 0.6 | Analyse the sketch, if there is one | 0.3 | 2, 3 |
 
 ## Phase 1 · Strategy

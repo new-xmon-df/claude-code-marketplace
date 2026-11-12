@@ -4,7 +4,7 @@ description: "Trigger: identidad de marca, crear o rediseñar logotipo, identida
 license: MIT
 metadata:
   author: "juanjo"
-  version: "0.3"
+  version: "0.4"
 ---
 
 ## Activation Contract
@@ -34,7 +34,7 @@ Load for any logo creation or redesign, brand identity, brand manual or brand-sk
 | Work that uses the logo (favicon, icons, app files, motion, identity system) | Start only after the logo and its construction drawing are approved |
 | Optical choice (spacing, size, weight) | Show a range of options; the owner's eye decides |
 | Showing work | Show it visually and inspect the rendered board before sending |
-| Owner rejects a deliverable | Log it, redo it from the skill's workflow |
+| Owner rejects a deliverable | Log it, redo it from the skill's workflow, and retire the old generator's output in the same step (G56) |
 
 ## Execution Steps
 

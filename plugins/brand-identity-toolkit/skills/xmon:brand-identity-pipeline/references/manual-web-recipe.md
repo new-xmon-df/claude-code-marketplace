@@ -72,7 +72,7 @@ import re
 
 REF_MARKERS = [r"\bD\d+", r"\banswer \d+", r"\.md\b", r"§"]   # the project's codes and markers
 _marker = "|".join(REF_MARKERS)
-_PAREN = re.compile(r"\s*\((?=[^()]*(?:" + _marker + r"))[^()]*\)")  # «(D63)», «(answer 4; x.md)»
+_PAREN = re.compile(r"\s*\((?=[^()]*(?:" + _marker + r"))[^()]*\)")  # «(D12)», «(answer 4; x.md)»
 _LOOSE = re.compile(r"\s*\b(?:D\d+[;,]\s*)+(?=\s|$)")                # «D12; D14;» outside brackets
 _CODE = re.compile(r"`([^`]*)`")                                       # Markdown code backticks
 
